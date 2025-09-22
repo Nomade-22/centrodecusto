@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — Adequações Civis</title>
+  <title>Dashboard — Adequações Civis (v1.1 OF)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
@@ -16,54 +16,50 @@
     }
     *{box-sizing:border-box}
     html,body{height:100%}
-    body{
-      margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text);
-    }
-    header{
-      position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(6px);
+    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text);}
+    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(6px);
       background:linear-gradient(180deg, rgba(21,25,34,.9), rgba(21,25,34,.75));
-      border-bottom:1px solid var(--border); padding:16px 20px;
-      display:flex; align-items:center; justify-content:space-between;
-    }
+      border-bottom:1px solid var(--border); padding:16px 20px; display:flex; align-items:center; justify-content:space-between;}
     .title{display:flex; gap:12px; align-items:center;}
     .title h1{font-size:18px; margin:0; letter-spacing:.2px}
     .tabs{display:flex; gap:8px}
-    .btn{
-      background:var(--panel-2); color:var(--text); border:1px solid var(--border);
-      padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; transition:.2s ease;
-    }
+    .btn{background:var(--panel-2); color:var(--text); border:1px solid var(--border);
+      padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; transition:.2s ease;}
     .btn:hover{border-color:var(--primary); box-shadow:var(--ring)}
     .btn.primary{background:var(--primary); border-color:transparent; color:#0a0f1a}
     .btn.ghost{background:transparent}
-    main{max-width:1200px; margin:24px auto; padding:0 16px}
-    .tab{display:none}
-    .tab.active{display:block; animation:fade .25s ease}
+    main{max-width:1220px; margin:24px auto; padding:0 16px}
+    .tab{display:none} .tab.active{display:block; animation:fade .25s ease}
     @keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
     .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
-    .card{
-      background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
-      padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25);
-    }
+    .card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25);}
     .kpi .label{color:var(--muted); font-size:12px; letter-spacing:.4px; text-transform:uppercase}
     .kpi .value{font-size:26px; font-weight:700; margin-top:6px}
     .kpi .sub{margin-top:6px; font-size:12px; color:var(--muted)}
     .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px}
-    .chart-wrap{min-height:340px}
-    canvas{width:100% !important; height:300px !important}
+    .chart-wrap{min-height:340px} canvas{width:100% !important; height:300px !important}
     .filters{display:flex; flex-wrap:wrap; gap:10px; align-items:end; margin-bottom:12px}
     label.small{display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted)}
-    input, select{
+    input, select, textarea{
       background:var(--panel-2); color:var(--text); border:1px solid var(--border);
-      padding:10px 12px; border-radius:10px; outline:none; min-width:180px;
+      padding:10px 12px; border-radius:10px; outline:none; min-width:160px;
     }
-    input:focus{border-color:var(--primary); box-shadow:var(--ring)}
+    textarea{min-height:84px; resize:vertical}
+    input:focus, select:focus, textarea:focus{border-color:var(--primary); box-shadow:var(--ring)}
     table{width:100%; border-collapse:collapse; margin-top:12px; font-size:14px}
     th,td{border-bottom:1px solid var(--border); padding:10px; text-align:center}
     tr:hover td{background:#121724}
     .toolbar{display:flex; gap:8px; margin:12px 0}
-    .two-col{display:grid; grid-template-columns:320px 1fr; gap:14px}
+    .two-col{display:grid; grid-template-columns:360px 1fr; gap:14px}
     .form{display:grid; gap:10px}
     .muted{color:var(--muted)}
+    .pill{display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; border:1px solid var(--border); background:var(--panel-2)}
+    .of-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
+    .of-card .head{display:flex; justify-content:space-between; align-items:center}
+    .of-progress{height:10px; background:#0f1320; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin-top:8px}
+    .of-bar{height:100%; background:linear-gradient(90deg, var(--primary), var(--primary-2)); width:0%}
+    .tag-warn{background:rgba(255,179,0,.1); color:#ffdd7a; border-color:rgba(255,179,0,.3)}
+    .tag-danger{background:rgba(255,82,82,.1); color:#ffb4b4; border-color:rgba(255,82,82,.3)}
     @media (max-width:980px){
       .kpis{grid-template-columns:1fr 1fr}
       .grid{grid-template-columns:1fr}
@@ -76,11 +72,12 @@
 <header>
   <div class="title">
     <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 3h7v4h-7v-4Z" stroke="url(#g)" stroke-width="1.5"/><defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#4f8cff"/><stop offset="1" stop-color="#6aa1ff"/></linearGradient></defs></svg>
-    <h1>Dashboard — Adequações Civis</h1>
+    <h1>Dashboard — Adequações Civis (v1.1)</h1>
   </div>
   <div class="tabs">
     <button class="btn" data-tab="dashboard">Dashboard</button>
     <button class="btn" data-tab="lancamentos">Lançamentos</button>
+    <button class="btn" data-tab="ofs">OFs</button>
     <button class="btn ghost" data-tab="config">Configurações</button>
   </div>
 </header>
@@ -88,6 +85,19 @@
 <main>
   <!-- DASHBOARD -->
   <section id="dashboard" class="tab active">
+    <div class="card" style="margin-bottom:12px; display:flex; gap:12px; align-items:end; flex-wrap:wrap">
+      <label class="small">OF selecionada
+        <select id="selOF"></select>
+      </label>
+      <label class="small">De:<input type="date" id="fDe"></label>
+      <label class="small">Até:<input type="date" id="fAte"></label>
+      <label class="small">Fornecedor:<input type="text" id="fFornecedor" placeholder="Filtrar fornecedor"></label>
+      <button class="btn" id="btnFiltrar">Aplicar filtros</button>
+      <button class="btn ghost" id="btnLimpar">Limpar</button>
+      <span class="pill" id="pillOrcado">Orçado: —</span>
+      <span class="pill" id="pillSaldo">Saldo: —</span>
+    </div>
+
     <div class="kpis">
       <div class="card kpi">
         <div class="label">Total Materiais</div>
@@ -113,28 +123,13 @@
 
     <div class="grid">
       <div class="card">
-        <div class="filters">
-          <label class="small">De:<input type="date" id="fDe"></label>
-          <label class="small">Até:<input type="date" id="fAte"></label>
-          <label class="small">Fornecedor:<input type="text" id="fFornecedor" placeholder="Filtrar fornecedor"></label>
-          <button class="btn" id="btnFiltrar">Aplicar filtros</button>
-          <button class="btn ghost" id="btnLimpar">Limpar</button>
-        </div>
-        <div class="chart-wrap">
-          <canvas id="graficoEvolucao"></canvas>
-        </div>
+        <div class="chart-wrap"><canvas id="graficoEvolucao"></canvas></div>
       </div>
-
       <div class="card">
-        <div class="chart-wrap">
-          <canvas id="graficoCategorias"></canvas>
-        </div>
+        <div class="chart-wrap"><canvas id="graficoCategorias"></canvas></div>
       </div>
-
       <div class="card" style="grid-column:1 / -1">
-        <div class="chart-wrap">
-          <canvas id="graficoFornecedores"></canvas>
-        </div>
+        <div class="chart-wrap"><canvas id="graficoFornecedores"></canvas></div>
       </div>
 
       <div class="card" style="grid-column:1 / -1">
@@ -142,13 +137,13 @@
           <button class="btn" id="btnExportar">Exportar CSV</button>
           <label class="btn ghost" for="inputCSV">Importar CSV</label>
           <input id="inputCSV" type="file" accept=".csv" style="display:none">
-          <span class="muted">Formato esperado: data,fornecedor,materiais,profissionais,ajudantes,almoco,translado</span>
+          <span class="muted">CSV: of_id,data,fornecedor,materiais,profissionais,ajudantes,almoco,translado</span>
         </div>
         <div class="table-wrap">
           <table id="tabela">
             <thead>
               <tr>
-                <th>Data</th><th>Fornecedor</th><th>Materiais</th><th>Profissionais</th><th>Ajudantes</th><th>Almoço</th><th>Translado</th><th>Total</th><th></th>
+                <th>OF</th><th>Data</th><th>Fornecedor</th><th>Materiais</th><th>Profissionais</th><th>Ajudantes</th><th>Almoço</th><th>Translado</th><th>Total</th><th></th>
               </tr>
             </thead>
             <tbody></tbody>
@@ -165,13 +160,20 @@
       <div class="card">
         <h3 style="margin:0 0 10px">Novo Lançamento</h3>
         <form id="form" class="form">
+          <label class="small">OF
+            <select id="ofId" required></select>
+          </label>
           <label class="small">Data<input type="date" id="data" required></label>
           <label class="small">Fornecedor<input type="text" id="fornecedor" placeholder="Ex.: Bortolaso"></label>
           <label class="small">Materiais (R$)<input type="number" id="materiais" step="0.01" min="0"></label>
-          <label class="small">Profissionais (qtd)<input type="number" id="profissionais" step="1" min="0"></label>
-          <label class="small">Ajudantes (qtd)<input type="number" id="ajudantes" step="1" min="0"></label>
-          <label class="small">Almoço (R$)<input type="number" id="almoco" step="0.01" min="0"></label>
-          <label class="small">Translado (R$)<input type="number" id="translado" step="0.01" min="0"></label>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+            <label class="small">Profissionais (qtd)<input type="number" id="profissionais" step="1" min="0"></label>
+            <label class="small">Ajudantes (qtd)<input type="number" id="ajudantes" step="1" min="0"></label>
+          </div>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+            <label class="small">Almoço (R$)<input type="number" id="almoco" step="0.01" min="0"></label>
+            <label class="small">Translado (R$)<input type="number" id="translado" step="0.01" min="0"></label>
+          </div>
           <div style="display:flex; gap:8px; margin-top:6px">
             <button class="btn primary" type="submit">Adicionar</button>
             <button class="btn ghost" type="reset">Limpar</button>
@@ -182,10 +184,34 @@
       <div class="card">
         <h3 style="margin:0 0 10px">Ajuda</h3>
         <ul class="muted" style="margin:0 0 6px 16px; line-height:1.5">
-          <li>Use a aba <b>Configurações</b> para ajustar o R$/dia de Profissional e Ajudante.</li>
-          <li>Os dados ficam salvos no navegador (localStorage).</li>
-          <li>Exporte CSV para compartilhar ou fazer backup.</li>
+          <li>Cadastre as <b>OFs</b> primeiro (aba OFs). Cada OF é um <b>centro de custo</b>.</li>
+          <li>Selecione a OF na hora de lançar uma despesa.</li>
+          <li>Dashboard mostra o <b>saldo</b> da OF selecionada (orçado − gastos).</li>
         </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- OFs -->
+  <section id="ofs" class="tab">
+    <div class="two-col">
+      <div class="card">
+        <h3 style="margin:0 0 10px">Cadastrar OF</h3>
+        <form id="formOF" class="form">
+          <label class="small">Nº/ID da OF<input type="text" id="ofNumero" placeholder="Ex.: OF-2025-001" required></label>
+          <label class="small">Cliente<input type="text" id="ofCliente" placeholder="Ex.: JBS"></label>
+          <label class="small">Orçamento (R$)<input type="number" id="ofOrcado" step="0.01" min="0" placeholder="Valor orçado"></label>
+          <label class="small">Descrição<textarea id="ofDesc" placeholder="Resumo/escopo"></textarea></label>
+          <div style="display:flex; gap:8px">
+            <button class="btn primary" type="submit">Salvar OF</button>
+            <button class="btn" id="btnResetOFs" type="button">Apagar todas OFs</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="margin:0 10px 10px 0">OFs cadastradas</h3>
+        <div class="of-grid" id="ofCards"></div>
       </div>
     </div>
   </section>
@@ -203,95 +229,216 @@
         </label>
         <div style="display:flex; gap:8px">
           <button class="btn primary" id="btnSalvarCfg">Salvar</button>
-          <button class="btn" id="btnResetar">Resetar dados</button>
+          <button class="btn" id="btnResetar">Resetar dados (lançamentos)</button>
         </div>
-        <p class="muted" style="margin:6px 0 0">Padrão inicial: Prof R$ 809,00 | Ajud R$ 405,00 (você pode alterar aqui).</p>
+        <p class="muted" style="margin:6px 0 0">Padrão: Prof R$ 809,00 | Ajud R$ 405,00 (ajuste conforme tua planilha).</p>
       </div>
     </div>
   </section>
 </main>
 
 <script>
-  // ======= Estado / Storage =======
+  // ======= Constantes / Storage =======
   const BRL = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
-  const KEY = 'adq_civis_lancamentos_v1';
-  const CFG_KEY = 'adq_civis_cfg_v1';
-  let lanc = JSON.parse(localStorage.getItem(KEY) || '[]');
-  let cfg = JSON.parse(localStorage.getItem(CFG_KEY) || '{"prof":809,"ajud":405}');
+  const KEY = 'adq_civis_lancamentos_v11';
+  const CFG_KEY = 'adq_civis_cfg_v11';
+  const OF_KEY = 'adq_civis_ofs_v11';
 
-  // ======= Tabs =======
+  let lanc = JSON.parse(localStorage.getItem(KEY) || '[]');
+  let cfg  = JSON.parse(localStorage.getItem(CFG_KEY) || '{"prof":809,"ajud":405}');
+  let ofs  = JSON.parse(localStorage.getItem(OF_KEY)  || '[]'); // {id, cliente, orcado, desc}
+
+  // ======= Navegação entre abas =======
   document.querySelectorAll('button[data-tab]').forEach(b=>{
     b.addEventListener('click',()=>{
       document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
       document.getElementById(b.dataset.tab).classList.add('active');
       if(b.dataset.tab==='dashboard'){ renderAll(); }
+      if(b.dataset.tab==='lancamentos'){ fillOFSelects(); }
+      if(b.dataset.tab==='ofs'){ renderOFs(); fillOFSelects(); }
+      if(b.dataset.tab==='config'){ document.getElementById('cfgProf').value = cfg.prof; document.getElementById('cfgAjud').value = cfg.ajud; }
     });
   });
 
-  // ======= Form Lançamento =======
-  document.getElementById('form').addEventListener('submit', (e)=>{
+  // ======= Helpers =======
+  const q = (s)=>document.querySelector(s);
+  const qa = (s)=>[...document.querySelectorAll(s)];
+  const sum = (arr, pick)=> arr.reduce((s,o)=> s + (+pick(o)||0), 0);
+
+  function persistLanc(){ localStorage.setItem(KEY, JSON.stringify(lanc)); }
+  function persistCfg(){ localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
+  function persistOFs(){ localStorage.setItem(OF_KEY, JSON.stringify(ofs)); }
+
+  function findOF(id){ return ofs.find(o => o.id===id); }
+  function gastoLanc(l){ return (+l.materiais||0) + (l.profissionais*cfg.prof) + (l.ajudantes*cfg.ajud) + (+l.almoco||0) + (+l.translado||0); }
+
+  function filtrarDados(){
+    const sel = q('#selOF').value;
+    const de = q('#fDe').value || null;
+    const ate = q('#fAte').value || null;
+    const forn = (q('#fFornecedor').value||'').toLowerCase().trim();
+    return lanc.filter(l=>{
+      const okOF = (sel==='__ALL__') || (l.of_id===sel);
+      const okData = (!de || l.data>=de) && (!ate || l.data<=ate);
+      const okForn = !forn || (l.fornecedor||'').toLowerCase().includes(forn);
+      return okOF && okData && okForn;
+    }).sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  }
+
+  // ======= OFs =======
+  function renderOFs(){
+    const wrap = q('#ofCards'); wrap.innerHTML='';
+    const mapGastos = {};
+    lanc.forEach(l => { mapGastos[l.of_id] = (mapGastos[l.of_id]||0) + gastoLanc(l); });
+
+    ofs.forEach(of=>{
+      const gasto = mapGastos[of.id]||0;
+      const orc = +of.orcado||0;
+      const pct = orc>0 ? Math.min(100, (gasto/orc)*100) : 0;
+      const saldo = orc - gasto;
+      const card = document.createElement('div');
+      card.className = 'card of-card';
+      card.innerHTML = `
+        <div class="head">
+          <div>
+            <div style="font-weight:700">${of.id}</div>
+            <div class="muted">${of.cliente||''}</div>
+          </div>
+          <div>
+            <span class="pill">Orçado: ${orc?BRL.format(orc):'—'}</span>
+          </div>
+        </div>
+        <div style="margin-top:8px">${of.desc?('<span class="muted">'+escapeHtml(of.desc)+'</span>'):'<span class="muted">Sem descrição</span>'}</div>
+        <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+          <span class="pill">Gasto: <b>${BRL.format(gasto)}</b></span>
+          <span class="pill ${saldo<0?'tag-danger':(pct>=80?'tag-warn':'')}">Saldo: <b>${BRL.format(saldo)}</b></span>
+          <span class="pill">${pct.toFixed(0)}% consumido</span>
+        </div>
+        <div class="of-progress"><div class="of-bar" style="width:${pct}%;"></div></div>
+        <div style="display:flex; gap:8px; margin-top:10px">
+          <button class="btn" data-ativar="${of.id}">Selecionar no Dashboard</button>
+          <button class="btn ghost" data-delof="${of.id}">Excluir OF</button>
+        </div>
+      `;
+      wrap.appendChild(card);
+    });
+
+    // Ações
+    wrap.querySelectorAll('[data-ativar]').forEach(b=>{
+      b.onclick = ()=>{ q('#selOF').value = b.dataset.ativar; renderAll(); scrollToTop(); };
+    });
+    wrap.querySelectorAll('[data-delof]').forEach(b=>{
+      b.onclick = ()=>{
+        const id=b.dataset.delof;
+        if(confirm('Excluir OF e manter os lançamentos (eles ficarão sem OF)?')){
+          ofs = ofs.filter(o=>o.id!==id); persistOFs();
+          lanc.forEach(l=>{ if(l.of_id===id) l.of_id=''; }); persistLanc();
+          renderOFs(); fillOFSelects(); renderAll();
+        }
+      };
+    });
+  }
+
+  function fillOFSelects(){
+    const sel1 = q('#ofId'), sel2 = q('#selOF');
+    const makeOpts = (includeAll)=>{
+      let html = includeAll? `<option value="__ALL__">— Todas OFs —</option>` : '';
+      ofs.forEach(of=> html += `<option value="${of.id}">${of.id} — ${escapeHtml(of.cliente||'')}</option>`);
+      return html;
+    };
+    sel1.innerHTML = makeOpts(false);
+    sel2.innerHTML = makeOpts(true);
+    if(!sel2.value) sel2.value='__ALL__';
+  }
+
+  // Cadastro OF
+  q('#formOF').addEventListener('submit', (e)=>{
     e.preventDefault();
-    const data = document.getElementById('data').value;
-    const fornecedor = (document.getElementById('fornecedor').value||'').trim();
-    const materiais = +document.getElementById('materiais').value||0;
-    const profissionais = +document.getElementById('profissionais').value||0;
-    const ajudantes = +document.getElementById('ajudantes').value||0;
-    const almoco = +document.getElementById('almoco').value||0;
-    const translado = +document.getElementById('translado').value||0;
-    lanc.push({data, fornecedor, materiais, profissionais, ajudantes, almoco, translado});
-    persist();
+    const id=(q('#ofNumero').value||'').trim();
+    if(!id) return alert('Informe o Nº/ID da OF.');
+    if(ofs.some(o=>o.id===id)) return alert('Já existe uma OF com esse ID.');
+    const cliente=(q('#ofCliente').value||'').trim();
+    const orcado= +q('#ofOrcado').value||0;
+    const desc=(q('#ofDesc').value||'').trim();
+    ofs.push({id, cliente, orcado, desc});
+    persistOFs();
+    e.target.reset();
+    renderOFs(); fillOFSelects();
+    alert('OF cadastrada.');
+  });
+
+  q('#btnResetOFs').onclick = ()=>{
+    if(confirm('Apagar TODAS as OFs? (lançamentos não serão apagados)')){
+      ofs=[]; persistOFs(); renderOFs(); fillOFSelects(); renderAll();
+    }
+  };
+
+  // ======= Lançamentos =======
+  q('#form').addEventListener('submit', (e)=>{
+    e.preventDefault();
+    const of_id = q('#ofId').value;
+    if(!of_id){ alert('Selecione uma OF.'); return; }
+    const data = q('#data').value;
+    const fornecedor = (q('#fornecedor').value||'').trim();
+    const materiais = +q('#materiais').value||0;
+    const profissionais = +q('#profissionais').value||0;
+    const ajudantes = +q('#ajudantes').value||0;
+    const almoco = +q('#almoco').value||0;
+    const translado = +q('#translado').value||0;
+    lanc.push({of_id, data, fornecedor, materiais, profissionais, ajudantes, almoco, translado});
+    persistLanc();
     e.target.reset();
     alert('Lançamento adicionado.');
   });
 
   // ======= Config =======
-  document.getElementById('cfgProf').value = cfg.prof ?? 809;
-  document.getElementById('cfgAjud').value = cfg.ajud ?? 405;
-
-  document.getElementById('btnSalvarCfg').onclick = ()=>{
-    cfg.prof = +document.getElementById('cfgProf').value||0;
-    cfg.ajud = +document.getElementById('cfgAjud').value||0;
-    localStorage.setItem(CFG_KEY, JSON.stringify(cfg));
+  q('#cfgProf').value = cfg.prof ?? 809;
+  q('#cfgAjud').value = cfg.ajud ?? 405;
+  q('#btnSalvarCfg').onclick = ()=>{
+    cfg.prof = +q('#cfgProf').value||0;
+    cfg.ajud = +q('#cfgAjud').value||0;
+    persistCfg();
     renderAll();
   };
-  document.getElementById('btnResetar').onclick = ()=>{
-    if(confirm('Apagar TODOS os dados e voltar ao padrão?')){
-      localStorage.removeItem(KEY);
-      lanc = [];
-      renderAll();
+  q('#btnResetar').onclick = ()=>{
+    if(confirm('Apagar TODOS os lançamentos?')){
+      lanc=[]; persistLanc(); renderAll();
     }
   };
 
-  // ======= Filtros =======
-  document.getElementById('btnFiltrar').onclick = ()=> renderAll();
-  document.getElementById('btnLimpar').onclick = ()=>{
-    document.getElementById('fDe').value='';
-    document.getElementById('fAte').value='';
-    document.getElementById('fFornecedor').value='';
+  // ======= Filtros / Header =======
+  q('#btnFiltrar').onclick = ()=> renderAll();
+  q('#btnLimpar').onclick = ()=>{
+    q('#fDe').value=''; q('#fAte').value=''; q('#fFornecedor').value='';
+    q('#selOF').value='__ALL__';
     renderAll();
   };
 
   // ======= Import/Export CSV =======
-  document.getElementById('btnExportar').onclick = ()=>{
-    const rows = [['data','fornecedor','materiais','profissionais','ajudantes','almoco','translado']];
-    lanc.forEach(l=> rows.push([l.data,l.fornecedor,l.materiais,l.profissionais,l.ajudantes,l.almoco,l.translado]));
+  q('#btnExportar').onclick = ()=>{
+    const rows = [['of_id','data','fornecedor','materiais','profissionais','ajudantes','almoco','translado']];
+    lanc.forEach(l=> rows.push([l.of_id,l.data,l.fornecedor,l.materiais,l.profissionais,l.ajudantes,l.almoco,l.translado]));
     const csv = rows.map(r=>r.map(v=> typeof v==='string' && v.includes(',') ? `"${v.replace(/"/g,'""')}"` : v).join(',')).join('\n');
     const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
     const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'adequacoes_civis.csv'; a.click();
+    a.href = URL.createObjectURL(blob); a.download = 'adequacoes_civis_v11.csv'; a.click();
   };
 
-  document.getElementById('inputCSV').addEventListener('change', async (e)=>{
+  q('#inputCSV').addEventListener('change', async (e)=>{
     const file = e.target.files[0]; if(!file) return;
     const txt = await file.text();
     const lines = txt.trim().split(/\r?\n/);
     const head = lines.shift().split(',').map(s=>s.trim().toLowerCase());
     const idx = (k)=> head.indexOf(k);
-    if(idx('data')<0) { alert('Cabeçalho CSV inválido.'); return; }
+    const need = ['of_id','data','fornecedor','materiais','profissionais','ajudantes','almoco','translado'];
+    const missing = need.filter(k=> idx(k)<0);
+    if(missing.length){ alert('Cabeçalho CSV faltando: '+missing.join(', ')); return; }
+
     lines.forEach(line=>{
       if(!line.trim()) return;
       const cols = parseCsvLine(line);
       const rec = {
+        of_id: cols[idx('of_id')]||'',
         data: cols[idx('data')]||'',
         fornecedor: cols[idx('fornecedor')]||'',
         materiais: +cols[idx('materiais')]||0,
@@ -302,12 +449,17 @@
       };
       lanc.push(rec);
     });
-    persist();
+    persistLanc();
     e.target.value='';
+    // garantir que todas as OFs referenciadas existam
+    const idsUsados = [...new Set(lanc.map(l=>l.of_id).filter(Boolean))];
+    idsUsados.forEach(id=>{
+      if(!ofs.some(o=>o.id===id)){ ofs.push({id, cliente:'', orcado:0, desc:''}); }
+    });
+    persistOFs(); fillOFSelects(); renderOFs(); renderAll();
   });
 
   function parseCsvLine(s){
-    // simples parser com suporte a campos entre aspas
     const out=[]; let cur=''; let q=false;
     for(let i=0;i<s.length;i++){
       const c=s[i];
@@ -319,38 +471,14 @@
     return out.map(x=>x.trim());
   }
 
-  // ======= Helpers =======
-  function persist(){ localStorage.setItem(KEY, JSON.stringify(lanc)); renderAll(); }
-
-  function filtrarDados(){
-    const de = document.getElementById('fDe').value || null;
-    const ate = document.getElementById('fAte').value || null;
-    const forn = (document.getElementById('fFornecedor').value||'').toLowerCase().trim();
-    return lanc.filter(l=>{
-      const okData = (!de || l.data>=de) && (!ate || l.data<=ate);
-      const okForn = !forn || (l.fornecedor||'').toLowerCase().includes(forn);
-      return okData && okForn;
-    }).sort((a,b)=>(a.data||'').localeCompare(b.data||''));
-  }
-
-  function sum(arr, pick){ return arr.reduce((s,o)=> s + (+pick(o)||0), 0); }
-
-  function totals(rows){
-    const mat = sum(rows, r=>r.materiais);
-    const mo = sum(rows, r=> r.profissionais*cfg.prof + r.ajudantes*cfg.ajud );
-    const ind = sum(rows, r=> r.almoco + r.translado);
-    const total = mat + mo + ind;
-    return {mat, mo, ind, total};
-  }
-
   // ======= Tabela =======
   function renderTable(rows){
-    const tb = document.querySelector('#tabela tbody');
-    tb.innerHTML = '';
+    const tb = q('#tabela tbody'); tb.innerHTML = '';
     rows.forEach((l,idx)=>{
-      const total = l.materiais + (l.profissionais*cfg.prof) + (l.ajudantes*cfg.ajud) + l.almoco + l.translado;
+      const total = gastoLanc(l);
       const tr = document.createElement('tr');
       tr.innerHTML = `
+        <td>${escapeHtml(l.of_id||'')}</td>
         <td>${l.data||''}</td>
         <td>${escapeHtml(l.fornecedor||'')}</td>
         <td>${BRL.format(l.materiais||0)}</td>
@@ -365,54 +493,72 @@
     });
     tb.querySelectorAll('button[data-del]').forEach(b=>{
       b.onclick = ()=>{
-        const idx = +b.dataset.del;
+        const i = +b.dataset.del;
         if(confirm('Remover este lançamento?')){
-          lanc.splice(idx,1); persist();
+          lanc.splice(i,1); persistLanc(); renderAll();
         }
       };
     });
   }
 
-  function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-
-  // ======= KPIs =======
+  // ======= KPIs & Saldo OF =======
   function renderKpis(rows){
-    const t = totals(rows);
-    document.getElementById('kpiMateriais').textContent = BRL.format(t.mat);
-    document.getElementById('kpiMO').textContent = BRL.format(t.mo);
-    document.getElementById('kpiIndiretos').textContent = BRL.format(t.ind);
-    document.getElementById('kpiTotal').textContent = BRL.format(t.total);
-    document.getElementById('kpiRegistros').textContent = rows.length ? `${rows.length} registros` : 'Sem registros';
-    const qtdMO = sum(rows, r=>r.profissionais + r.ajudantes);
-    document.getElementById('kpiHh').textContent = `${qtdMO} pessoas·dia`;
-    const pct = t.total ? (t.ind/t.total)*100 : 0;
-    document.getElementById('kpiIndPct').textContent = `Indiretos ${pct.toFixed(1)}%`;
-    const itensMat = rows.filter(r=>r.materiais>0).length;
-    document.getElementById('kpiItensMat').textContent = itensMat ? `${itensMat} lanç. com materiais` : '—';
+    const mat = sum(rows, r=> +r.materiais||0);
+    const mo  = sum(rows, r=> r.profissionais*cfg.prof + r.ajudantes*cfg.ajud );
+    const ind = sum(rows, r=> +r.almoco + +r.translado);
+    const total = mat + mo + ind;
+
+    q('#kpiMateriais').textContent = BRL.format(mat);
+    q('#kpiMO').textContent = BRL.format(mo);
+    q('#kpiIndiretos').textContent = BRL.format(ind);
+    q('#kpiTotal').textContent = BRL.format(total);
+    q('#kpiRegistros').textContent = rows.length ? `${rows.length} registros` : 'Sem registros';
+    const qtdMO = sum(rows, r=> r.profissionais + r.ajudantes);
+    q('#kpiHh').textContent = `${qtdMO} pessoas·dia`;
+    const pct = total ? (ind/total)*100 : 0;
+    q('#kpiIndPct').textContent = `Indiretos ${pct.toFixed(1)}%`;
+
+    // Pill Orçado/Saldo para OF selecionada
+    const sel = q('#selOF').value;
+    let orcado = 0, gastoOF = 0;
+    if(sel && sel!=='__ALL__'){
+      const of = findOF(sel);
+      orcado = of ? (+of.orcado||0) : 0;
+      gastoOF = sum(lanc.filter(l=>l.of_id===sel), l=>gastoLanc(l));
+    } else {
+      // visão geral (todas): soma dos orçados e gastos
+      orcado = sum(ofs, o=> +o.orcado||0);
+      gastoOF = sum(lanc, l=> gastoLanc(l));
+    }
+    const saldo = orcado - gastoOF;
+    q('#pillOrcado').textContent = `Orçado: ${orcado?BRL.format(orcado):'—'}`;
+    q('#pillSaldo').textContent = `Saldo: ${BRL.format(saldo)}`;
+    q('#pillSaldo').classList.remove('tag-warn','tag-danger');
+    if(orcado>0){
+      const p = gastoOF/orcado;
+      if(saldo<0) q('#pillSaldo').classList.add('tag-danger');
+      else if(p>=0.8) q('#pillSaldo').classList.add('tag-warn');
+    }
   }
 
-  // ======= Gráficos (com destruição prévia) =======
+  // ======= Gráficos =======
   let chEvo=null, chCat=null, chForn=null;
 
   function renderCharts(rows){
-    const byDate = aggregate(rows, r=>r.data||'—', r=> r.materiais + (r.profissionais*cfg.prof) + (r.ajudantes*cfg.ajud) + r.almoco + r.translado );
+    const byDate = aggregate(rows, r=>r.data||'—', r=> gastoLanc(r));
     const cat = {
-      'Materiais': sum(rows, r=>r.materiais),
+      'Materiais': sum(rows, r=> +r.materiais||0),
       'Mão de Obra': sum(rows, r=> r.profissionais*cfg.prof + r.ajudantes*cfg.ajud ),
-      'Indiretos': sum(rows, r=> r.almoco + r.translado),
+      'Indiretos': sum(rows, r=> +r.almoco + +r.translado),
     };
-    const byForn = aggregate(rows, r=> (r.fornecedor||'—'), r=> r.materiais + (r.profissionais*cfg.prof) + (r.ajudantes*cfg.ajud) + r.almoco + r.translado);
+    const byForn = aggregate(rows, r=> (r.fornecedor||'—'), r=> gastoLanc(r));
 
-    const evoLabels = Object.keys(byDate);
-    const evoData = Object.values(byDate);
-
-    // Destroy anteriores
     [chEvo,chCat,chForn].forEach(ch=> ch && ch.destroy());
 
     const ctx1 = document.getElementById('graficoEvolucao').getContext('2d');
     chEvo = new Chart(ctx1, {
       type:'line',
-      data:{ labels:evoLabels, datasets:[{ label:'Total por dia', data:evoData, tension:.25 }]},
+      data:{ labels:Object.keys(byDate), datasets:[{ label:'Total por dia', data:Object.values(byDate), tension:.25 }]},
       options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } }
     });
 
@@ -437,30 +583,43 @@
       const k = keyFn(r);
       map[k] = (map[k]||0) + (+valFn(r)||0);
     });
-    // ordenar por chave (datas sobem naturalmente por string ISO)
     return Object.fromEntries(Object.entries(map).sort((a,b)=> a[0].localeCompare(b[0])));
   }
 
+  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+  function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
+
   // ======= Render all =======
   function renderAll(){
+    fillOFSelects();
     const rows = filtrarDados();
     renderKpis(rows);
     renderCharts(rows);
     renderTable(rows);
   }
 
-  // ======= Seed opcional (remova se quiser começar vazio) =======
+  // ======= Seed opcional (remove se preferir começar vazio) =======
+  if(ofs.length===0){
+    ofs = [
+      {id:'OF-2025-001', cliente:'Bortolaso', orcado:22100, desc:'Adequações civis — etapa 1'},
+      {id:'OF-2025-002', cliente:'—', orcado:15000, desc:'Reservado'}
+    ];
+    persistOFs();
+  }
   if(lanc.length===0){
     lanc = [
-      {data:'2025-09-09', fornecedor:'Bortolaso', materiais:344, profissionais:2, ajudantes:0, almoco:40, translado:25},
-      {data:'2025-09-10', fornecedor:'—', materiais:0, profissionais:2, ajudantes:0, almoco:40, translado:25},
-      {data:'2025-09-15', fornecedor:'Bortolaso', materiais:355, profissionais:2, ajudantes:0, almoco:40, translado:25},
-      {data:'2025-09-16', fornecedor:'Bortolaso', materiais:86,  profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {of_id:'OF-2025-001', data:'2025-09-09', fornecedor:'Bortolaso', materiais:344, profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {of_id:'OF-2025-001', data:'2025-09-10', fornecedor:'—',        materiais:0,   profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {of_id:'OF-2025-001', data:'2025-09-15', fornecedor:'Bortolaso', materiais:355, profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {of_id:'OF-2025-002', data:'2025-09-16', fornecedor:'Bortolaso', materiais:86,  profissionais:2, ajudantes:0, almoco:40, translado:25},
     ];
-    persist();
-  } else {
-    renderAll();
+    persistLanc();
   }
+
+  // Inicialização
+  fillOFSelects();
+  renderOFs();
+  renderAll();
 </script>
 </body>
 </html>
