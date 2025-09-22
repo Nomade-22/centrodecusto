@@ -341,3 +341,126 @@
     const ind = sum(rows, r=> r.almoco + r.translado);
     const total = mat + mo + ind;
     return {mat, mo, ind, total};
+  }
+
+  // ======= Tabela =======
+  function renderTable(rows){
+    const tb = document.querySelector('#tabela tbody');
+    tb.innerHTML = '';
+    rows.forEach((l,idx)=>{
+      const total = l.materiais + (l.profissionais*cfg.prof) + (l.ajudantes*cfg.ajud) + l.almoco + l.translado;
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${l.data||''}</td>
+        <td>${escapeHtml(l.fornecedor||'')}</td>
+        <td>${BRL.format(l.materiais||0)}</td>
+        <td>${l.profissionais||0}</td>
+        <td>${l.ajudantes||0}</td>
+        <td>${BRL.format(l.almoco||0)}</td>
+        <td>${BRL.format(l.translado||0)}</td>
+        <td><b>${BRL.format(total)}</b></td>
+        <td><button class="btn ghost" data-del="${idx}">Excluir</button></td>
+      `;
+      tb.appendChild(tr);
+    });
+    tb.querySelectorAll('button[data-del]').forEach(b=>{
+      b.onclick = ()=>{
+        const idx = +b.dataset.del;
+        if(confirm('Remover este lançamento?')){
+          lanc.splice(idx,1); persist();
+        }
+      };
+    });
+  }
+
+  function escapeHtml(s){ return s.replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+  // ======= KPIs =======
+  function renderKpis(rows){
+    const t = totals(rows);
+    document.getElementById('kpiMateriais').textContent = BRL.format(t.mat);
+    document.getElementById('kpiMO').textContent = BRL.format(t.mo);
+    document.getElementById('kpiIndiretos').textContent = BRL.format(t.ind);
+    document.getElementById('kpiTotal').textContent = BRL.format(t.total);
+    document.getElementById('kpiRegistros').textContent = rows.length ? `${rows.length} registros` : 'Sem registros';
+    const qtdMO = sum(rows, r=>r.profissionais + r.ajudantes);
+    document.getElementById('kpiHh').textContent = `${qtdMO} pessoas·dia`;
+    const pct = t.total ? (t.ind/t.total)*100 : 0;
+    document.getElementById('kpiIndPct').textContent = `Indiretos ${pct.toFixed(1)}%`;
+    const itensMat = rows.filter(r=>r.materiais>0).length;
+    document.getElementById('kpiItensMat').textContent = itensMat ? `${itensMat} lanç. com materiais` : '—';
+  }
+
+  // ======= Gráficos (com destruição prévia) =======
+  let chEvo=null, chCat=null, chForn=null;
+
+  function renderCharts(rows){
+    const byDate = aggregate(rows, r=>r.data||'—', r=> r.materiais + (r.profissionais*cfg.prof) + (r.ajudantes*cfg.ajud) + r.almoco + r.translado );
+    const cat = {
+      'Materiais': sum(rows, r=>r.materiais),
+      'Mão de Obra': sum(rows, r=> r.profissionais*cfg.prof + r.ajudantes*cfg.ajud ),
+      'Indiretos': sum(rows, r=> r.almoco + r.translado),
+    };
+    const byForn = aggregate(rows, r=> (r.fornecedor||'—'), r=> r.materiais + (r.profissionais*cfg.prof) + (r.ajudantes*cfg.ajud) + r.almoco + r.translado);
+
+    const evoLabels = Object.keys(byDate);
+    const evoData = Object.values(byDate);
+
+    // Destroy anteriores
+    [chEvo,chCat,chForn].forEach(ch=> ch && ch.destroy());
+
+    const ctx1 = document.getElementById('graficoEvolucao').getContext('2d');
+    chEvo = new Chart(ctx1, {
+      type:'line',
+      data:{ labels:evoLabels, datasets:[{ label:'Total por dia', data:evoData, tension:.25 }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } }
+    });
+
+    const ctx2 = document.getElementById('graficoCategorias').getContext('2d');
+    chCat = new Chart(ctx2, {
+      type:'doughnut',
+      data:{ labels:Object.keys(cat), datasets:[{ data:Object.values(cat) }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } }
+    });
+
+    const ctx3 = document.getElementById('graficoFornecedores').getContext('2d');
+    chForn = new Chart(ctx3, {
+      type:'bar',
+      data:{ labels:Object.keys(byForn), datasets:[{ label:'Total por fornecedor', data:Object.values(byForn) }]},
+      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } }
+    });
+  }
+
+  function aggregate(rows, keyFn, valFn){
+    const map = {};
+    rows.forEach(r=>{
+      const k = keyFn(r);
+      map[k] = (map[k]||0) + (+valFn(r)||0);
+    });
+    // ordenar por chave (datas sobem naturalmente por string ISO)
+    return Object.fromEntries(Object.entries(map).sort((a,b)=> a[0].localeCompare(b[0])));
+  }
+
+  // ======= Render all =======
+  function renderAll(){
+    const rows = filtrarDados();
+    renderKpis(rows);
+    renderCharts(rows);
+    renderTable(rows);
+  }
+
+  // ======= Seed opcional (remova se quiser começar vazio) =======
+  if(lanc.length===0){
+    lanc = [
+      {data:'2025-09-09', fornecedor:'Bortolaso', materiais:344, profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {data:'2025-09-10', fornecedor:'—', materiais:0, profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {data:'2025-09-15', fornecedor:'Bortolaso', materiais:355, profissionais:2, ajudantes:0, almoco:40, translado:25},
+      {data:'2025-09-16', fornecedor:'Bortolaso', materiais:86,  profissionais:2, ajudantes:0, almoco:40, translado:25},
+    ];
+    persist();
+  } else {
+    renderAll();
+  }
+</script>
+</body>
+</html>
