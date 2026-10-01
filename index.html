@@ -1,11 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Orçamento — Multprest Serviços Industriais</title>
-  <meta name="theme-color" content="#0b1730" />
-  <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Orçamento — Multprest Serviços Industriais</title>
+<meta content="#0b1730" name="theme-color"/>
+<style>
 :root{
   --bg1:#071426;--bg2:#10233e;--panel:#11243d;--panel2:#172d48;--panel3:#0c1b30;
   --line:#2f4662;--text:#f6f8fb;--muted:#aebcd0;--tab:#f3f4f6;--tabText:#111827;
@@ -19,181 +20,211 @@ button,input,select,textarea{font:inherit}.app-shell{max-width:1500px;margin:0 a
 @media(max-width:820px){.meta-grid{grid-template-columns:1fr}}
 
 </style>
-</head>
+<style id="pdf-layout-override">
+:root{--pdf-bg:#0f1b30;--pdf-bg2:#14233a;--pdf-card:rgba(30,41,59,.48);--pdf-line:#334155;--pdf-muted:#94a3b8;--pdf-text:#f8fafc}
+html,body{min-height:100%;background:#0f1b30!important}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;color:var(--pdf-text)!important;background:linear-gradient(135deg,#0f172a 0%,#1e293b 48%,#0f172a 100%)!important}
+.app-shell{max-width:896px!important;margin:0 auto!important;padding:16px 12px 44px!important}
+.app-header{position:relative!important;display:grid!important;grid-template-columns:1fr auto 1fr!important;align-items:center!important;margin:0 0 12px!important;min-height:64px!important}
+.head-spacer{min-width:0}.head-right{display:flex;justify-content:flex-end}.original-brand{display:flex!important;align-items:center!important;gap:8px!important}.original-brand .brand-logo{height:54px;width:auto;object-fit:contain}.original-brand h1{font-size:26px!important;line-height:1!important;margin:0!important;color:white!important;font-weight:800!important}.logout-visual{border:0;background:transparent;color:#94a3b8;font-size:12px;display:flex;align-items:center;gap:5px;cursor:pointer;padding:8px}.logout-visual:hover{color:white}.hidden-actions{display:none!important}
+.tabs{display:flex!important;justify-content:center!important;align-items:center!important;flex-wrap:wrap!important;gap:7px!important;margin:0 0 16px!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important}
+.tab-btn{display:inline-flex!important;align-items:center!important;gap:4px!important;border:1px solid #475569!important;border-radius:8px!important;background:rgba(51,65,85,.58)!important;color:#cbd5e1!important;padding:7px 10px!important;font-size:11px!important;font-weight:650!important;box-shadow:none!important;outline:none!important;line-height:1.1!important}
+.tab-btn:hover{background:#334155!important;color:white!important}.tab-btn.active{background:#059669!important;border-color:#059669!important;color:white!important}.tab-btn[data-tab="negociacao"].active{background:#d97706!important;border-color:#d97706!important}.tab-btn[data-tab="custoshh"].active,.tab-btn[data-tab="calculadorahh"].active{background:#0f766e!important;border-color:#0f766e!important}.tab-btn[data-tab="tributos"].active{background:#7c3aed!important;border-color:#7c3aed!important}.tab-icon{font-size:11px;opacity:.9}
+.main-content{display:block!important}.tab-panel{display:none!important;padding:0!important;background:transparent!important;border:0!important;border-radius:0!important;box-shadow:none!important}.tab-panel.active{display:block!important}.quote-meta-in-summary{margin:0 0 14px!important}
+.card,.inner-card,.quote-meta{background:rgba(30,41,59,.48)!important;border:1px solid #334155!important;border-radius:9px!important;box-shadow:none!important;backdrop-filter:blur(3px)}.inner-card{padding:12px!important}.compact-card{padding:12px!important}.section-heading{margin-bottom:12px!important}.section-heading h2{font-size:18px!important}.section-heading p{font-size:11px!important;color:#94a3b8!important}.btn{border-radius:7px!important;padding:7px 10px!important;font-size:11px!important;background:#334155!important;border:1px solid #475569!important}.btn-primary{background:#059669!important;border-color:#059669!important}.btn-danger{background:#7f1d1d!important}
+input,select,textarea{background:rgba(51,65,85,.5)!important;border:1px solid #475569!important;color:white!important;border-radius:7px!important;padding:8px 9px!important;font-size:12px!important}label{font-size:11px!important;color:#94a3b8!important}.table-wrap{border:1px solid #334155!important;border-radius:8px!important}table{min-width:760px!important}th{background:rgba(15,23,42,.75)!important;color:#cbd5e1!important;font-size:10px!important}td{font-size:11px!important;border-bottom-color:#334155!important}.totals-strip{font-size:11px!important}.kpi-grid{gap:7px!important}.kpi{padding:10px!important;border-radius:8px!important;background:rgba(51,65,85,.35)!important;border:1px solid #334155!important}.kpi strong{font-size:16px!important}.kpi span{font-size:9px!important}.two-col,.three-col{gap:10px!important}.notice{font-size:11px!important;border-radius:7px!important}
+/* Nota Reversa: reproduz o desenho do PDF/original */
+#tab-nota{max-width:100%}.nr-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-bottom:14px}.nr-kpi{min-width:0;padding:11px 6px 10px;border-radius:8px;border:1px solid;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2px}.nr-kpi .nr-icon{font-size:11px;margin-bottom:1px}.nr-kpi span:not(.nr-icon){font-size:9px;opacity:.82}.nr-kpi strong{font-size:12px;color:white;white-space:nowrap}.nr-kpi small{font-size:8px;opacity:.72}.nr-blue{background:rgba(59,130,246,.10);border-color:rgba(59,130,246,.18);color:#60a5fa}.nr-red{background:rgba(239,68,68,.10);border-color:rgba(239,68,68,.17);color:#f87171}.nr-orange{background:rgba(249,115,22,.10);border-color:rgba(249,115,22,.17);color:#fb923c}.nr-amber{background:rgba(245,158,11,.10);border-color:rgba(245,158,11,.17);color:#fbbf24}.nr-emerald{background:rgba(16,185,129,.10);border-color:rgba(16,185,129,.17);color:#34d399}.nr-green{background:rgba(34,197,94,.10);border-color:rgba(34,197,94,.17);color:#4ade80}
+.original-card{background:rgba(30,41,59,.48);border:1px solid #334155;border-radius:9px;padding:12px;margin-bottom:13px;backdrop-filter:blur(3px)}.original-card-title{display:flex;align-items:center;gap:7px;color:#f8fafc;font-size:11px;font-weight:700;margin-bottom:11px}.title-icon{font-size:10px}.title-icon.blue{color:#60a5fa}.title-icon.purple{color:#c084fc}.title-icon.orange{color:#fb923c}.title-icon.green{color:#34d399}.nr-value-input{height:38px!important;text-align:center!important;font-weight:700!important;font-size:12px!important;background:rgba(51,65,85,.55)!important}.pull-total-btn{width:100%;margin-top:8px;height:33px;border:1px solid rgba(16,185,129,.28);background:rgba(16,185,129,.10);color:#34d399;border-radius:7px;font-size:10px;font-weight:650;cursor:pointer}.pull-total-btn:hover{background:rgba(16,185,129,.16)}
+.original-tax-row{min-height:36px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 8px;margin-bottom:6px;border-radius:6px;background:rgba(51,65,85,.28)}.tax-row-main{display:flex;align-items:center;gap:7px;color:#f8fafc;font-size:10px;min-width:0}.toggle-dot{width:25px;height:13px;border-radius:999px;background:#64748b;position:relative;flex:0 0 auto}.toggle-dot:after{content:"";position:absolute;top:2px;left:2px;width:9px;height:9px;border-radius:50%;background:#f8fafc}.toggle-dot.on{background:#7c3aed}.toggle-dot.on:after{left:14px}.percent-pill{font-size:8px;color:#cbd5e1;background:#475569;border-radius:999px;padding:2px 5px}.mini-segment{display:flex!important;gap:4px!important;grid-template-columns:none!important}.mini-segment button{padding:5px 7px!important;border-radius:6px!important;font-size:9px!important;background:#334155!important;border:1px solid #475569!important;color:#cbd5e1!important}.mini-segment button.active{background:#7c3aed!important;border-color:#8b5cf6!important;color:white!important}.tax-select{width:auto!important;min-width:128px!important;height:27px!important;padding:4px 7px!important;font-size:9px!important}.base-row{min-height:32px}.sub-label{color:#94a3b8}.base-input-wrap{display:flex;align-items:center;gap:4px;color:#94a3b8;font-size:9px}.base-input-wrap input{width:75px!important;height:27px!important;padding:4px 6px!important}.row-value{font-size:9px;font-weight:600}.red-text{color:#f87171}.checkbox-toggle input{display:none}.toggle-shell{width:25px;height:13px;border-radius:999px;background:#64748b;position:relative}.toggle-shell:after{content:"";position:absolute;top:2px;left:2px;width:9px;height:9px;border-radius:50%;background:#fff;transition:.12s}.checkbox-toggle input:checked + .toggle-shell{background:#7c3aed}.checkbox-toggle input:checked + .toggle-shell:after{left:14px}.tax-rule-summary{font-size:9px;color:#94a3b8;line-height:1.45;padding:7px 8px;border-top:1px solid rgba(71,85,105,.5);margin-top:6px}.cost-list{display:grid;gap:6px}.cost-line{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 8px;border-radius:6px;background:rgba(51,65,85,.28);font-size:10px}.cost-line .left{display:flex;align-items:center;gap:7px;color:#f8fafc}.cost-line .switch-on{width:25px;height:13px;border-radius:999px;background:#7c3aed;position:relative}.cost-line .switch-on:after{content:"";position:absolute;top:2px;left:14px;width:9px;height:9px;border-radius:50%;background:white}.cost-line .cost-value{color:#fb923c}.cost-total{display:flex;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid #475569;font-size:10px}.cost-total strong{color:#fb923c}.original-breakdown .break-row{padding:6px 4px!important;font-size:9px!important;border-bottom:1px solid rgba(51,65,85,.62)!important}.original-breakdown .break-row span:first-child{color:#94a3b8!important}.original-breakdown .break-row strong{font-size:9px}.original-breakdown .break-row.total{font-size:11px!important}.profit-positive{color:#34d399!important}.profit-negative{color:#f87171!important}
+footer{display:none!important}.toast{font-size:11px!important}
+@media(max-width:720px){.app-shell{padding:10px 8px 34px!important}.app-header{grid-template-columns:1fr auto 1fr!important}.original-brand .brand-logo{height:44px}.original-brand h1{font-size:21px!important}.logout-visual span{display:none}.tabs{gap:5px!important}.tab-btn{padding:6px 8px!important;font-size:9px!important}.nr-kpis{grid-template-columns:repeat(3,1fr)}.nr-kpi strong{font-size:11px}.three-col,.two-col{grid-template-columns:1fr!important}.quote-meta-in-summary .meta-grid{grid-template-columns:1fr!important}.original-tax-row{align-items:flex-start}.mini-segment{flex-wrap:wrap}.tax-select{max-width:145px}.table-wrap{overflow-x:auto}}
+</style></head>
 <body>
-  <div class="app-shell">
-    <header class="app-header">
-      <div class="brand">
-        <div class="brand-mark">M</div>
-        <div>
-          <h1>Orçamento</h1>
-          <p>Multprest Serviços Industriais</p>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button class="btn btn-soft" id="btnNovo">Novo</button>
-        <button class="btn btn-soft" id="btnSalvar">Salvar</button>
-        <button class="btn btn-soft" id="btnExportar">Exportar</button>
-        <label class="btn btn-soft file-label">Importar<input id="importFile" type="file" accept="application/json" hidden></label>
-      </div>
-    </header>
+<div class="app-shell">
+<header class="app-header">
+<div class="head-spacer"></div>
+<div class="brand original-brand">
+<img alt="Multprest" class="brand-logo" src="https://dtvoeevhaseb5.cloudfront.net/uploads/mocha-import/73ee0db2-d333-4cc6-9729-ca6149cffff7/28f8a3d4-08bb-4ec0-b9aa-e3163a94641b.png"/>
+<h1>Orçamento</h1>
+</div>
+<div class="head-spacer head-right"><button class="logout-visual" id="logoutVisual" type="button">↪ <span>Sair</span></button></div>
+<div aria-hidden="true" class="hidden-actions">
+<button id="btnNovo"></button><button id="btnSalvar"></button><button id="btnExportar"></button>
+<label><input accept="application/json" id="importFile" type="file"/></label>
+</div>
+</header>
+<nav aria-label="Abas do orçamento" class="tabs" id="mainTabs">
+<button class="tab-btn active" data-tab="mao"><span class="tab-icon">⛑</span> Mão de Obra</button>
+<button class="tab-btn" data-tab="material"><span class="tab-icon">▦</span> Material</button>
+<button class="tab-btn" data-tab="despesas"><span class="tab-icon">◆</span> Estadia e Alimentação</button>
+<button class="tab-btn" data-tab="viagens"><span class="tab-icon">➤</span> Horas Viajadas</button>
+<button class="tab-btn" data-tab="nota"><span class="tab-icon">▣</span> Nota Reversa</button>
+<button class="tab-btn" data-tab="negociacao"><span class="tab-icon">◫</span> Negociação</button>
+<button class="tab-btn" data-tab="resumo"><span class="tab-icon">▧</span> Resumo Final</button>
+<button class="tab-btn" data-tab="historico"><span class="tab-icon">▤</span> Histórico</button>
+<button class="tab-btn" data-tab="precos"><span class="tab-icon">⚙</span> Tabela de Preços</button>
+<button class="tab-btn" data-tab="custoshh"><span class="tab-icon">$</span> Custos HH</button>
+<button class="tab-btn" data-tab="calculadorahh"><span class="tab-icon">∑</span> Calculadora HH</button>
+<button class="tab-btn" data-tab="tributos"><span class="tab-icon">%</span> Tributos</button>
+</nav>
+<main class="main-content">
 
-    <nav class="tabs" id="mainTabs" aria-label="Abas do orçamento">
-      <button class="tab-btn active" data-tab="mao">Mão de Obra</button>
-      <button class="tab-btn" data-tab="material">Material</button>
-      <button class="tab-btn" data-tab="despesas">Estadia e Alimentação</button>
-      <button class="tab-btn" data-tab="viagens">Horas Viajadas</button>
-      <button class="tab-btn" data-tab="nota">Nota Reversa</button>
-      <button class="tab-btn" data-tab="negociacao">Negociação</button>
-      <button class="tab-btn" data-tab="resumo">Resumo Final</button>
-      <button class="tab-btn" data-tab="historico">Histórico</button>
-      <button class="tab-btn" data-tab="precos">Tabela de Preços</button>
-      <button class="tab-btn" data-tab="custoshh">Custos HH</button>
-      <button class="tab-btn" data-tab="calculadorahh">Calculadora HH</button>
-      <button class="tab-btn" data-tab="tributos">Tributos</button>
-    </nav>
-
-    <main class="main-content">
-      <section class="quote-meta card compact-card">
-        <div class="form-grid meta-grid">
-          <label><span>Nº do orçamento</span><input id="quoteNumber" type="text" /></label>
-          <label class="wide"><span>Descrição / obra</span><input id="quoteDescription" type="text" placeholder="Descrição do serviço" /></label>
-          <label><span>Cliente</span><select id="quoteClient"></select></label>
-          <label><span>Competência tributária</span><select id="quoteCompetence"></select></label>
-          <label><span>Lucro serviço</span><div class="inline-input"><input id="serviceProfitPct" type="number" step="0.01"><select id="serviceProfitMode"><option value="markup">markup custo</option><option value="margin">margem venda</option></select></div></label>
-          <label><span>Critério lucro material</span><select id="materialProfitMode"><option value="margin">margem sobre venda</option><option value="markup">markup sobre custo</option></select></label>
-          <label><span>Reserva para negociação (%)</span><input id="negotiationReservePct" type="number" step="0.01" min="0" max="80"></label>
-        </div>
-      </section>
-
-      <section class="tab-panel active" id="tab-mao">
-        <div class="section-heading">
-          <div><h2>Mão de Obra</h2><p>Preço comercial calculado a partir do custo HH real, tributação da operação e prazo do cliente.</p></div>
-          <button class="btn btn-primary" id="addLabor">+ Adicionar</button>
-        </div>
-        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Cargo</th><th>Tipo hora</th><th>h/dia</th><th>Pessoas</th><th>Dias</th><th>Custo HH</th><th>Venda HH</th><th>Total</th><th></th></tr></thead><tbody id="laborBody"></tbody></table></div>
-        <div class="totals-strip"><span>Custo <strong id="laborCostTotal">R$ 0,00</strong></span><span>Venda <strong id="laborSaleTotal">R$ 0,00</strong></span></div>
-      </section>
-
-      <section class="tab-panel" id="tab-material">
-        <div class="section-heading"><div><h2>Material</h2><p>Cada item informa como será faturado: embutido no serviço, CFOP 5102 ou CFOP 5405/ST.</p></div><button class="btn btn-primary" id="addMaterial">+ Adicionar</button></div>
-        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Custo</th><th>Faturamento</th><th>Margem venda</th><th>Imposto</th><th>Venda</th><th></th></tr></thead><tbody id="materialBody"></tbody></table></div>
-        <div class="totals-strip"><span>Custo <strong id="materialCostTotal">R$ 0,00</strong></span><span>Venda <strong id="materialSaleTotal">R$ 0,00</strong></span></div>
-      </section>
-
-      <section class="tab-panel" id="tab-despesas">
-        <div class="section-heading"><div><h2>Estadia e Alimentação</h2><p>Custos indiretos seguem a tributação do serviço escolhido; não usam alíquota de mercadoria.</p></div><button class="btn btn-primary" id="addExpense">+ Adicionar</button></div>
-        <div class="table-wrap"><table><thead><tr><th>Tipo</th><th>Descrição</th><th>Valor unit.</th><th>Qtd./pessoas</th><th>Dias</th><th>Custo</th><th>Venda</th><th></th></tr></thead><tbody id="expenseBody"></tbody></table></div>
-        <div class="totals-strip"><span>Custo <strong id="expenseCostTotal">R$ 0,00</strong></span><span>Venda <strong id="expenseSaleTotal">R$ 0,00</strong></span></div>
-      </section>
-
-      <section class="tab-panel" id="tab-viagens">
-        <div class="section-heading"><div><h2>Horas Viajadas</h2><p>Horas de deslocamento vinculadas ao custo e preço HH do cargo.</p></div><button class="btn btn-primary" id="addTravel">+ Adicionar</button></div>
-        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Cargo</th><th>Horas</th><th>Pessoas</th><th>Viagens/dias</th><th>Custo</th><th>Venda</th><th></th></tr></thead><tbody id="travelBody"></tbody></table></div>
-        <div class="totals-strip"><span>Custo <strong id="travelCostTotal">R$ 0,00</strong></span><span>Venda <strong id="travelSaleTotal">R$ 0,00</strong></span></div>
-      </section>
-
-      <section class="tab-panel" id="tab-nota">
-        <div class="section-heading"><div><h2>Nota Reversa</h2><p>Separa tributo definitivo, retenção de caixa, custo financeiro e lucro econômico.</p></div><button class="btn btn-primary" id="pullQuoteTotal">Puxar Total do Orçamento</button></div>
-        <div class="kpi-grid five">
-          <div class="kpi"><span>Valor Bruto</span><strong id="nrGross">R$ 0,00</strong></div>
-          <div class="kpi"><span>Tributos definitivos</span><strong id="nrTaxes">R$ 0,00</strong></div>
-          <div class="kpi"><span>Retenções de caixa</span><strong id="nrRetentions">R$ 0,00</strong></div>
-          <div class="kpi"><span>Custos</span><strong id="nrCosts">R$ 0,00</strong></div>
-          <div class="kpi accent"><span>Lucro econômico</span><strong id="nrProfit">R$ 0,00</strong><small id="nrProfitPct">0,0%</small></div>
-        </div>
-        <div class="two-col">
-          <div class="card inner-card">
-            <h3>Regras da nota</h3>
-            <label><span>Valor bruto manual</span><input id="nrManualGross" type="number" step="0.01" min="0" placeholder="0,00" /></label>
-            <div class="seg-label">Anexo do serviço</div><div class="segmented" id="annexSeg"><button data-value="III">Anexo III</button><button data-value="IV">Anexo IV</button></div>
-            <div class="seg-label">ISS</div><div class="segmented" id="issSeg"><button data-value="no">Sem retenção</button><button data-value="yes">Com retenção</button></div>
-            <label><span>Retenção previdenciária</span><select id="previdRetention"><option value="none">Não se aplica</option><option value="11">11%</option><option value="3.5">3,5% — CPRB</option></select></label>
-            <label><span>Base da retenção previdenciária (%)</span><input id="previdBase" type="number" min="0" max="100" step="0.01"></label>
-            <label class="switch-row"><input id="advanceToggle" type="checkbox"><span>Antecipar recebível</span></label>
-            <div class="rule-summary" id="taxRuleSummary"></div>
-          </div>
-          <div class="card inner-card"><h3>Memória do cálculo</h3><div id="nrBreakdown" class="breakdown"></div></div>
-        </div>
-      </section>
-
-      <section class="tab-panel" id="tab-negociacao">
-        <div class="section-heading"><div><h2>Negociação</h2><p>Simule desconto sem misturar taxa do cliente com desconto comercial.</p></div></div>
-        <div class="two-col">
-          <div class="card inner-card form-stack">
-            <label><span>Valor de referência</span><input id="negBase" type="number" step="0.01"></label>
-            <label><span>Desconto comercial (%)</span><input id="negPercent" type="number" min="0" max="99" step="0.01"></label>
-            <label><span>Margem mínima desejada sobre faturamento (%)</span><input id="minMargin" type="number" min="0" max="80" step="0.01"></label>
-          </div>
-          <div class="card inner-card"><div class="kpi-grid"><div class="kpi"><span>Após desconto</span><strong id="negAfter">R$ 0,00</strong></div><div class="kpi"><span>Lucro econômico</span><strong id="negProfit">R$ 0,00</strong></div><div class="kpi"><span>Margem</span><strong id="negMargin">0,0%</strong></div><div class="kpi"><span>Desconto máx. equilíbrio</span><strong id="negMaxBreak">0,0%</strong></div></div><div class="notice" id="negNotice"></div></div>
-        </div>
-      </section>
-
-      <section class="tab-panel" id="tab-resumo">
-        <div class="section-heading"><div><h2>Resumo Final</h2><p>Visão econômica e financeira do orçamento.</p></div></div>
-        <div class="kpi-grid five"><div class="kpi"><span>Venda total</span><strong id="sumRevenue">R$ 0,00</strong></div><div class="kpi"><span>Custo total</span><strong id="sumCost">R$ 0,00</strong></div><div class="kpi"><span>Tributos</span><strong id="sumTax">R$ 0,00</strong></div><div class="kpi"><span>Financeiro</span><strong id="sumFinance">R$ 0,00</strong></div><div class="kpi accent"><span>Lucro</span><strong id="sumProfit">R$ 0,00</strong><small id="sumMargin"></small></div></div>
-        <div class="two-col"><div class="card inner-card"><h3>Receita por natureza</h3><div id="sumRevenueBreakdown" class="breakdown"></div></div><div class="card inner-card"><h3>Memória de cálculo</h3><div id="sumMemory" class="breakdown"></div></div></div>
-      </section>
-
-      <section class="tab-panel" id="tab-historico">
-        <div class="section-heading"><div><h2>Histórico</h2><p>Cada orçamento salvo mantém uma fotografia da competência e das alíquotas usadas.</p></div></div>
-        <div class="table-wrap"><table><thead><tr><th>Nº</th><th>Descrição</th><th>Cliente</th><th>Competência</th><th>Total</th><th>Salvo em</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div>
-      </section>
-
-      <section class="tab-panel" id="tab-precos">
-        <div class="section-heading"><div><h2>Tabela de Preços</h2><p>Compare custo HH, preço mínimo calculado e preço comercial específico por cliente.</p></div></div>
-        <div class="table-wrap"><table><thead><tr><th>Cargo</th><th>Custo HH</th><th>Preço mínimo</th><th>Cliente</th><th>Preço comercial</th><th>Margem econômica</th></tr></thead><tbody id="priceBody"></tbody></table></div>
-      </section>
-
-      <section class="tab-panel" id="tab-custoshh">
-        <div class="section-heading"><div><h2>Custos HH</h2><p>Custos calculados pelo método anual, usando horas faturáveis separadas da jornada contratual.</p></div></div>
-        <div class="table-wrap"><table><thead><tr><th>Cargo</th><th>Salário</th><th>Custo anual direto</th><th>Rateio fixo/HH</th><th>Horas faturáveis/ano</th><th>Custo HH real</th></tr></thead><tbody id="hhCostBody"></tbody></table></div>
-      </section>
-
-      <section class="tab-panel" id="tab-calculadorahh">
-        <div class="section-heading"><div><h2>Calculadora HH</h2><p>Base anual para evitar dupla contagem de férias e separar jornada paga de capacidade vendável.</p></div><button class="btn btn-primary" id="saveHH">Salvar parâmetros HH</button></div>
-        <div class="hh-role-tabs" id="hhRoleTabs"></div>
-        <div class="three-col">
-          <div class="card inner-card form-stack"><h3>Remuneração</h3>
-            <label><span>Salário base</span><input id="hhSalary" type="number" step="0.01"></label>
-            <label><span>Salário mínimo</span><input id="hhMinSalary" type="number" step="0.01"></label>
-            <label><span>Insalubridade (%)</span><input id="hhInsal" type="number" step="0.01"></label>
-            <label><span>Prêmio assiduidade</span><input id="hhPrize" type="number" step="0.01"></label>
-            <label class="switch-row"><input id="hhPrizeInc" type="checkbox"><span>Prêmio integra encargos</span></label>
-            <label><span>Jornada contratual mensal</span><input id="hhContractHours" type="number" step="0.01"></label>
-            <label><span>Horas faturáveis mensais</span><input id="hhBillableHours" type="number" step="0.01"></label>
-            <label><span>Funcionários para rateio dos fixos</span><input id="hhEmployeeCount" type="number" min="1" step="1"></label>
-          </div>
-          <div class="card inner-card form-stack"><h3>Custos por funcionário</h3>
-            <label><span>EPI / uniforme</span><div class="inline-input"><input id="hhEpi" type="number" step="0.01"><select id="hhEpiPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
-            <label><span>Exames</span><div class="inline-input"><input id="hhExam" type="number" step="0.01"><select id="hhExamPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
-            <label><span>Ferramentas</span><div class="inline-input"><input id="hhTools" type="number" step="0.01"><select id="hhToolsPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
-            <label><span>Plano de saúde mensal</span><input id="hhHealth" type="number" step="0.01"></label>
-            <label><span>Alimentação mensal</span><input id="hhMeal" type="number" step="0.01"></label>
-            <label><span>Transporte mensal</span><input id="hhTransport" type="number" step="0.01"></label>
-            <label><span>Treinamentos anuais</span><input id="hhTraining" type="number" step="0.01"></label>
-            <label><span>Provisão multa FGTS (%)</span><input id="hhFgtsFine" type="number" step="0.01"></label>
-          </div>
-          <div class="card inner-card"><h3>Resultado HH</h3><div id="hhResult" class="breakdown"></div><div class="hero-number"><span>Custo HH faturável</span><strong id="hhHero">R$ 0,00</strong></div><div class="notice" id="hhNotice">Custos periódicos continuam editáveis. Revise especialmente a periodicidade de exames, EPI e ferramentas conforme a realidade da empresa.</div></div>
-        </div>
-        <div class="card inner-card top-gap"><h3>Custos fixos mensais da empresa</h3><div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Valor mensal</th><th></th></tr></thead><tbody id="fixedCostBody"></tbody></table></div><div class="toolbar"><button class="btn btn-soft" id="addFixedCost">+ Custo fixo</button><span class="toolbar-summary">Total mensal <strong id="fixedCostTotal">R$ 0,00</strong></span></div></div>
-      </section>
-
-      <section class="tab-panel" id="tab-tributos">
-        <div class="section-heading"><div><h2>Configuração Tributária</h2><p>Parâmetros mensais editáveis. Orçamentos salvos guardam a fotografia das alíquotas da competência.</p></div><button class="btn btn-primary" id="saveTaxProfile">Salvar competência</button></div>
-        <div class="three-col">
-          <div class="card inner-card form-stack"><h3>Competência</h3><label><span>Mês</span><input id="taxCompetence" type="month"></label><label><span>Taxa financeira por dia (%)</span><input id="taxDailyFinance" type="number" step="0.001"></label><div class="notice">A taxa é simples: percentual ao dia × número de dias. Não há capitalização composta.</div></div>
-          <div class="card inner-card form-stack"><h3>Serviços</h3><label><span>Anexo III — alíquota efetiva (%)</span><input id="taxA3" type="number" step="0.01"></label><label><span>ISS III sem retenção — destaque (%)</span><input id="taxA3IssNo" type="number" step="0.01"></label><label><span>ISS III com retenção (%)</span><input id="taxA3IssYes" type="number" step="0.01"></label><label><span>Anexo IV — alíquota efetiva (%)</span><input id="taxA4" type="number" step="0.01"></label><label><span>ISS IV sem retenção — destaque (%)</span><input id="taxA4IssNo" type="number" step="0.01"></label><label><span>ISS IV com retenção (%)</span><input id="taxA4IssYes" type="number" step="0.01"></label></div>
-          <div class="card inner-card form-stack"><h3>Mercadorias e CPP</h3><label><span>CFOP 5102 — DAS (%)</span><input id="tax5102" type="number" step="0.01"></label><label><span>Crédito 5102 informado (%)</span><input id="tax5102Credit" type="number" step="0.01"></label><label><span>CFOP 5405/ST — DAS (%)</span><input id="tax5405" type="number" step="0.01"></label><label><span>CPP Anexo IV (%)</span><input id="taxCpp" type="number" step="0.01"></label><label><span>RAT (%)</span><input id="taxRat" type="number" step="0.01"></label><label><span>FAP</span><input id="taxFap" type="number" step="0.0001"></label><label class="switch-row"><input id="taxCprb" type="checkbox"><span>Empresa optante pela CPRB</span></label><label><span>CPP efetiva manual se CPRB (%)</span><input id="taxCppCprb" type="number" step="0.01"></label></div>
-        </div>
-        <div class="card inner-card top-gap"><h3>Clientes e regras comerciais</h3><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Prazo (dias)</th><th>Taxa/repasse cliente (%)</th><th>Antecipar padrão</th><th></th></tr></thead><tbody id="clientRulesBody"></tbody></table></div><div class="toolbar"><button class="btn btn-soft" id="addClient">+ Cliente</button></div></div>
-        <div class="notice warning top-gap">Os valores de outubro/2026 foram preenchidos conforme a tabela informada pela contabilidade. CPP/RAT/FAP e eventual CPRB devem ser conferidos com a contabilidade/eSocial; por isso permanecem editáveis.</div>
-      </section>
-    </main>
-    <footer>Multprest Serviços Industriais · Formação de preço e memória de cálculo</footer>
-  </div>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script>
+<section class="tab-panel active" id="tab-mao">
+<div class="section-heading">
+<div><h2>Mão de Obra</h2><p>Preço comercial calculado a partir do custo HH real, tributação da operação e prazo do cliente.</p></div>
+<button class="btn btn-primary" id="addLabor">+ Adicionar</button>
+</div>
+<div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Cargo</th><th>Tipo hora</th><th>h/dia</th><th>Pessoas</th><th>Dias</th><th>Custo HH</th><th>Venda HH</th><th>Total</th><th></th></tr></thead><tbody id="laborBody"></tbody></table></div>
+<div class="totals-strip"><span>Custo <strong id="laborCostTotal">R$ 0,00</strong></span><span>Venda <strong id="laborSaleTotal">R$ 0,00</strong></span></div>
+</section>
+<section class="tab-panel" id="tab-material">
+<div class="section-heading"><div><h2>Material</h2><p>Cada item informa como será faturado: embutido no serviço, CFOP 5102 ou CFOP 5405/ST.</p></div><button class="btn btn-primary" id="addMaterial">+ Adicionar</button></div>
+<div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Custo</th><th>Faturamento</th><th>Margem venda</th><th>Imposto</th><th>Venda</th><th></th></tr></thead><tbody id="materialBody"></tbody></table></div>
+<div class="totals-strip"><span>Custo <strong id="materialCostTotal">R$ 0,00</strong></span><span>Venda <strong id="materialSaleTotal">R$ 0,00</strong></span></div>
+</section>
+<section class="tab-panel" id="tab-despesas">
+<div class="section-heading"><div><h2>Estadia e Alimentação</h2><p>Custos indiretos seguem a tributação do serviço escolhido; não usam alíquota de mercadoria.</p></div><button class="btn btn-primary" id="addExpense">+ Adicionar</button></div>
+<div class="table-wrap"><table><thead><tr><th>Tipo</th><th>Descrição</th><th>Valor unit.</th><th>Qtd./pessoas</th><th>Dias</th><th>Custo</th><th>Venda</th><th></th></tr></thead><tbody id="expenseBody"></tbody></table></div>
+<div class="totals-strip"><span>Custo <strong id="expenseCostTotal">R$ 0,00</strong></span><span>Venda <strong id="expenseSaleTotal">R$ 0,00</strong></span></div>
+</section>
+<section class="tab-panel" id="tab-viagens">
+<div class="section-heading"><div><h2>Horas Viajadas</h2><p>Horas de deslocamento vinculadas ao custo e preço HH do cargo.</p></div><button class="btn btn-primary" id="addTravel">+ Adicionar</button></div>
+<div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Cargo</th><th>Horas</th><th>Pessoas</th><th>Viagens/dias</th><th>Custo</th><th>Venda</th><th></th></tr></thead><tbody id="travelBody"></tbody></table></div>
+<div class="totals-strip"><span>Custo <strong id="travelCostTotal">R$ 0,00</strong></span><span>Venda <strong id="travelSaleTotal">R$ 0,00</strong></span></div>
+</section>
+<section class="tab-panel" id="tab-nota">
+<div class="nr-kpis">
+<div class="nr-kpi nr-blue"><span class="nr-icon">▣</span><span>Valor Bruto</span><strong id="nrGross">R$ 0,00</strong></div>
+<div class="nr-kpi nr-red"><span class="nr-icon">⌁</span><span>Impostos</span><strong id="nrTaxes">R$ 0,00</strong></div>
+<div class="nr-kpi nr-orange"><span class="nr-icon">●</span><span>Custos</span><strong id="nrCosts">R$ 0,00</strong></div>
+<div class="nr-kpi nr-amber"><span class="nr-icon">%</span><span>% Descontos</span><strong id="nrRetentions">0,0%</strong></div>
+<div class="nr-kpi nr-emerald"><span class="nr-icon">$</span><span>Valor Líquido</span><strong id="nrProfit">R$ 0,00</strong></div>
+<div class="nr-kpi nr-green"><span class="nr-icon">↗</span><span>Lucro</span><strong id="nrProfitPct">0,0%</strong><small id="nrProfitMirror">R$ 0,00</small></div>
+</div>
+<div class="original-card nr-value-card">
+<div class="original-card-title"><span class="title-icon blue">▣</span>Valor da Nota</div>
+<input class="nr-value-input" id="nrManualGross" min="0" placeholder="R$ 0,00" step="0.01" type="number"/>
+<button class="pull-total-btn" id="pullQuoteTotal" type="button">⇩  Puxar Total do Orçamento</button>
+</div>
+<div class="original-card">
+<div class="original-card-title"><span class="title-icon purple">▦</span>Impostos e Descontos</div>
+<div class="original-tax-row">
+<div class="tax-row-main"><span class="toggle-dot on"></span><span>Regra do serviço</span></div>
+<div class="mini-segment" id="annexSeg"><button data-value="III">Anexo III</button><button data-value="IV">Anexo IV</button></div>
+</div>
+<div class="original-tax-row">
+<div class="tax-row-main"><span class="toggle-dot on"></span><span>ISS</span><span class="percent-pill" id="nrIssBadge">0%</span></div>
+<div class="mini-segment" id="issSeg"><button data-value="no">Sem retenção</button><button data-value="yes">Com retenção</button></div>
+</div>
+<div class="original-tax-row">
+<div class="tax-row-main"><span class="toggle-dot"></span><span>INSS</span><span class="percent-pill" id="nrInssBadge">0%</span></div>
+<select class="tax-select" id="previdRetention"><option value="none">Não se aplica</option><option value="11">11%</option><option value="3.5">3,5% — CPRB</option></select>
+</div>
+<div class="original-tax-row base-row">
+<div class="tax-row-main"><span class="sub-label">Base retenção previdenciária</span></div>
+<div class="base-input-wrap"><input id="previdBase" max="100" min="0" step="0.01" type="number"/><span>%</span></div>
+</div>
+<div class="original-tax-row">
+<div class="tax-row-main"><span class="toggle-dot on"></span><span>Simples Nacional</span><span class="percent-pill" id="nrSimplesBadge">0%</span></div>
+<span class="row-value red-text" id="nrSimplesValue">- R$ 0,00</span>
+</div>
+<div class="original-tax-row">
+<label class="tax-row-main checkbox-toggle"><input id="advanceToggle" type="checkbox"/><span class="toggle-shell"></span><span>Antecipação</span></label>
+<span class="row-value red-text" id="nrFinanceValue">- R$ 0,00</span>
+</div>
+<div class="tax-rule-summary" id="taxRuleSummary"></div>
+</div>
+<div class="original-card">
+<div class="original-card-title"><span class="title-icon orange">⌁</span>Deduzir Custos</div>
+<div class="cost-list" id="nrCostList"></div>
+</div>
+<div class="original-card nr-summary-card">
+<div class="original-card-title"><span class="title-icon green">$</span>Resumo do Cálculo</div>
+<div class="breakdown original-breakdown" id="nrBreakdown"></div>
+</div>
+</section>
+<section class="tab-panel" id="tab-negociacao">
+<div class="section-heading"><div><h2>Negociação</h2><p>Simule desconto sem misturar taxa do cliente com desconto comercial.</p></div></div>
+<div class="two-col">
+<div class="card inner-card form-stack">
+<label><span>Valor de referência</span><input id="negBase" step="0.01" type="number"/></label>
+<label><span>Desconto comercial (%)</span><input id="negPercent" max="99" min="0" step="0.01" type="number"/></label>
+<label><span>Margem mínima desejada sobre faturamento (%)</span><input id="minMargin" max="80" min="0" step="0.01" type="number"/></label>
+</div>
+<div class="card inner-card"><div class="kpi-grid"><div class="kpi"><span>Após desconto</span><strong id="negAfter">R$ 0,00</strong></div><div class="kpi"><span>Lucro econômico</span><strong id="negProfit">R$ 0,00</strong></div><div class="kpi"><span>Margem</span><strong id="negMargin">0,0%</strong></div><div class="kpi"><span>Desconto máx. equilíbrio</span><strong id="negMaxBreak">0,0%</strong></div></div><div class="notice" id="negNotice"></div></div>
+</div>
+</section>
+<section class="tab-panel" id="tab-resumo">
+<section class="quote-meta card compact-card quote-meta-in-summary">
+<div class="form-grid meta-grid">
+<label><span>Nº do orçamento</span><input id="quoteNumber" type="text"/></label>
+<label class="wide"><span>Descrição / obra</span><input id="quoteDescription" placeholder="Descrição do serviço" type="text"/></label>
+<label><span>Cliente</span><select id="quoteClient"></select></label>
+<label><span>Competência tributária</span><select id="quoteCompetence"></select></label>
+<label><span>Lucro serviço</span><div class="inline-input"><input id="serviceProfitPct" step="0.01" type="number"/><select id="serviceProfitMode"><option value="markup">markup custo</option><option value="margin">margem venda</option></select></div></label>
+<label><span>Critério lucro material</span><select id="materialProfitMode"><option value="margin">margem sobre venda</option><option value="markup">markup sobre custo</option></select></label>
+<label><span>Reserva para negociação (%)</span><input id="negotiationReservePct" max="80" min="0" step="0.01" type="number"/></label>
+</div>
+</section><div class="section-heading"><div><h2>Resumo Final</h2><p>Visão econômica e financeira do orçamento.</p></div></div>
+<div class="kpi-grid five"><div class="kpi"><span>Venda total</span><strong id="sumRevenue">R$ 0,00</strong></div><div class="kpi"><span>Custo total</span><strong id="sumCost">R$ 0,00</strong></div><div class="kpi"><span>Tributos</span><strong id="sumTax">R$ 0,00</strong></div><div class="kpi"><span>Financeiro</span><strong id="sumFinance">R$ 0,00</strong></div><div class="kpi accent"><span>Lucro</span><strong id="sumProfit">R$ 0,00</strong><small id="sumMargin"></small></div></div>
+<div class="two-col"><div class="card inner-card"><h3>Receita por natureza</h3><div class="breakdown" id="sumRevenueBreakdown"></div></div><div class="card inner-card"><h3>Memória de cálculo</h3><div class="breakdown" id="sumMemory"></div></div></div>
+</section>
+<section class="tab-panel" id="tab-historico">
+<div class="section-heading"><div><h2>Histórico</h2><p>Cada orçamento salvo mantém uma fotografia da competência e das alíquotas usadas.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>Nº</th><th>Descrição</th><th>Cliente</th><th>Competência</th><th>Total</th><th>Salvo em</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div>
+</section>
+<section class="tab-panel" id="tab-precos">
+<div class="section-heading"><div><h2>Tabela de Preços</h2><p>Compare custo HH, preço mínimo calculado e preço comercial específico por cliente.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>Cargo</th><th>Custo HH</th><th>Preço mínimo</th><th>Cliente</th><th>Preço comercial</th><th>Margem econômica</th></tr></thead><tbody id="priceBody"></tbody></table></div>
+</section>
+<section class="tab-panel" id="tab-custoshh">
+<div class="section-heading"><div><h2>Custos HH</h2><p>Custos calculados pelo método anual, usando horas faturáveis separadas da jornada contratual.</p></div></div>
+<div class="table-wrap"><table><thead><tr><th>Cargo</th><th>Salário</th><th>Custo anual direto</th><th>Rateio fixo/HH</th><th>Horas faturáveis/ano</th><th>Custo HH real</th></tr></thead><tbody id="hhCostBody"></tbody></table></div>
+</section>
+<section class="tab-panel" id="tab-calculadorahh">
+<div class="section-heading"><div><h2>Calculadora HH</h2><p>Base anual para evitar dupla contagem de férias e separar jornada paga de capacidade vendável.</p></div><button class="btn btn-primary" id="saveHH">Salvar parâmetros HH</button></div>
+<div class="hh-role-tabs" id="hhRoleTabs"></div>
+<div class="three-col">
+<div class="card inner-card form-stack"><h3>Remuneração</h3>
+<label><span>Salário base</span><input id="hhSalary" step="0.01" type="number"/></label>
+<label><span>Salário mínimo</span><input id="hhMinSalary" step="0.01" type="number"/></label>
+<label><span>Insalubridade (%)</span><input id="hhInsal" step="0.01" type="number"/></label>
+<label><span>Prêmio assiduidade</span><input id="hhPrize" step="0.01" type="number"/></label>
+<label class="switch-row"><input id="hhPrizeInc" type="checkbox"/><span>Prêmio integra encargos</span></label>
+<label><span>Jornada contratual mensal</span><input id="hhContractHours" step="0.01" type="number"/></label>
+<label><span>Horas faturáveis mensais</span><input id="hhBillableHours" step="0.01" type="number"/></label>
+<label><span>Funcionários para rateio dos fixos</span><input id="hhEmployeeCount" min="1" step="1" type="number"/></label>
+</div>
+<div class="card inner-card form-stack"><h3>Custos por funcionário</h3>
+<label><span>EPI / uniforme</span><div class="inline-input"><input id="hhEpi" step="0.01" type="number"/><select id="hhEpiPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
+<label><span>Exames</span><div class="inline-input"><input id="hhExam" step="0.01" type="number"/><select id="hhExamPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
+<label><span>Ferramentas</span><div class="inline-input"><input id="hhTools" step="0.01" type="number"/><select id="hhToolsPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
+<label><span>Plano de saúde mensal</span><input id="hhHealth" step="0.01" type="number"/></label>
+<label><span>Alimentação mensal</span><input id="hhMeal" step="0.01" type="number"/></label>
+<label><span>Transporte mensal</span><input id="hhTransport" step="0.01" type="number"/></label>
+<label><span>Treinamentos anuais</span><input id="hhTraining" step="0.01" type="number"/></label>
+<label><span>Provisão multa FGTS (%)</span><input id="hhFgtsFine" step="0.01" type="number"/></label>
+</div>
+<div class="card inner-card"><h3>Resultado HH</h3><div class="breakdown" id="hhResult"></div><div class="hero-number"><span>Custo HH faturável</span><strong id="hhHero">R$ 0,00</strong></div><div class="notice" id="hhNotice">Custos periódicos continuam editáveis. Revise especialmente a periodicidade de exames, EPI e ferramentas conforme a realidade da empresa.</div></div>
+</div>
+<div class="card inner-card top-gap"><h3>Custos fixos mensais da empresa</h3><div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Valor mensal</th><th></th></tr></thead><tbody id="fixedCostBody"></tbody></table></div><div class="toolbar"><button class="btn btn-soft" id="addFixedCost">+ Custo fixo</button><span class="toolbar-summary">Total mensal <strong id="fixedCostTotal">R$ 0,00</strong></span></div></div>
+</section>
+<section class="tab-panel" id="tab-tributos">
+<div class="section-heading"><div><h2>Configuração Tributária</h2><p>Parâmetros mensais editáveis. Orçamentos salvos guardam a fotografia das alíquotas da competência.</p></div><button class="btn btn-primary" id="saveTaxProfile">Salvar competência</button></div>
+<div class="three-col">
+<div class="card inner-card form-stack"><h3>Competência</h3><label><span>Mês</span><input id="taxCompetence" type="month"/></label><label><span>Taxa financeira por dia (%)</span><input id="taxDailyFinance" step="0.001" type="number"/></label><div class="notice">A taxa é simples: percentual ao dia × número de dias. Não há capitalização composta.</div></div>
+<div class="card inner-card form-stack"><h3>Serviços</h3><label><span>Anexo III — alíquota efetiva (%)</span><input id="taxA3" step="0.01" type="number"/></label><label><span>ISS III sem retenção — destaque (%)</span><input id="taxA3IssNo" step="0.01" type="number"/></label><label><span>ISS III com retenção (%)</span><input id="taxA3IssYes" step="0.01" type="number"/></label><label><span>Anexo IV — alíquota efetiva (%)</span><input id="taxA4" step="0.01" type="number"/></label><label><span>ISS IV sem retenção — destaque (%)</span><input id="taxA4IssNo" step="0.01" type="number"/></label><label><span>ISS IV com retenção (%)</span><input id="taxA4IssYes" step="0.01" type="number"/></label></div>
+<div class="card inner-card form-stack"><h3>Mercadorias e CPP</h3><label><span>CFOP 5102 — DAS (%)</span><input id="tax5102" step="0.01" type="number"/></label><label><span>Crédito 5102 informado (%)</span><input id="tax5102Credit" step="0.01" type="number"/></label><label><span>CFOP 5405/ST — DAS (%)</span><input id="tax5405" step="0.01" type="number"/></label><label><span>CPP Anexo IV (%)</span><input id="taxCpp" step="0.01" type="number"/></label><label><span>RAT (%)</span><input id="taxRat" step="0.01" type="number"/></label><label><span>FAP</span><input id="taxFap" step="0.0001" type="number"/></label><label class="switch-row"><input id="taxCprb" type="checkbox"/><span>Empresa optante pela CPRB</span></label><label><span>CPP efetiva manual se CPRB (%)</span><input id="taxCppCprb" step="0.01" type="number"/></label></div>
+</div>
+<div class="card inner-card top-gap"><h3>Clientes e regras comerciais</h3><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Prazo (dias)</th><th>Taxa/repasse cliente (%)</th><th>Antecipar padrão</th><th></th></tr></thead><tbody id="clientRulesBody"></tbody></table></div><div class="toolbar"><button class="btn btn-soft" id="addClient">+ Cliente</button></div></div>
+<div class="notice warning top-gap">Os valores de outubro/2026 foram preenchidos conforme a tabela informada pela contabilidade. CPP/RAT/FAP e eventual CPRB devem ser conferidos com a contabilidade/eSocial; por isso permanecem editáveis.</div>
+</section>
+</main>
+<footer>Multprest Serviços Industriais · Formação de preço e memória de cálculo</footer>
+</div>
+<div aria-live="polite" class="toast" id="toast" role="status"></div>
+<script>
 (() => {
   'use strict';
 
@@ -488,10 +519,16 @@ button,input,select,textarea{font:inherit}.app-shell{max-width:1500px;margin:0 a
   function setSegment(containerId,value){ $(containerId).querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.value===String(value))); }
   function renderNota(){
     const q=state.quote; const b=quoteBreakdown(); const manual=num(q.nrManualGross); const useManual=manual>0 && !q.nrUseBreakdown; const r=economicResult(useManual?manual:b.gross, q.nrUseBreakdown);
-    $('nrManualGross').value=useManual?manual:''; $('nrGross').textContent=money(r.gross);$('nrTaxes').textContent=money(r.taxes);$('nrRetentions').textContent=money(r.issRet+r.prevRet);$('nrCosts').textContent=money(r.costs);$('nrProfit').textContent=money(r.profit);$('nrProfitPct').textContent=pct(r.margin,1);$('nrProfit').className=r.profit>=0?'profit-positive':'profit-negative';
+    $('nrManualGross').value=useManual?manual:''; $('nrGross').textContent=money(r.gross);$('nrTaxes').textContent=money(r.taxes);const dedPct=r.gross>0?((r.gross-r.profit)/r.gross*100):0;$('nrRetentions').textContent=pct(dedPct,1);$('nrCosts').textContent=money(r.costs);$('nrProfit').textContent=money(r.profit);$('nrProfitPct').textContent=pct(r.margin,1);$('nrProfitMirror').textContent=money(r.profit);$('nrProfit').className=r.profit>=0?'profit-positive':'profit-negative';$('nrProfitPct').className=r.profit>=0?'profit-positive':'profit-negative';
     setSegment('annexSeg',q.annex);setSegment('issSeg',q.issRetained?'yes':'no');$('previdRetention').value=q.previdRetention;$('previdBase').value=q.previdBasePct;$('advanceToggle').checked=!!q.advance;
     const t=r.taxMeta,p=getTaxProfile(),c=getClient();
     $('taxRuleSummary').innerHTML=`<strong>Anexo ${q.annex}</strong><br>Simples efetivo: ${pct(t.total)} · ISS ${q.issRetained?'retido':'destaque'}: ${pct(q.issRetained?t.issYes:t.issNo)}${q.issRetained?` · DAS restante: ${pct(t.dasPayable)}`:''}<br>Prazo ${c.days} dias · Financeiro simples ${pct(p.dailyFinance*c.days)} · Taxa/repasse cliente ${pct(c.clientFee)}<br>Retenção previdenciária: ${q.previdRetention==='none'?'não se aplica':pct(q.previdRetention)} sobre ${pct(q.previdBasePct)} da base do serviço.`;
+    $('nrIssBadge').textContent=pct(q.issRetained?t.issYes:t.issNo);$('nrInssBadge').textContent=q.previdRetention==='none'?'0%':pct(q.previdRetention);$('nrSimplesBadge').textContent=pct(t.total);$('nrSimplesValue').textContent=`- ${money(r.serviceTax)}`;$('nrFinanceValue').textContent=`- ${money(r.finance)}`;
+    const lt=laborTotals(),mt=materialTotals(),et=expenseTotals(),tt=travelTotals();
+    const expByType={};state.quote.expenses.forEach(x=>{const v=num(x.unit)*num(x.qty)*num(x.days);expByType[x.type]=(expByType[x.type]||0)+v});
+    const costRows=[['Mão de Obra',lt.cost],['Material',mt.cost],['Horas Viajadas',tt.cost],['Transporte',expByType.transporte||0],['Estadia',expByType.estadia||0],['Almoço',expByType.almoco||0],['Janta',expByType.janta||0],['Café',expByType.cafe||0]].filter(x=>x[1]>0);
+    $('nrCostList').innerHTML=costRows.map(([n,v])=>`<div class="cost-line"><div class="left"><span class="switch-on"></span><span>${n}</span></div><span class="cost-value">- ${money(v)}</span></div>`).join('')+`<div class="cost-total"><span>Total Custos</span><strong>- ${money(r.costs)}</strong></div>`;
+
     const rows=[
       ['Receita serviço',money(r.serviceGross)],['Receita CFOP 5102',money(r.g5102)],['Receita CFOP 5405/ST',money(r.g5405)],
       [`Simples serviço — total efetivo ${pct(t.total)}`,`- ${money(r.serviceTax)}`],
