@@ -1,625 +1,592 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Dashboard — Adequações Civis (v1.1 OF)</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3"></script>
+  <title>Orçamento — Multprest Serviços Industriais</title>
+  <meta name="theme-color" content="#0b1730" />
   <style>
-    :root{
-      --bg:#0f1115; --panel:#151922; --panel-2:#1b2130; --muted:#9aa4b2; --text:#e7ecf3;
-      --primary:#4f8cff; --primary-2:#6aa1ff; --ok:#00c853; --warn:#ffb300; --danger:#ff5252;
-      --border:#242b3a; --ring: 0 0 0 2px rgba(79,140,255,.25);
-      --radius:16px;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0; font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--text);}
-    header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(140%) blur(6px);
-      background:linear-gradient(180deg, rgba(21,25,34,.9), rgba(21,25,34,.75));
-      border-bottom:1px solid var(--border); padding:16px 20px; display:flex; align-items:center; justify-content:space-between;}
-    .title{display:flex; gap:12px; align-items:center;}
-    .title h1{font-size:18px; margin:0; letter-spacing:.2px}
-    .tabs{display:flex; gap:8px}
-    .btn{background:var(--panel-2); color:var(--text); border:1px solid var(--border);
-      padding:10px 14px; border-radius:10px; cursor:pointer; font-weight:600; transition:.2s ease;}
-    .btn:hover{border-color:var(--primary); box-shadow:var(--ring)}
-    .btn.primary{background:var(--primary); border-color:transparent; color:#0a0f1a}
-    .btn.ghost{background:transparent}
-    main{max-width:1220px; margin:24px auto; padding:0 16px}
-    .tab{display:none} .tab.active{display:block; animation:fade .25s ease}
-    @keyframes fade{from{opacity:0; transform:translateY(4px)} to{opacity:1; transform:none}}
-    .kpis{display:grid; grid-template-columns:repeat(4,1fr); gap:14px}
-    .card{background:var(--panel); border:1px solid var(--border); border-radius:var(--radius); padding:16px; box-shadow:0 10px 30px rgba(0,0,0,.25);}
-    .kpi .label{color:var(--muted); font-size:12px; letter-spacing:.4px; text-transform:uppercase}
-    .kpi .value{font-size:26px; font-weight:700; margin-top:6px}
-    .kpi .sub{margin-top:6px; font-size:12px; color:var(--muted)}
-    .grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px}
-    .chart-wrap{min-height:340px} canvas{width:100% !important; height:300px !important}
-    .filters{display:flex; flex-wrap:wrap; gap:10px; align-items:end; margin-bottom:12px}
-    label.small{display:flex; flex-direction:column; gap:6px; font-size:12px; color:var(--muted)}
-    input, select, textarea{
-      background:var(--panel-2); color:var(--text); border:1px solid var(--border);
-      padding:10px 12px; border-radius:10px; outline:none; min-width:160px;
-    }
-    textarea{min-height:84px; resize:vertical}
-    input:focus, select:focus, textarea:focus{border-color:var(--primary); box-shadow:var(--ring)}
-    table{width:100%; border-collapse:collapse; margin-top:12px; font-size:14px}
-    th,td{border-bottom:1px solid var(--border); padding:10px; text-align:center}
-    tr:hover td{background:#121724}
-    .toolbar{display:flex; gap:8px; margin:12px 0}
-    .two-col{display:grid; grid-template-columns:360px 1fr; gap:14px}
-    .form{display:grid; gap:10px}
-    .muted{color:var(--muted)}
-    .pill{display:inline-block; padding:4px 8px; border-radius:999px; font-size:12px; border:1px solid var(--border); background:var(--panel-2)}
-    .of-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px}
-    .of-card .head{display:flex; justify-content:space-between; align-items:center}
-    .of-progress{height:10px; background:#0f1320; border:1px solid var(--border); border-radius:999px; overflow:hidden; margin-top:8px}
-    .of-bar{height:100%; background:linear-gradient(90deg, var(--primary), var(--primary-2)); width:0%}
-    .tag-warn{background:rgba(255,179,0,.1); color:#ffdd7a; border-color:rgba(255,179,0,.3)}
-    .tag-danger{background:rgba(255,82,82,.1); color:#ffb4b4; border-color:rgba(255,82,82,.3)}
-    @media (max-width:980px){
-      .kpis{grid-template-columns:1fr 1fr}
-      .grid{grid-template-columns:1fr}
-      .two-col{grid-template-columns:1fr}
-      canvas{height:260px !important}
-    }
-  </style>
+:root{
+  --bg1:#071426;--bg2:#10233e;--panel:#11243d;--panel2:#172d48;--panel3:#0c1b30;
+  --line:#2f4662;--text:#f6f8fb;--muted:#aebcd0;--tab:#f3f4f6;--tabText:#111827;
+  --blue:#2563eb;--blue2:#1d4ed8;--green:#22c55e;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;
+  --radius:14px;
+}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg1)}body{margin:0;min-height:100%;font-family:Inter,system-ui,Segoe UI,Arial,sans-serif;color:var(--text);background:radial-gradient(circle at 15% 0%,#173b67 0,transparent 30%),linear-gradient(145deg,var(--bg2),var(--bg1) 58%,#07111f)}
+button,input,select,textarea{font:inherit}.app-shell{max-width:1500px;margin:0 auto;padding:22px 22px 40px}.app-header{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:14px}.brand{display:flex;align-items:center;gap:12px}.brand-mark{width:52px;height:52px;border-radius:12px;border:2px solid #c8d5e6;display:grid;place-items:center;font-size:25px;font-weight:800;background:rgba(255,255,255,.05)}.brand h1{margin:0;font-size:28px;line-height:1}.brand p{margin:5px 0 0;color:var(--muted);font-size:12px}.header-actions{display:flex;gap:8px;flex-wrap:wrap}.btn{border:1px solid var(--line);border-radius:9px;padding:9px 13px;color:var(--text);background:var(--panel2);cursor:pointer;font-weight:700}.btn:hover{filter:brightness(1.08)}.btn-primary{background:var(--blue);border-color:var(--blue)}.btn-soft{background:rgba(255,255,255,.06)}.btn-danger{background:#5e1e27;border-color:#7f2936}.file-label{display:inline-flex;align-items:center}.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 14px;padding:9px;border-radius:12px;background:rgba(4,12,25,.38);border:1px solid rgba(255,255,255,.08)}.tab-btn{border:0;border-radius:8px;background:var(--tab);color:var(--tabText);padding:9px 12px;font-weight:700;cursor:pointer;box-shadow:0 2px 5px rgba(0,0,0,.2)}.tab-btn.active{background:#dbeafe;color:#1e3a8a;outline:2px solid #60a5fa}.main-content{display:grid;gap:14px}.card,.tab-panel{border:1px solid var(--line);background:linear-gradient(180deg,rgba(18,40,68,.96),rgba(10,25,45,.96));border-radius:var(--radius);box-shadow:0 16px 34px rgba(0,0,0,.18)}.tab-panel{display:none;padding:18px}.tab-panel.active{display:block}.compact-card{padding:12px 14px}.inner-card{padding:16px;background:linear-gradient(180deg,#122844,#0d2038)}.section-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:16px}.section-heading h2{margin:0 0 4px;font-size:22px}.section-heading p{margin:0;color:var(--muted);font-size:13px}.form-grid{display:grid;gap:10px}.meta-grid{grid-template-columns:170px minmax(260px,1fr) 200px 180px}.meta-grid .wide{min-width:0}label{display:grid;gap:5px;color:var(--muted);font-size:12px;font-weight:600}input,select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;background:#08172a;color:var(--text);padding:9px 10px;outline:none}input:focus,select:focus,textarea:focus{border-color:#60a5fa;box-shadow:0 0 0 2px rgba(96,165,250,.16)}select option{background:#08172a;color:#fff}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:11px}table{width:100%;border-collapse:collapse;min-width:820px}th,td{padding:9px 8px;border-bottom:1px solid rgba(83,111,143,.38);text-align:center;font-size:12px;vertical-align:middle}th{color:#dbe8f8;background:#0b1e35;font-size:11px;text-transform:uppercase;letter-spacing:.03em;position:sticky;top:0;z-index:1}td input,td select{min-width:90px;padding:7px 8px}td .small-input{width:76px;min-width:70px}.icon-btn{width:32px;height:32px;padding:0;border:1px solid #643341;border-radius:7px;background:#3c1822;color:#fecaca;cursor:pointer}.totals-strip{display:flex;justify-content:flex-end;gap:26px;margin-top:11px;color:var(--muted);font-size:13px}.totals-strip strong{color:white;margin-left:5px}.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px}.kpi-grid.five{grid-template-columns:repeat(5,minmax(0,1fr))}.kpi{padding:14px;border-radius:11px;background:#0b1d33;border:1px solid var(--line);display:grid;gap:4px}.kpi span{color:var(--muted);font-size:11px;text-transform:uppercase}.kpi strong{font-size:20px}.kpi small{color:#bbf7d0}.kpi.accent{background:linear-gradient(135deg,#0f5137,#0d3d35);border-color:#1e7555}.two-col{display:grid;grid-template-columns:minmax(300px,.8fr) minmax(420px,1.2fr);gap:14px}.three-col{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.form-stack{display:grid;gap:10px;align-content:start}.inner-card h3{margin:0 0 12px;font-size:15px}.seg-label{font-size:12px;color:var(--muted);font-weight:600;margin:10px 0 5px}.segmented{display:grid;grid-template-columns:1fr 1fr;gap:6px}.segmented button{border:1px solid var(--line);background:#0c1c30;color:#d6e1ef;padding:9px;border-radius:8px;cursor:pointer;font-weight:700}.segmented button.active{background:var(--blue);border-color:var(--blue);color:white}.switch-row{display:flex;align-items:center;gap:9px;padding:8px 0}.switch-row input{width:auto}.rule-summary{margin-top:10px;padding:11px;border-radius:9px;background:#08172a;border:1px solid var(--line);font-size:12px;line-height:1.6}.breakdown{display:grid;gap:0}.break-row{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px dashed #304861;font-size:12px}.break-row:last-child{border:0}.break-row span:first-child{color:var(--muted)}.break-row strong{color:white;text-align:right}.break-row.total{font-size:14px;border-top:1px solid #526b86;margin-top:4px}.break-row.good strong{color:#86efac}.break-row.bad strong{color:#fca5a5}.notice{margin-top:12px;padding:11px 12px;border:1px solid #31577a;background:#0d2943;border-radius:9px;color:#cce5f7;font-size:12px;line-height:1.5}.notice.warning{border-color:#775b1c;background:#34270c;color:#fde68a}.top-gap{margin-top:14px}.hero-number{margin-top:14px;padding:18px;background:linear-gradient(135deg,#0b754d,#0f5f59);border-radius:12px;text-align:center}.hero-number span{display:block;font-size:11px;text-transform:uppercase;color:#d1fae5}.hero-number strong{display:block;margin-top:5px;font-size:30px}.inline-input{display:grid;grid-template-columns:1fr 110px;gap:7px}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px}.toolbar-summary{color:var(--muted);font-size:13px}.toolbar-summary strong{color:#fff}.hh-role-tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.hh-role-tabs button{border:1px solid var(--line);background:#0c1d33;color:#dce7f3;border-radius:8px;padding:8px 10px;cursor:pointer;font-size:12px}.hh-role-tabs button.active{background:#1d4ed8;border-color:#3b82f6}.badge{display:inline-flex;padding:3px 7px;border-radius:999px;background:#1e3a5f;color:#dbeafe;border:1px solid #315783;font-size:10px}.profit-positive{color:#86efac}.profit-negative{color:#fca5a5}footer{text-align:center;color:#7790ac;font-size:11px;padding:22px}.toast{position:fixed;right:20px;bottom:20px;background:#0f5137;color:white;border:1px solid #1e7555;border-radius:10px;padding:12px 15px;box-shadow:0 12px 28px rgba(0,0,0,.32);opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}@media(max-width:1100px){.meta-grid{grid-template-columns:1fr 1fr}.two-col,.three-col{grid-template-columns:1fr}.kpi-grid.five{grid-template-columns:repeat(2,1fr)}}@media(max-width:720px){.app-shell{padding:12px}.app-header{align-items:flex-start;flex-direction:column}.tabs{gap:6px}.tab-btn{font-size:11px;padding:8px 9px}.meta-grid,.kpi-grid,.kpi-grid.five{grid-template-columns:1fr}.section-heading{flex-direction:column}.brand h1{font-size:24px}.tab-panel{padding:12px}.totals-strip{justify-content:flex-start;flex-wrap:wrap}}
+.meta-grid{grid-template-columns:160px minmax(250px,1.6fr) 170px 170px minmax(250px,1fr) 210px 190px}
+@media(max-width:1300px){.meta-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:820px){.meta-grid{grid-template-columns:1fr}}
+
+</style>
 </head>
 <body>
-<header>
-  <div class="title">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none"><path d="M4 4h7v7H4V4Zm9 0h7v7h-7V4ZM4 13h7v7H4v-7Zm9 3h7v4h-7v-4Z" stroke="url(#g)" stroke-width="1.5"/><defs><linearGradient id="g" x1="0" y1="0" x2="24" y2="24"><stop stop-color="#4f8cff"/><stop offset="1" stop-color="#6aa1ff"/></linearGradient></defs></svg>
-    <h1>Dashboard — Adequações Civis (v1.1)</h1>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand">
+        <div class="brand-mark">M</div>
+        <div>
+          <h1>Orçamento</h1>
+          <p>Multprest Serviços Industriais</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button class="btn btn-soft" id="btnNovo">Novo</button>
+        <button class="btn btn-soft" id="btnSalvar">Salvar</button>
+        <button class="btn btn-soft" id="btnExportar">Exportar</button>
+        <label class="btn btn-soft file-label">Importar<input id="importFile" type="file" accept="application/json" hidden></label>
+      </div>
+    </header>
+
+    <nav class="tabs" id="mainTabs" aria-label="Abas do orçamento">
+      <button class="tab-btn active" data-tab="mao">Mão de Obra</button>
+      <button class="tab-btn" data-tab="material">Material</button>
+      <button class="tab-btn" data-tab="despesas">Estadia e Alimentação</button>
+      <button class="tab-btn" data-tab="viagens">Horas Viajadas</button>
+      <button class="tab-btn" data-tab="nota">Nota Reversa</button>
+      <button class="tab-btn" data-tab="negociacao">Negociação</button>
+      <button class="tab-btn" data-tab="resumo">Resumo Final</button>
+      <button class="tab-btn" data-tab="historico">Histórico</button>
+      <button class="tab-btn" data-tab="precos">Tabela de Preços</button>
+      <button class="tab-btn" data-tab="custoshh">Custos HH</button>
+      <button class="tab-btn" data-tab="calculadorahh">Calculadora HH</button>
+      <button class="tab-btn" data-tab="tributos">Tributos</button>
+    </nav>
+
+    <main class="main-content">
+      <section class="quote-meta card compact-card">
+        <div class="form-grid meta-grid">
+          <label><span>Nº do orçamento</span><input id="quoteNumber" type="text" /></label>
+          <label class="wide"><span>Descrição / obra</span><input id="quoteDescription" type="text" placeholder="Descrição do serviço" /></label>
+          <label><span>Cliente</span><select id="quoteClient"></select></label>
+          <label><span>Competência tributária</span><select id="quoteCompetence"></select></label>
+          <label><span>Lucro serviço</span><div class="inline-input"><input id="serviceProfitPct" type="number" step="0.01"><select id="serviceProfitMode"><option value="markup">markup custo</option><option value="margin">margem venda</option></select></div></label>
+          <label><span>Critério lucro material</span><select id="materialProfitMode"><option value="margin">margem sobre venda</option><option value="markup">markup sobre custo</option></select></label>
+          <label><span>Reserva para negociação (%)</span><input id="negotiationReservePct" type="number" step="0.01" min="0" max="80"></label>
+        </div>
+      </section>
+
+      <section class="tab-panel active" id="tab-mao">
+        <div class="section-heading">
+          <div><h2>Mão de Obra</h2><p>Preço comercial calculado a partir do custo HH real, tributação da operação e prazo do cliente.</p></div>
+          <button class="btn btn-primary" id="addLabor">+ Adicionar</button>
+        </div>
+        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Cargo</th><th>Tipo hora</th><th>h/dia</th><th>Pessoas</th><th>Dias</th><th>Custo HH</th><th>Venda HH</th><th>Total</th><th></th></tr></thead><tbody id="laborBody"></tbody></table></div>
+        <div class="totals-strip"><span>Custo <strong id="laborCostTotal">R$ 0,00</strong></span><span>Venda <strong id="laborSaleTotal">R$ 0,00</strong></span></div>
+      </section>
+
+      <section class="tab-panel" id="tab-material">
+        <div class="section-heading"><div><h2>Material</h2><p>Cada item informa como será faturado: embutido no serviço, CFOP 5102 ou CFOP 5405/ST.</p></div><button class="btn btn-primary" id="addMaterial">+ Adicionar</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Custo</th><th>Faturamento</th><th>Margem venda</th><th>Imposto</th><th>Venda</th><th></th></tr></thead><tbody id="materialBody"></tbody></table></div>
+        <div class="totals-strip"><span>Custo <strong id="materialCostTotal">R$ 0,00</strong></span><span>Venda <strong id="materialSaleTotal">R$ 0,00</strong></span></div>
+      </section>
+
+      <section class="tab-panel" id="tab-despesas">
+        <div class="section-heading"><div><h2>Estadia e Alimentação</h2><p>Custos indiretos seguem a tributação do serviço escolhido; não usam alíquota de mercadoria.</p></div><button class="btn btn-primary" id="addExpense">+ Adicionar</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Tipo</th><th>Descrição</th><th>Valor unit.</th><th>Qtd./pessoas</th><th>Dias</th><th>Custo</th><th>Venda</th><th></th></tr></thead><tbody id="expenseBody"></tbody></table></div>
+        <div class="totals-strip"><span>Custo <strong id="expenseCostTotal">R$ 0,00</strong></span><span>Venda <strong id="expenseSaleTotal">R$ 0,00</strong></span></div>
+      </section>
+
+      <section class="tab-panel" id="tab-viagens">
+        <div class="section-heading"><div><h2>Horas Viajadas</h2><p>Horas de deslocamento vinculadas ao custo e preço HH do cargo.</p></div><button class="btn btn-primary" id="addTravel">+ Adicionar</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Cargo</th><th>Horas</th><th>Pessoas</th><th>Viagens/dias</th><th>Custo</th><th>Venda</th><th></th></tr></thead><tbody id="travelBody"></tbody></table></div>
+        <div class="totals-strip"><span>Custo <strong id="travelCostTotal">R$ 0,00</strong></span><span>Venda <strong id="travelSaleTotal">R$ 0,00</strong></span></div>
+      </section>
+
+      <section class="tab-panel" id="tab-nota">
+        <div class="section-heading"><div><h2>Nota Reversa</h2><p>Separa tributo definitivo, retenção de caixa, custo financeiro e lucro econômico.</p></div><button class="btn btn-primary" id="pullQuoteTotal">Puxar Total do Orçamento</button></div>
+        <div class="kpi-grid five">
+          <div class="kpi"><span>Valor Bruto</span><strong id="nrGross">R$ 0,00</strong></div>
+          <div class="kpi"><span>Tributos definitivos</span><strong id="nrTaxes">R$ 0,00</strong></div>
+          <div class="kpi"><span>Retenções de caixa</span><strong id="nrRetentions">R$ 0,00</strong></div>
+          <div class="kpi"><span>Custos</span><strong id="nrCosts">R$ 0,00</strong></div>
+          <div class="kpi accent"><span>Lucro econômico</span><strong id="nrProfit">R$ 0,00</strong><small id="nrProfitPct">0,0%</small></div>
+        </div>
+        <div class="two-col">
+          <div class="card inner-card">
+            <h3>Regras da nota</h3>
+            <label><span>Valor bruto manual</span><input id="nrManualGross" type="number" step="0.01" min="0" placeholder="0,00" /></label>
+            <div class="seg-label">Anexo do serviço</div><div class="segmented" id="annexSeg"><button data-value="III">Anexo III</button><button data-value="IV">Anexo IV</button></div>
+            <div class="seg-label">ISS</div><div class="segmented" id="issSeg"><button data-value="no">Sem retenção</button><button data-value="yes">Com retenção</button></div>
+            <label><span>Retenção previdenciária</span><select id="previdRetention"><option value="none">Não se aplica</option><option value="11">11%</option><option value="3.5">3,5% — CPRB</option></select></label>
+            <label><span>Base da retenção previdenciária (%)</span><input id="previdBase" type="number" min="0" max="100" step="0.01"></label>
+            <label class="switch-row"><input id="advanceToggle" type="checkbox"><span>Antecipar recebível</span></label>
+            <div class="rule-summary" id="taxRuleSummary"></div>
+          </div>
+          <div class="card inner-card"><h3>Memória do cálculo</h3><div id="nrBreakdown" class="breakdown"></div></div>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-negociacao">
+        <div class="section-heading"><div><h2>Negociação</h2><p>Simule desconto sem misturar taxa do cliente com desconto comercial.</p></div></div>
+        <div class="two-col">
+          <div class="card inner-card form-stack">
+            <label><span>Valor de referência</span><input id="negBase" type="number" step="0.01"></label>
+            <label><span>Desconto comercial (%)</span><input id="negPercent" type="number" min="0" max="99" step="0.01"></label>
+            <label><span>Margem mínima desejada sobre faturamento (%)</span><input id="minMargin" type="number" min="0" max="80" step="0.01"></label>
+          </div>
+          <div class="card inner-card"><div class="kpi-grid"><div class="kpi"><span>Após desconto</span><strong id="negAfter">R$ 0,00</strong></div><div class="kpi"><span>Lucro econômico</span><strong id="negProfit">R$ 0,00</strong></div><div class="kpi"><span>Margem</span><strong id="negMargin">0,0%</strong></div><div class="kpi"><span>Desconto máx. equilíbrio</span><strong id="negMaxBreak">0,0%</strong></div></div><div class="notice" id="negNotice"></div></div>
+        </div>
+      </section>
+
+      <section class="tab-panel" id="tab-resumo">
+        <div class="section-heading"><div><h2>Resumo Final</h2><p>Visão econômica e financeira do orçamento.</p></div></div>
+        <div class="kpi-grid five"><div class="kpi"><span>Venda total</span><strong id="sumRevenue">R$ 0,00</strong></div><div class="kpi"><span>Custo total</span><strong id="sumCost">R$ 0,00</strong></div><div class="kpi"><span>Tributos</span><strong id="sumTax">R$ 0,00</strong></div><div class="kpi"><span>Financeiro</span><strong id="sumFinance">R$ 0,00</strong></div><div class="kpi accent"><span>Lucro</span><strong id="sumProfit">R$ 0,00</strong><small id="sumMargin"></small></div></div>
+        <div class="two-col"><div class="card inner-card"><h3>Receita por natureza</h3><div id="sumRevenueBreakdown" class="breakdown"></div></div><div class="card inner-card"><h3>Memória de cálculo</h3><div id="sumMemory" class="breakdown"></div></div></div>
+      </section>
+
+      <section class="tab-panel" id="tab-historico">
+        <div class="section-heading"><div><h2>Histórico</h2><p>Cada orçamento salvo mantém uma fotografia da competência e das alíquotas usadas.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Nº</th><th>Descrição</th><th>Cliente</th><th>Competência</th><th>Total</th><th>Salvo em</th><th></th></tr></thead><tbody id="historyBody"></tbody></table></div>
+      </section>
+
+      <section class="tab-panel" id="tab-precos">
+        <div class="section-heading"><div><h2>Tabela de Preços</h2><p>Compare custo HH, preço mínimo calculado e preço comercial específico por cliente.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Cargo</th><th>Custo HH</th><th>Preço mínimo</th><th>Cliente</th><th>Preço comercial</th><th>Margem econômica</th></tr></thead><tbody id="priceBody"></tbody></table></div>
+      </section>
+
+      <section class="tab-panel" id="tab-custoshh">
+        <div class="section-heading"><div><h2>Custos HH</h2><p>Custos calculados pelo método anual, usando horas faturáveis separadas da jornada contratual.</p></div></div>
+        <div class="table-wrap"><table><thead><tr><th>Cargo</th><th>Salário</th><th>Custo anual direto</th><th>Rateio fixo/HH</th><th>Horas faturáveis/ano</th><th>Custo HH real</th></tr></thead><tbody id="hhCostBody"></tbody></table></div>
+      </section>
+
+      <section class="tab-panel" id="tab-calculadorahh">
+        <div class="section-heading"><div><h2>Calculadora HH</h2><p>Base anual para evitar dupla contagem de férias e separar jornada paga de capacidade vendável.</p></div><button class="btn btn-primary" id="saveHH">Salvar parâmetros HH</button></div>
+        <div class="hh-role-tabs" id="hhRoleTabs"></div>
+        <div class="three-col">
+          <div class="card inner-card form-stack"><h3>Remuneração</h3>
+            <label><span>Salário base</span><input id="hhSalary" type="number" step="0.01"></label>
+            <label><span>Salário mínimo</span><input id="hhMinSalary" type="number" step="0.01"></label>
+            <label><span>Insalubridade (%)</span><input id="hhInsal" type="number" step="0.01"></label>
+            <label><span>Prêmio assiduidade</span><input id="hhPrize" type="number" step="0.01"></label>
+            <label class="switch-row"><input id="hhPrizeInc" type="checkbox"><span>Prêmio integra encargos</span></label>
+            <label><span>Jornada contratual mensal</span><input id="hhContractHours" type="number" step="0.01"></label>
+            <label><span>Horas faturáveis mensais</span><input id="hhBillableHours" type="number" step="0.01"></label>
+            <label><span>Funcionários para rateio dos fixos</span><input id="hhEmployeeCount" type="number" min="1" step="1"></label>
+          </div>
+          <div class="card inner-card form-stack"><h3>Custos por funcionário</h3>
+            <label><span>EPI / uniforme</span><div class="inline-input"><input id="hhEpi" type="number" step="0.01"><select id="hhEpiPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
+            <label><span>Exames</span><div class="inline-input"><input id="hhExam" type="number" step="0.01"><select id="hhExamPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
+            <label><span>Ferramentas</span><div class="inline-input"><input id="hhTools" type="number" step="0.01"><select id="hhToolsPeriod"><option value="1">mensal</option><option value="3">trimestral</option><option value="6">semestral</option><option value="12">anual</option></select></div></label>
+            <label><span>Plano de saúde mensal</span><input id="hhHealth" type="number" step="0.01"></label>
+            <label><span>Alimentação mensal</span><input id="hhMeal" type="number" step="0.01"></label>
+            <label><span>Transporte mensal</span><input id="hhTransport" type="number" step="0.01"></label>
+            <label><span>Treinamentos anuais</span><input id="hhTraining" type="number" step="0.01"></label>
+            <label><span>Provisão multa FGTS (%)</span><input id="hhFgtsFine" type="number" step="0.01"></label>
+          </div>
+          <div class="card inner-card"><h3>Resultado HH</h3><div id="hhResult" class="breakdown"></div><div class="hero-number"><span>Custo HH faturável</span><strong id="hhHero">R$ 0,00</strong></div><div class="notice" id="hhNotice">Custos periódicos continuam editáveis. Revise especialmente a periodicidade de exames, EPI e ferramentas conforme a realidade da empresa.</div></div>
+        </div>
+        <div class="card inner-card top-gap"><h3>Custos fixos mensais da empresa</h3><div class="table-wrap"><table><thead><tr><th>Descrição</th><th>Valor mensal</th><th></th></tr></thead><tbody id="fixedCostBody"></tbody></table></div><div class="toolbar"><button class="btn btn-soft" id="addFixedCost">+ Custo fixo</button><span class="toolbar-summary">Total mensal <strong id="fixedCostTotal">R$ 0,00</strong></span></div></div>
+      </section>
+
+      <section class="tab-panel" id="tab-tributos">
+        <div class="section-heading"><div><h2>Configuração Tributária</h2><p>Parâmetros mensais editáveis. Orçamentos salvos guardam a fotografia das alíquotas da competência.</p></div><button class="btn btn-primary" id="saveTaxProfile">Salvar competência</button></div>
+        <div class="three-col">
+          <div class="card inner-card form-stack"><h3>Competência</h3><label><span>Mês</span><input id="taxCompetence" type="month"></label><label><span>Taxa financeira por dia (%)</span><input id="taxDailyFinance" type="number" step="0.001"></label><div class="notice">A taxa é simples: percentual ao dia × número de dias. Não há capitalização composta.</div></div>
+          <div class="card inner-card form-stack"><h3>Serviços</h3><label><span>Anexo III — alíquota efetiva (%)</span><input id="taxA3" type="number" step="0.01"></label><label><span>ISS III sem retenção — destaque (%)</span><input id="taxA3IssNo" type="number" step="0.01"></label><label><span>ISS III com retenção (%)</span><input id="taxA3IssYes" type="number" step="0.01"></label><label><span>Anexo IV — alíquota efetiva (%)</span><input id="taxA4" type="number" step="0.01"></label><label><span>ISS IV sem retenção — destaque (%)</span><input id="taxA4IssNo" type="number" step="0.01"></label><label><span>ISS IV com retenção (%)</span><input id="taxA4IssYes" type="number" step="0.01"></label></div>
+          <div class="card inner-card form-stack"><h3>Mercadorias e CPP</h3><label><span>CFOP 5102 — DAS (%)</span><input id="tax5102" type="number" step="0.01"></label><label><span>Crédito 5102 informado (%)</span><input id="tax5102Credit" type="number" step="0.01"></label><label><span>CFOP 5405/ST — DAS (%)</span><input id="tax5405" type="number" step="0.01"></label><label><span>CPP Anexo IV (%)</span><input id="taxCpp" type="number" step="0.01"></label><label><span>RAT (%)</span><input id="taxRat" type="number" step="0.01"></label><label><span>FAP</span><input id="taxFap" type="number" step="0.0001"></label><label class="switch-row"><input id="taxCprb" type="checkbox"><span>Empresa optante pela CPRB</span></label><label><span>CPP efetiva manual se CPRB (%)</span><input id="taxCppCprb" type="number" step="0.01"></label></div>
+        </div>
+        <div class="card inner-card top-gap"><h3>Clientes e regras comerciais</h3><div class="table-wrap"><table><thead><tr><th>Cliente</th><th>Prazo (dias)</th><th>Taxa/repasse cliente (%)</th><th>Antecipar padrão</th><th></th></tr></thead><tbody id="clientRulesBody"></tbody></table></div><div class="toolbar"><button class="btn btn-soft" id="addClient">+ Cliente</button></div></div>
+        <div class="notice warning top-gap">Os valores de outubro/2026 foram preenchidos conforme a tabela informada pela contabilidade. CPP/RAT/FAP e eventual CPRB devem ser conferidos com a contabilidade/eSocial; por isso permanecem editáveis.</div>
+      </section>
+    </main>
+    <footer>Multprest Serviços Industriais · Formação de preço e memória de cálculo</footer>
   </div>
-  <div class="tabs">
-    <button class="btn" data-tab="dashboard">Dashboard</button>
-    <button class="btn" data-tab="lancamentos">Lançamentos</button>
-    <button class="btn" data-tab="ofs">OFs</button>
-    <button class="btn ghost" data-tab="config">Configurações</button>
-  </div>
-</header>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script>
+(() => {
+  'use strict';
 
-<main>
-  <!-- DASHBOARD -->
-  <section id="dashboard" class="tab active">
-    <div class="card" style="margin-bottom:12px; display:flex; gap:12px; align-items:end; flex-wrap:wrap">
-      <label class="small">OF selecionada
-        <select id="selOF"></select>
-      </label>
-      <label class="small">De:<input type="date" id="fDe"></label>
-      <label class="small">Até:<input type="date" id="fAte"></label>
-      <label class="small">Fornecedor:<input type="text" id="fFornecedor" placeholder="Filtrar fornecedor"></label>
-      <button class="btn" id="btnFiltrar">Aplicar filtros</button>
-      <button class="btn ghost" id="btnLimpar">Limpar</button>
-      <span class="pill" id="pillOrcado">Orçado: —</span>
-      <span class="pill" id="pillSaldo">Saldo: —</span>
-    </div>
+  const STORAGE_KEY = 'multprest_orcamento_profissional_v1';
+  const HISTORY_KEY = 'multprest_orcamento_historico_v1';
 
-    <div class="kpis">
-      <div class="card kpi">
-        <div class="label">Total Materiais</div>
-        <div class="value" id="kpiMateriais">R$ 0,00</div>
-        <div class="sub" id="kpiItensMat">—</div>
-      </div>
-      <div class="card kpi">
-        <div class="label">Total Mão de Obra</div>
-        <div class="value" id="kpiMO">R$ 0,00</div>
-        <div class="sub" id="kpiHh">—</div>
-      </div>
-      <div class="card kpi">
-        <div class="label">Indiretos (Almoço + Translado)</div>
-        <div class="value" id="kpiIndiretos">R$ 0,00</div>
-        <div class="sub" id="kpiIndPct">—</div>
-      </div>
-      <div class="card kpi">
-        <div class="label">Total Geral</div>
-        <div class="value" id="kpiTotal">R$ 0,00</div>
-        <div class="sub" id="kpiRegistros">—</div>
-      </div>
-    </div>
+  const uid = () => Math.random().toString(36).slice(2, 9);
+  const clamp = (n, min, max) => Math.min(max, Math.max(min, Number.isFinite(+n) ? +n : 0));
+  const num = (v) => Number.isFinite(+v) ? +v : 0;
+  const money = (v) => num(v).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+  const pct = (v, d = 2) => `${num(v).toFixed(d).replace('.', ',')}%`;
+  const esc = (s) => String(s ?? '').replace(/[&<>'"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+  const currentMonth = '2026-10';
 
-    <div class="grid">
-      <div class="card">
-        <div class="chart-wrap"><canvas id="graficoEvolucao"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="chart-wrap"><canvas id="graficoCategorias"></canvas></div>
-      </div>
-      <div class="card" style="grid-column:1 / -1">
-        <div class="chart-wrap"><canvas id="graficoFornecedores"></canvas></div>
-      </div>
+  const fixedDefaults = [
+    ['Aluguel',6000],['Água',0],['Luz',700],['Internet',100],['Seguro Func.',600],['Assessoria',2500],
+    ['HGM',304],['EML',3000],['Salários ADM',14000],['Manut. Carros',300],['ISEG',710],['Higiene',80],
+    ['ACI',125],['Santander',240],['Protej',116],['Ponto Web',125]
+  ].map(([name,value]) => ({id:uid(), name, value}));
 
-      <div class="card" style="grid-column:1 / -1">
-        <div class="toolbar">
-          <button class="btn" id="btnExportar">Exportar CSV</button>
-          <label class="btn ghost" for="inputCSV">Importar CSV</label>
-          <input id="inputCSV" type="file" accept=".csv" style="display:none">
-          <span class="muted">CSV: of_id,data,fornecedor,materiais,profissionais,ajudantes,almoco,translado</span>
-        </div>
-        <div class="table-wrap">
-          <table id="tabela">
-            <thead>
-              <tr>
-                <th>OF</th><th>Data</th><th>Fornecedor</th><th>Materiais</th><th>Profissionais</th><th>Ajudantes</th><th>Almoço</th><th>Translado</th><th>Total</th><th></th>
-              </tr>
-            </thead>
-            <tbody></tbody>
-          </table>
-        </div>
-      </div>
+  const roleDefaults = [
+    ['mecanico-caldeireiro','Mecânico Caldeireiro',2574.53],
+    ['pedreiro','Pedreiro',2219.80],
+    ['servente','Servente',1841.40],
+    ['meio-oficial','Meio Oficial',1889.80],
+    ['serralheiro','Serralheiro',2574.53],
+    ['soldador','Soldador',4000],
+    ['supervisor-manutencao','Supervisor de Manutenção',2587.80]
+  ].map(([id,name,salary]) => ({id,name,salary}));
 
-    </div>
-  </section>
+  const clientDefaults = [
+    {id:'brf', name:'BRF', days:180, clientFee:0, advanceDefault:true},
+    {id:'jbs', name:'JBS', days:135, clientFee:12, advanceDefault:true},
+    {id:'vibra', name:'VIBRA', days:30, clientFee:0, advanceDefault:true},
+    {id:'agrogen', name:'AGROGEN', days:35, clientFee:0, advanceDefault:true},
+    {id:'lar', name:'LAR', days:5, clientFee:0, advanceDefault:false},
+    {id:'migplus', name:'MIG PLUS', days:45, clientFee:0, advanceDefault:true}
+  ];
 
-  <!-- LANÇAMENTOS -->
-  <section id="lancamentos" class="tab">
-    <div class="two-col">
-      <div class="card">
-        <h3 style="margin:0 0 10px">Novo Lançamento</h3>
-        <form id="form" class="form">
-          <label class="small">OF
-            <select id="ofId" required></select>
-          </label>
-          <label class="small">Data<input type="date" id="data" required></label>
-          <label class="small">Fornecedor<input type="text" id="fornecedor" placeholder="Ex.: Bortolaso"></label>
-          <label class="small">Materiais (R$)<input type="number" id="materiais" step="0.01" min="0"></label>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
-            <label class="small">Profissionais (qtd)<input type="number" id="profissionais" step="1" min="0"></label>
-            <label class="small">Ajudantes (qtd)<input type="number" id="ajudantes" step="1" min="0"></label>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
-            <label class="small">Almoço (R$)<input type="number" id="almoco" step="0.01" min="0"></label>
-            <label class="small">Translado (R$)<input type="number" id="translado" step="0.01" min="0"></label>
-          </div>
-          <div style="display:flex; gap:8px; margin-top:6px">
-            <button class="btn primary" type="submit">Adicionar</button>
-            <button class="btn ghost" type="reset">Limpar</button>
-          </div>
-        </form>
-      </div>
+  const octTax = {
+    competence:'2026-10', dailyFinance:0.1,
+    a3:13.14, a3IssNo:4.27, a3IssYes:4.30,
+    a4:10.81, a4IssNo:4.32, a4IssYes:4.36,
+    cfop5102:8.89, cfop5102Credit:2.98, cfop5405:5.91,
+    cpp:20, rat:2, fap:1, cprb:false, cppCprbManual:0
+  };
 
-      <div class="card">
-        <h3 style="margin:0 0 10px">Ajuda</h3>
-        <ul class="muted" style="margin:0 0 6px 16px; line-height:1.5">
-          <li>Cadastre as <b>OFs</b> primeiro (aba OFs). Cada OF é um <b>centro de custo</b>.</li>
-          <li>Selecione a OF na hora de lançar uma despesa.</li>
-          <li>Dashboard mostra o <b>saldo</b> da OF selecionada (orçado − gastos).</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- OFs -->
-  <section id="ofs" class="tab">
-    <div class="two-col">
-      <div class="card">
-        <h3 style="margin:0 0 10px">Cadastrar OF</h3>
-        <form id="formOF" class="form">
-          <label class="small">Nº/ID da OF<input type="text" id="ofNumero" placeholder="Ex.: OF-2025-001" required></label>
-          <label class="small">Cliente<input type="text" id="ofCliente" placeholder="Ex.: JBS"></label>
-          <label class="small">Orçamento (R$)<input type="number" id="ofOrcado" step="0.01" min="0" placeholder="Valor orçado"></label>
-          <label class="small">Descrição<textarea id="ofDesc" placeholder="Resumo/escopo"></textarea></label>
-          <div style="display:flex; gap:8px">
-            <button class="btn primary" type="submit">Salvar OF</button>
-            <button class="btn" id="btnResetOFs" type="button">Apagar todas OFs</button>
-          </div>
-        </form>
-      </div>
-
-      <div class="card">
-        <h3 style="margin:0 10px 10px 0">OFs cadastradas</h3>
-        <div class="of-grid" id="ofCards"></div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CONFIG -->
-  <section id="config" class="tab">
-    <div class="card" style="max-width:520px">
-      <h3 style="margin:0 0 10px">Configurações</h3>
-      <div class="form">
-        <label class="small">R$/dia Profissional
-          <input type="number" id="cfgProf" step="0.01" min="0">
-        </label>
-        <label class="small">R$/dia Ajudante
-          <input type="number" id="cfgAjud" step="0.01" min="0">
-        </label>
-        <div style="display:flex; gap:8px">
-          <button class="btn primary" id="btnSalvarCfg">Salvar</button>
-          <button class="btn" id="btnResetar">Resetar dados (lançamentos)</button>
-        </div>
-        <p class="muted" style="margin:6px 0 0">Padrão: Prof R$ 809,00 | Ajud R$ 405,00 (ajuste conforme tua planilha).</p>
-      </div>
-    </div>
-  </section>
-</main>
-
-<script>
-  // ======= Constantes / Storage =======
-  const BRL = new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
-  const KEY = 'adq_civis_lancamentos_v11';
-  const CFG_KEY = 'adq_civis_cfg_v11';
-  const OF_KEY = 'adq_civis_ofs_v11';
-
-  let lanc = JSON.parse(localStorage.getItem(KEY) || '[]');
-  let cfg  = JSON.parse(localStorage.getItem(CFG_KEY) || '{"prof":809,"ajud":405}');
-  let ofs  = JSON.parse(localStorage.getItem(OF_KEY)  || '[]'); // {id, cliente, orcado, desc}
-
-  // ======= Navegação entre abas =======
-  document.querySelectorAll('button[data-tab]').forEach(b=>{
-    b.addEventListener('click',()=>{
-      document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
-      document.getElementById(b.dataset.tab).classList.add('active');
-      if(b.dataset.tab==='dashboard'){ renderAll(); }
-      if(b.dataset.tab==='lancamentos'){ fillOFSelects(); }
-      if(b.dataset.tab==='ofs'){ renderOFs(); fillOFSelects(); }
-      if(b.dataset.tab==='config'){ document.getElementById('cfgProf').value = cfg.prof; document.getElementById('cfgAjud').value = cfg.ajud; }
-    });
+  const defaultState = () => ({
+    taxProfiles:{[currentMonth]:structuredClone(octTax)},
+    clients:structuredClone(clientDefaults),
+    roles:structuredClone(roleDefaults),
+    fixedCosts:structuredClone(fixedDefaults),
+    hh:{
+      minSalary:1621, insalPct:20, prize:380, prizeIntegrates:true,
+      contractHours:220, billableHours:165,
+      epi:450, epiPeriod:1, exam:500, examPeriod:1, tools:300, toolsPeriod:1,
+      health:15, meal:0, transport:0, trainingAnnual:330, fgtsFinePct:40,
+      employeeCount:8
+    },
+    priceOverrides:{},
+    quote:{
+      id:uid(), number:'', description:'', clientId:'jbs', competence:currentMonth,
+      annex:'III', issRetained:false, previdRetention:'none', previdBasePct:100,
+      advance:true, serviceProfitMode:'markup', serviceProfitPct:30, materialProfitMode:'margin', negotiationReservePct:12, minMarginPct:10,
+      labor:[], materials:[], expenses:[], travel:[],
+      nrManualGross:0, nrUseBreakdown:true, negotiationPct:0
+    },
+    ui:{hhRoleId:'mecanico-caldeireiro'}
   });
 
-  // ======= Helpers =======
-  const q = (s)=>document.querySelector(s);
-  const qa = (s)=>[...document.querySelectorAll(s)];
-  const sum = (arr, pick)=> arr.reduce((s,o)=> s + (+pick(o)||0), 0);
+  let state = loadState();
+  let history = loadHistory();
 
-  function persistLanc(){ localStorage.setItem(KEY, JSON.stringify(lanc)); }
-  function persistCfg(){ localStorage.setItem(CFG_KEY, JSON.stringify(cfg)); }
-  function persistOFs(){ localStorage.setItem(OF_KEY, JSON.stringify(ofs)); }
+  function loadState(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if(!raw) return defaultState();
+      const parsed = JSON.parse(raw);
+      return migrateState(parsed);
+    } catch { return defaultState(); }
+  }
+  function migrateState(s){
+    const d = defaultState();
+    const out = {...d, ...s};
+    out.quote = {...d.quote, ...(s.quote||{})};
+    out.hh = {...d.hh, ...(s.hh||{})};
+    out.ui = {...d.ui, ...(s.ui||{})};
+    out.taxProfiles = {...d.taxProfiles, ...(s.taxProfiles||{})};
+    out.clients = Array.isArray(s.clients) && s.clients.length ? s.clients : d.clients;
+    out.roles = Array.isArray(s.roles) && s.roles.length ? s.roles : d.roles;
+    out.fixedCosts = Array.isArray(s.fixedCosts) && s.fixedCosts.length ? s.fixedCosts : d.fixedCosts;
+    out.priceOverrides = s.priceOverrides || {};
+    return out;
+  }
+  function loadHistory(){ try{return JSON.parse(localStorage.getItem(HISTORY_KEY)||'[]')}catch{return []} }
+  function persist(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+  function persistHistory(){ localStorage.setItem(HISTORY_KEY, JSON.stringify(history)); }
+  function toast(msg){ const el=$('toast'); el.textContent=msg; el.classList.add('show'); clearTimeout(toast._t); toast._t=setTimeout(()=>el.classList.remove('show'),2200); }
+  function $(id){ return document.getElementById(id); }
 
-  function findOF(id){ return ofs.find(o => o.id===id); }
-  function gastoLanc(l){ return (+l.materiais||0) + (l.profissionais*cfg.prof) + (l.ajudantes*cfg.ajud) + (+l.almoco||0) + (+l.translado||0); }
+  function getTaxProfile(comp = state.quote.competence){
+    if(state.taxProfiles[comp]) return state.taxProfiles[comp];
+    const keys = Object.keys(state.taxProfiles).sort();
+    const base = keys.length ? state.taxProfiles[keys[keys.length-1]] : octTax;
+    state.taxProfiles[comp] = {...structuredClone(base), competence:comp};
+    return state.taxProfiles[comp];
+  }
+  function getClient(id = state.quote.clientId){ return state.clients.find(c=>c.id===id) || state.clients[0] || {days:0,clientFee:0,advanceDefault:false,name:'Cliente'}; }
+  function getRole(id){ return state.roles.find(r=>r.id===id) || state.roles[0]; }
+  function totalFixedMonthly(){ return state.fixedCosts.reduce((s,x)=>s+num(x.value),0); }
+  function annualize(value, periodMonths){ return num(value) * (12 / Math.max(1,num(periodMonths)||1)); }
 
-  function filtrarDados(){
-    const sel = q('#selOF').value;
-    const de = q('#fDe').value || null;
-    const ate = q('#fAte').value || null;
-    const forn = (q('#fFornecedor').value||'').toLowerCase().trim();
-    return lanc.filter(l=>{
-      const okOF = (sel==='__ALL__') || (l.of_id===sel);
-      const okData = (!de || l.data>=de) && (!ate || l.data<=ate);
-      const okForn = !forn || (l.fornecedor||'').toLowerCase().includes(forn);
-      return okOF && okData && okForn;
-    }).sort((a,b)=>(a.data||'').localeCompare(b.data||''));
+  function cppRateForAnnex(annex, profile){
+    if(annex !== 'IV') return 0;
+    const employer = profile.cprb ? num(profile.cppCprbManual) : num(profile.cpp);
+    return employer + (num(profile.rat) * num(profile.fap));
   }
 
-  // ======= OFs =======
-  function renderOFs(){
-    const wrap = q('#ofCards'); wrap.innerHTML='';
-    const mapGastos = {};
-    lanc.forEach(l => { mapGastos[l.of_id] = (mapGastos[l.of_id]||0) + gastoLanc(l); });
-
-    ofs.forEach(of=>{
-      const gasto = mapGastos[of.id]||0;
-      const orc = +of.orcado||0;
-      const pct = orc>0 ? Math.min(100, (gasto/orc)*100) : 0;
-      const saldo = orc - gasto;
-      const card = document.createElement('div');
-      card.className = 'card of-card';
-      card.innerHTML = `
-        <div class="head">
-          <div>
-            <div style="font-weight:700">${of.id}</div>
-            <div class="muted">${of.cliente||''}</div>
-          </div>
-          <div>
-            <span class="pill">Orçado: ${orc?BRL.format(orc):'—'}</span>
-          </div>
-        </div>
-        <div style="margin-top:8px">${of.desc?('<span class="muted">'+escapeHtml(of.desc)+'</span>'):'<span class="muted">Sem descrição</span>'}</div>
-        <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
-          <span class="pill">Gasto: <b>${BRL.format(gasto)}</b></span>
-          <span class="pill ${saldo<0?'tag-danger':(pct>=80?'tag-warn':'')}">Saldo: <b>${BRL.format(saldo)}</b></span>
-          <span class="pill">${pct.toFixed(0)}% consumido</span>
-        </div>
-        <div class="of-progress"><div class="of-bar" style="width:${pct}%;"></div></div>
-        <div style="display:flex; gap:8px; margin-top:10px">
-          <button class="btn" data-ativar="${of.id}">Selecionar no Dashboard</button>
-          <button class="btn ghost" data-delof="${of.id}">Excluir OF</button>
-        </div>
-      `;
-      wrap.appendChild(card);
-    });
-
-    // Ações
-    wrap.querySelectorAll('[data-ativar]').forEach(b=>{
-      b.onclick = ()=>{ q('#selOF').value = b.dataset.ativar; renderAll(); scrollToTop(); };
-    });
-    wrap.querySelectorAll('[data-delof]').forEach(b=>{
-      b.onclick = ()=>{
-        const id=b.dataset.delof;
-        if(confirm('Excluir OF e manter os lançamentos (eles ficarão sem OF)?')){
-          ofs = ofs.filter(o=>o.id!==id); persistOFs();
-          lanc.forEach(l=>{ if(l.of_id===id) l.of_id=''; }); persistLanc();
-          renderOFs(); fillOFSelects(); renderAll();
-        }
-      };
-    });
+  function calcHH(roleId, annex = state.quote.annex, comp = state.quote.competence){
+    const role = getRole(roleId); const h=state.hh; const p=getTaxProfile(comp);
+    const insal = num(h.minSalary) * num(h.insalPct)/100;
+    const cashMonthly = num(role.salary) + insal + num(h.prize);
+    const chargeBase = num(role.salary) + insal + (h.prizeIntegrates ? num(h.prize) : 0);
+    const annualBaseCash = cashMonthly * 12;
+    const thirteenth = chargeBase;
+    const vacationThird = chargeBase/3;
+    const chargeAnnualBase = chargeBase*12 + thirteenth + vacationThird;
+    const fgts = chargeAnnualBase * .08;
+    const cppRate = cppRateForAnnex(annex,p);
+    const cpp = chargeAnnualBase * cppRate/100;
+    const severance = fgts * num(h.fgtsFinePct)/100;
+    const extras = annualize(h.epi,h.epiPeriod)+annualize(h.exam,h.examPeriod)+annualize(h.tools,h.toolsPeriod)+num(h.health)*12+num(h.meal)*12+num(h.transport)*12+num(h.trainingAnnual);
+    const directAnnual = annualBaseCash + thirteenth + vacationThird + fgts + cpp + severance + extras;
+    const annualBillable = Math.max(1,num(h.billableHours)*12);
+    const directHH = directAnnual/annualBillable;
+    const capacityMonthly = Math.max(1,num(h.employeeCount)*num(h.billableHours));
+    const fixedPerHH = totalFixedMonthly()/capacityMonthly;
+    const costHH = directHH + fixedPerHH;
+    return {role,insal,cashMonthly,chargeBase,annualBaseCash,thirteenth,vacationThird,chargeAnnualBase,fgts,cppRate,cpp,severance,extras,directAnnual,annualBillable,directHH,fixedPerHH,costHH};
   }
 
-  function fillOFSelects(){
-    const sel1 = q('#ofId'), sel2 = q('#selOF');
-    const makeOpts = (includeAll)=>{
-      let html = includeAll? `<option value="__ALL__">— Todas OFs —</option>` : '';
-      ofs.forEach(of=> html += `<option value="${of.id}">${of.id} — ${escapeHtml(of.cliente||'')}</option>`);
-      return html;
-    };
-    sel1.innerHTML = makeOpts(false);
-    sel2.innerHTML = makeOpts(true);
-    if(!sel2.value) sel2.value='__ALL__';
+  function serviceTaxMeta(){
+    const p=getTaxProfile(); const a=state.quote.annex;
+    const total = a==='IV'?num(p.a4):num(p.a3);
+    const issNo = a==='IV'?num(p.a4IssNo):num(p.a3IssNo);
+    const issYes = a==='IV'?num(p.a4IssYes):num(p.a3IssYes);
+    const issRetRate = state.quote.issRetained ? issYes : 0;
+    const dasPayable = state.quote.issRetained ? Math.max(0,total-issYes) : total;
+    return {total,issNo,issYes,issRetRate,dasPayable};
   }
-
-  // Cadastro OF
-  q('#formOF').addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const id=(q('#ofNumero').value||'').trim();
-    if(!id) return alert('Informe o Nº/ID da OF.');
-    if(ofs.some(o=>o.id===id)) return alert('Já existe uma OF com esse ID.');
-    const cliente=(q('#ofCliente').value||'').trim();
-    const orcado= +q('#ofOrcado').value||0;
-    const desc=(q('#ofDesc').value||'').trim();
-    ofs.push({id, cliente, orcado, desc});
-    persistOFs();
-    e.target.reset();
-    renderOFs(); fillOFSelects();
-    alert('OF cadastrada.');
-  });
-
-  q('#btnResetOFs').onclick = ()=>{
-    if(confirm('Apagar TODAS as OFs? (lançamentos não serão apagados)')){
-      ofs=[]; persistOFs(); renderOFs(); fillOFSelects(); renderAll();
+  function previdRate(){ return state.quote.previdRetention==='none'?0:num(state.quote.previdRetention); }
+  function advanceRate(){
+    if(!state.quote.advance) return 0;
+    const p=getTaxProfile(); const c=getClient();
+    return num(p.dailyFinance)*num(c.days)/100;
+  }
+  function grossUp(cost, taxRatePct, profitPct, profitMode='markup', retIssPct=0, retPrevPct=0){
+    cost=num(cost); const c=getClient(); const fee=num(c.clientFee)/100;
+    const ar=advanceRate();
+    const receivableFactor=Math.max(0,1-num(retIssPct)/100-num(retPrevPct)/100);
+    const financeEffective=ar*receivableFactor;
+    const tax=num(taxRatePct)/100; const profit=num(profitPct)/100;
+    if(profitMode==='margin'){
+      const denom=1-tax-fee-financeEffective-profit;
+      return denom>0 ? cost/denom : 0;
     }
-  };
+    const denom=1-tax-fee-financeEffective;
+    return denom>0 ? cost*(1+profit)/denom : 0;
+  }
+  function applyNegotiationReserve(value){
+    const r=clamp(state.quote.negotiationReservePct,0,80)/100;
+    return r>0 ? value/(1-r) : value;
+  }
+  function serviceMinimumFromCost(cost, profitPct=state.quote.serviceProfitPct, mode=state.quote.serviceProfitMode){
+    const t=serviceTaxMeta(); const prev=previdRate()*num(state.quote.previdBasePct)/100;
+    return grossUp(cost,t.total,profitPct,mode,t.issRetRate,prev);
+  }
+  function servicePriceFromCost(cost, profitPct=state.quote.serviceProfitPct, mode=state.quote.serviceProfitMode){
+    return applyNegotiationReserve(serviceMinimumFromCost(cost,profitPct,mode));
+  }
+  function materialMinimumFromCost(cost,billing,profitPct){
+    if(billing==='service') return serviceMinimumFromCost(cost,state.quote.serviceProfitPct,state.quote.serviceProfitMode);
+    const p=getTaxProfile(); const tax=billing==='5405'?p.cfop5405:p.cfop5102;
+    return grossUp(cost,tax,profitPct,state.quote.materialProfitMode,0,0);
+  }
+  function materialPriceFromCost(cost,billing,profitPct){
+    return applyNegotiationReserve(materialMinimumFromCost(cost,billing,profitPct));
+  }
+  function commercialHH(roleId){
+    const calc=calcHH(roleId); const clientId=state.quote.clientId;
+    const override=num(state.priceOverrides?.[clientId]?.[roleId]);
+    if(override>0) return override;
+    return servicePriceFromCost(calc.costHH);
+  }
+  const hourMultiplier = (type) => ({normal:1,'50':1.5,'100':2,'120':2.2}[type]||1);
 
-  // ======= Lançamentos =======
-  q('#form').addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const of_id = q('#ofId').value;
-    if(!of_id){ alert('Selecione uma OF.'); return; }
-    const data = q('#data').value;
-    const fornecedor = (q('#fornecedor').value||'').trim();
-    const materiais = +q('#materiais').value||0;
-    const profissionais = +q('#profissionais').value||0;
-    const ajudantes = +q('#ajudantes').value||0;
-    const almoco = +q('#almoco').value||0;
-    const translado = +q('#translado').value||0;
-    lanc.push({of_id, data, fornecedor, materiais, profissionais, ajudantes, almoco, translado});
-    persistLanc();
-    e.target.reset();
-    alert('Lançamento adicionado.');
-  });
+  function laborTotals(){
+    let cost=0,sale=0;
+    state.quote.labor.forEach(x=>{ const qty=num(x.hours)*num(x.people)*num(x.days); const m=hourMultiplier(x.hourType); cost+=calcHH(x.roleId).costHH*m*qty; sale+=commercialHH(x.roleId)*m*qty; });
+    return {cost,sale};
+  }
+  function materialTotals(){
+    let cost=0,sale=0,serviceRevenue=0,g5102=0,g5405=0;
+    state.quote.materials.forEach(x=>{ const c=num(x.cost); const s=materialPriceFromCost(c,x.billing,num(x.profitPct)); cost+=c;sale+=s;if(x.billing==='service')serviceRevenue+=s; else if(x.billing==='5405')g5405+=s; else g5102+=s; });
+    return {cost,sale,serviceRevenue,g5102,g5405};
+  }
+  function expenseTotals(){
+    let cost=0,sale=0,byType={};
+    state.quote.expenses.forEach(x=>{ const c=num(x.unit)*num(x.qty)*num(x.days); const s=servicePriceFromCost(c);cost+=c;sale+=s;byType[x.type]=(byType[x.type]||0)+c; });
+    return {cost,sale,byType};
+  }
+  function travelTotals(){
+    let cost=0,sale=0;
+    state.quote.travel.forEach(x=>{const qty=num(x.hours)*num(x.people)*num(x.days);cost+=calcHH(x.roleId).costHH*qty;sale+=commercialHH(x.roleId)*qty;});
+    return {cost,sale};
+  }
+  function quoteBreakdown(){
+    const l=laborTotals(),m=materialTotals(),e=expenseTotals(),v=travelTotals();
+    const serviceGross=l.sale+e.sale+v.sale+m.serviceRevenue;
+    const gross=serviceGross+m.g5102+m.g5405;
+    const cost=l.cost+m.cost+e.cost+v.cost;
+    return {labor:l,material:m,expense:e,travel:v,serviceGross,g5102:m.g5102,g5405:m.g5405,gross,cost};
+  }
 
-  // ======= Config =======
-  q('#cfgProf').value = cfg.prof ?? 809;
-  q('#cfgAjud').value = cfg.ajud ?? 405;
-  q('#btnSalvarCfg').onclick = ()=>{
-    cfg.prof = +q('#cfgProf').value||0;
-    cfg.ajud = +q('#cfgAjud').value||0;
-    persistCfg();
-    renderAll();
-  };
-  q('#btnResetar').onclick = ()=>{
-    if(confirm('Apagar TODOS os lançamentos?')){
-      lanc=[]; persistLanc(); renderAll();
+  function economicResult(customGross=null, useBreakdown=true){
+    const b=quoteBreakdown(); const p=getTaxProfile(); const c=getClient(); const t=serviceTaxMeta();
+    let serviceGross=b.serviceGross,g5102=b.g5102,g5405=b.g5405;
+    if(customGross!==null && num(customGross)>=0){
+      const g=num(customGross);
+      if(useBreakdown && b.gross>0){ const f=g/b.gross; serviceGross*=f;g5102*=f;g5405*=f; }
+      else {serviceGross=g;g5102=0;g5405=0;}
     }
-  };
-
-  // ======= Filtros / Header =======
-  q('#btnFiltrar').onclick = ()=> renderAll();
-  q('#btnLimpar').onclick = ()=>{
-    q('#fDe').value=''; q('#fAte').value=''; q('#fFornecedor').value='';
-    q('#selOF').value='__ALL__';
-    renderAll();
-  };
-
-  // ======= Import/Export CSV =======
-  q('#btnExportar').onclick = ()=>{
-    const rows = [['of_id','data','fornecedor','materiais','profissionais','ajudantes','almoco','translado']];
-    lanc.forEach(l=> rows.push([l.of_id,l.data,l.fornecedor,l.materiais,l.profissionais,l.ajudantes,l.almoco,l.translado]));
-    const csv = rows.map(r=>r.map(v=> typeof v==='string' && v.includes(',') ? `"${v.replace(/"/g,'""')}"` : v).join(',')).join('\n');
-    const blob = new Blob([csv],{type:'text/csv;charset=utf-8;'});
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(blob); a.download = 'adequacoes_civis_v11.csv'; a.click();
-  };
-
-  q('#inputCSV').addEventListener('change', async (e)=>{
-    const file = e.target.files[0]; if(!file) return;
-    const txt = await file.text();
-    const lines = txt.trim().split(/\r?\n/);
-    const head = lines.shift().split(',').map(s=>s.trim().toLowerCase());
-    const idx = (k)=> head.indexOf(k);
-    const need = ['of_id','data','fornecedor','materiais','profissionais','ajudantes','almoco','translado'];
-    const missing = need.filter(k=> idx(k)<0);
-    if(missing.length){ alert('Cabeçalho CSV faltando: '+missing.join(', ')); return; }
-
-    lines.forEach(line=>{
-      if(!line.trim()) return;
-      const cols = parseCsvLine(line);
-      const rec = {
-        of_id: cols[idx('of_id')]||'',
-        data: cols[idx('data')]||'',
-        fornecedor: cols[idx('fornecedor')]||'',
-        materiais: +cols[idx('materiais')]||0,
-        profissionais: +cols[idx('profissionais')]||0,
-        ajudantes: +cols[idx('ajudantes')]||0,
-        almoco: +cols[idx('almoco')]||0,
-        translado: +cols[idx('translado')]||0,
-      };
-      lanc.push(rec);
-    });
-    persistLanc();
-    e.target.value='';
-    // garantir que todas as OFs referenciadas existam
-    const idsUsados = [...new Set(lanc.map(l=>l.of_id).filter(Boolean))];
-    idsUsados.forEach(id=>{
-      if(!ofs.some(o=>o.id===id)){ ofs.push({id, cliente:'', orcado:0, desc:''}); }
-    });
-    persistOFs(); fillOFSelects(); renderOFs(); renderAll();
-  });
-
-  function parseCsvLine(s){
-    const out=[]; let cur=''; let q=false;
-    for(let i=0;i<s.length;i++){
-      const c=s[i];
-      if(c==='"' ){ if(q && s[i+1]==='"'){cur+='"'; i++;} else {q=!q;} }
-      else if(c===',' && !q){ out.push(cur); cur=''; }
-      else cur+=c;
-    }
-    out.push(cur);
-    return out.map(x=>x.trim());
+    const gross=serviceGross+g5102+g5405;
+    const issRet=state.quote.issRetained ? serviceGross*t.issYes/100 : 0;
+    const prevRet=serviceGross*(previdRate()/100)*(num(state.quote.previdBasePct)/100);
+    const serviceTax=serviceGross*t.total/100;
+    const tax5102=g5102*num(p.cfop5102)/100;
+    const tax5405=g5405*num(p.cfop5405)/100;
+    const taxes=serviceTax+tax5102+tax5405;
+    const clientFee=gross*num(c.clientFee)/100;
+    const receivable=Math.max(0,serviceGross-issRet-prevRet)+g5102+g5405;
+    const finance=state.quote.advance ? receivable*(num(p.dailyFinance)*num(c.days)/100) : 0;
+    const costs=b.cost;
+    const profit=gross-taxes-clientFee-finance-costs;
+    const margin=gross>0?profit/gross*100:0;
+    const cashInitial=gross-issRet-prevRet-clientFee-finance;
+    const dasService=Math.max(0,serviceTax-issRet);
+    const taxesPayable=dasService+tax5102+tax5405;
+    const cashAfterObligations=cashInitial-taxesPayable;
+    return {gross,serviceGross,g5102,g5405,issRet,prevRet,serviceTax,tax5102,tax5405,taxes,clientFee,receivable,finance,costs,profit,margin,cashInitial,taxesPayable,cashAfterObligations,dasService,taxMeta:t,breakdown:b};
   }
 
-  // ======= Tabela =======
-  function renderTable(rows){
-    const tb = q('#tabela tbody'); tb.innerHTML = '';
-    rows.forEach((l,idx)=>{
-      const total = gastoLanc(l);
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${escapeHtml(l.of_id||'')}</td>
-        <td>${l.data||''}</td>
-        <td>${escapeHtml(l.fornecedor||'')}</td>
-        <td>${BRL.format(l.materiais||0)}</td>
-        <td>${l.profissionais||0}</td>
-        <td>${l.ajudantes||0}</td>
-        <td>${BRL.format(l.almoco||0)}</td>
-        <td>${BRL.format(l.translado||0)}</td>
-        <td><b>${BRL.format(total)}</b></td>
-        <td><button class="btn ghost" data-del="${idx}">Excluir</button></td>
-      `;
-      tb.appendChild(tr);
-    });
-    tb.querySelectorAll('button[data-del]').forEach(b=>{
-      b.onclick = ()=>{
-        const i = +b.dataset.del;
-        if(confirm('Remover este lançamento?')){
-          lanc.splice(i,1); persistLanc(); renderAll();
-        }
-      };
-    });
-  }
-
-  // ======= KPIs & Saldo OF =======
-  function renderKpis(rows){
-    const mat = sum(rows, r=> +r.materiais||0);
-    const mo  = sum(rows, r=> r.profissionais*cfg.prof + r.ajudantes*cfg.ajud );
-    const ind = sum(rows, r=> +r.almoco + +r.translado);
-    const total = mat + mo + ind;
-
-    q('#kpiMateriais').textContent = BRL.format(mat);
-    q('#kpiMO').textContent = BRL.format(mo);
-    q('#kpiIndiretos').textContent = BRL.format(ind);
-    q('#kpiTotal').textContent = BRL.format(total);
-    q('#kpiRegistros').textContent = rows.length ? `${rows.length} registros` : 'Sem registros';
-    const qtdMO = sum(rows, r=> r.profissionais + r.ajudantes);
-    q('#kpiHh').textContent = `${qtdMO} pessoas·dia`;
-    const pct = total ? (ind/total)*100 : 0;
-    q('#kpiIndPct').textContent = `Indiretos ${pct.toFixed(1)}%`;
-
-    // Pill Orçado/Saldo para OF selecionada
-    const sel = q('#selOF').value;
-    let orcado = 0, gastoOF = 0;
-    if(sel && sel!=='__ALL__'){
-      const of = findOF(sel);
-      orcado = of ? (+of.orcado||0) : 0;
-      gastoOF = sum(lanc.filter(l=>l.of_id===sel), l=>gastoLanc(l));
-    } else {
-      // visão geral (todas): soma dos orçados e gastos
-      orcado = sum(ofs, o=> +o.orcado||0);
-      gastoOF = sum(lanc, l=> gastoLanc(l));
-    }
-    const saldo = orcado - gastoOF;
-    q('#pillOrcado').textContent = `Orçado: ${orcado?BRL.format(orcado):'—'}`;
-    q('#pillSaldo').textContent = `Saldo: ${BRL.format(saldo)}`;
-    q('#pillSaldo').classList.remove('tag-warn','tag-danger');
-    if(orcado>0){
-      const p = gastoOF/orcado;
-      if(saldo<0) q('#pillSaldo').classList.add('tag-danger');
-      else if(p>=0.8) q('#pillSaldo').classList.add('tag-warn');
-    }
-  }
-
-  // ======= Gráficos =======
-  let chEvo=null, chCat=null, chForn=null;
-
-  function renderCharts(rows){
-    const byDate = aggregate(rows, r=>r.data||'—', r=> gastoLanc(r));
-    const cat = {
-      'Materiais': sum(rows, r=> +r.materiais||0),
-      'Mão de Obra': sum(rows, r=> r.profissionais*cfg.prof + r.ajudantes*cfg.ajud ),
-      'Indiretos': sum(rows, r=> +r.almoco + +r.translado),
-    };
-    const byForn = aggregate(rows, r=> (r.fornecedor||'—'), r=> gastoLanc(r));
-
-    [chEvo,chCat,chForn].forEach(ch=> ch && ch.destroy());
-
-    const ctx1 = document.getElementById('graficoEvolucao').getContext('2d');
-    chEvo = new Chart(ctx1, {
-      type:'line',
-      data:{ labels:Object.keys(byDate), datasets:[{ label:'Total por dia', data:Object.values(byDate), tension:.25 }]},
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } }
-    });
-
-    const ctx2 = document.getElementById('graficoCategorias').getContext('2d');
-    chCat = new Chart(ctx2, {
-      type:'doughnut',
-      data:{ labels:Object.keys(cat), datasets:[{ data:Object.values(cat) }]},
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ position:'bottom' } } }
-    });
-
-    const ctx3 = document.getElementById('graficoFornecedores').getContext('2d');
-    chForn = new Chart(ctx3, {
-      type:'bar',
-      data:{ labels:Object.keys(byForn), datasets:[{ label:'Total por fornecedor', data:Object.values(byForn) }]},
-      options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{ y:{ ticks:{ callback:v=>BRL.format(v) } } } }
-    });
-  }
-
-  function aggregate(rows, keyFn, valFn){
-    const map = {};
-    rows.forEach(r=>{
-      const k = keyFn(r);
-      map[k] = (map[k]||0) + (+valFn(r)||0);
-    });
-    return Object.fromEntries(Object.entries(map).sort((a,b)=> a[0].localeCompare(b[0])));
-  }
-
-  function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-  function scrollToTop(){ window.scrollTo({top:0, behavior:'smooth'}); }
-
-  // ======= Render all =======
   function renderAll(){
-    fillOFSelects();
-    const rows = filtrarDados();
-    renderKpis(rows);
-    renderCharts(rows);
-    renderTable(rows);
+    ensureQuoteConsistency();
+    renderMeta(); renderLabor(); renderMaterials(); renderExpenses(); renderTravel(); renderNota(); renderNegotiation(); renderSummary(); renderHistory(); renderPriceTable(); renderHHCosts(); renderHHCalculator(); renderTaxConfig();
+    persist();
+  }
+  function ensureQuoteConsistency(){
+    if(!state.clients.some(c=>c.id===state.quote.clientId)) state.quote.clientId=state.clients[0]?.id||'';
+    if(!state.roles.some(r=>r.id===state.ui.hhRoleId)) state.ui.hhRoleId=state.roles[0]?.id||'';
+    getTaxProfile(state.quote.competence);
   }
 
-  // ======= Seed opcional (remove se preferir começar vazio) =======
-  if(ofs.length===0){
-    ofs = [
-      {id:'OF-2025-001', cliente:'Bortolaso', orcado:22100, desc:'Adequações civis — etapa 1'},
-      {id:'OF-2025-002', cliente:'—', orcado:15000, desc:'Reservado'}
-    ];
-    persistOFs();
-  }
-  if(lanc.length===0){
-    lanc = [
-      {of_id:'OF-2025-001', data:'2025-09-09', fornecedor:'Bortolaso', materiais:344, profissionais:2, ajudantes:0, almoco:40, translado:25},
-      {of_id:'OF-2025-001', data:'2025-09-10', fornecedor:'—',        materiais:0,   profissionais:2, ajudantes:0, almoco:40, translado:25},
-      {of_id:'OF-2025-001', data:'2025-09-15', fornecedor:'Bortolaso', materiais:355, profissionais:2, ajudantes:0, almoco:40, translado:25},
-      {of_id:'OF-2025-002', data:'2025-09-16', fornecedor:'Bortolaso', materiais:86,  profissionais:2, ajudantes:0, almoco:40, translado:25},
-    ];
-    persistLanc();
+  function renderMeta(){
+    $('quoteNumber').value=state.quote.number||''; $('quoteDescription').value=state.quote.description||'';
+    $('quoteClient').innerHTML=state.clients.map(c=>`<option value="${esc(c.id)}">${esc(c.name)}</option>`).join(''); $('quoteClient').value=state.quote.clientId;
+    $('quoteCompetence').innerHTML=Object.keys(state.taxProfiles).sort().reverse().map(k=>`<option value="${k}">${k.slice(5)}/${k.slice(0,4)}</option>`).join(''); $('quoteCompetence').value=state.quote.competence;
+    setVal('serviceProfitPct',state.quote.serviceProfitPct);$('serviceProfitMode').value=state.quote.serviceProfitMode;$('materialProfitMode').value=state.quote.materialProfitMode;setVal('negotiationReservePct',state.quote.negotiationReservePct);
   }
 
-  // Inicialização
-  fillOFSelects();
-  renderOFs();
-  renderAll();
+  function roleOptions(sel){ return state.roles.map(r=>`<option value="${r.id}" ${r.id===sel?'selected':''}>${esc(r.name)}</option>`).join(''); }
+  function renderLabor(){
+    const body=$('laborBody'); body.innerHTML=state.quote.labor.map(x=>{
+      const ch=calcHH(x.roleId).costHH*hourMultiplier(x.hourType), vh=commercialHH(x.roleId)*hourMultiplier(x.hourType), q=num(x.hours)*num(x.people)*num(x.days);
+      return `<tr data-id="${x.id}"><td><input data-f="description" value="${esc(x.description)}"></td><td><select data-f="roleId">${roleOptions(x.roleId)}</select></td><td><select data-f="hourType"><option value="normal" ${x.hourType==='normal'?'selected':''}>Normal</option><option value="50" ${x.hourType==='50'?'selected':''}>50%</option><option value="100" ${x.hourType==='100'?'selected':''}>100%</option><option value="120" ${x.hourType==='120'?'selected':''}>120%</option></select></td><td><input class="small-input" data-f="hours" type="number" step="0.01" value="${x.hours}"></td><td><input class="small-input" data-f="people" type="number" value="${x.people}"></td><td><input class="small-input" data-f="days" type="number" value="${x.days}"></td><td>${money(ch)}</td><td>${money(vh)}</td><td>${money(vh*q)}</td><td><button class="icon-btn" data-remove>×</button></td></tr>`;
+    }).join(''); bindRows(body,state.quote.labor); const t=laborTotals();$('laborCostTotal').textContent=money(t.cost);$('laborSaleTotal').textContent=money(t.sale);
+  }
+  function renderMaterials(){
+    const body=$('materialBody'); body.innerHTML=state.quote.materials.map(x=>{const sale=materialPriceFromCost(x.cost,x.billing,x.profitPct);const p=getTaxProfile();const tax=x.billing==='service'?serviceTaxMeta().total:(x.billing==='5405'?p.cfop5405:p.cfop5102);return `<tr data-id="${x.id}"><td><input data-f="description" value="${esc(x.description)}"></td><td><input data-f="cost" type="number" step="0.01" value="${x.cost}"></td><td><select data-f="billing"><option value="service" ${x.billing==='service'?'selected':''}>Incluído no serviço</option><option value="5102" ${x.billing==='5102'?'selected':''}>CFOP 5102</option><option value="5405" ${x.billing==='5405'?'selected':''}>CFOP 5405/ST</option></select></td><td><input class="small-input" data-f="profitPct" type="number" step="0.01" value="${x.profitPct}">%</td><td>${pct(tax)}</td><td>${money(sale)}</td><td><button class="icon-btn" data-remove>×</button></td></tr>`}).join('');bindRows(body,state.quote.materials);const t=materialTotals();$('materialCostTotal').textContent=money(t.cost);$('materialSaleTotal').textContent=money(t.sale);
+  }
+  function renderExpenses(){
+    const types=[['estadia','Estadia'],['almoco','Almoço'],['janta','Janta'],['cafe','Café'],['transporte','Transporte'],['outro','Outro']];
+    const body=$('expenseBody');body.innerHTML=state.quote.expenses.map(x=>{const c=num(x.unit)*num(x.qty)*num(x.days),s=servicePriceFromCost(c);return `<tr data-id="${x.id}"><td><select data-f="type">${types.map(([v,n])=>`<option value="${v}" ${x.type===v?'selected':''}>${n}</option>`).join('')}</select></td><td><input data-f="description" value="${esc(x.description)}"></td><td><input data-f="unit" type="number" step="0.01" value="${x.unit}"></td><td><input class="small-input" data-f="qty" type="number" step="0.01" value="${x.qty}"></td><td><input class="small-input" data-f="days" type="number" step="0.01" value="${x.days}"></td><td>${money(c)}</td><td>${money(s)}</td><td><button class="icon-btn" data-remove>×</button></td></tr>`}).join('');bindRows(body,state.quote.expenses);const t=expenseTotals();$('expenseCostTotal').textContent=money(t.cost);$('expenseSaleTotal').textContent=money(t.sale);
+  }
+  function renderTravel(){
+    const body=$('travelBody');body.innerHTML=state.quote.travel.map(x=>{const q=num(x.hours)*num(x.people)*num(x.days),c=calcHH(x.roleId).costHH*q,s=commercialHH(x.roleId)*q;return `<tr data-id="${x.id}"><td><input data-f="description" value="${esc(x.description)}"></td><td><select data-f="roleId">${roleOptions(x.roleId)}</select></td><td><input class="small-input" data-f="hours" type="number" step="0.01" value="${x.hours}"></td><td><input class="small-input" data-f="people" type="number" value="${x.people}"></td><td><input class="small-input" data-f="days" type="number" value="${x.days}"></td><td>${money(c)}</td><td>${money(s)}</td><td><button class="icon-btn" data-remove>×</button></td></tr>`}).join('');bindRows(body,state.quote.travel);const t=travelTotals();$('travelCostTotal').textContent=money(t.cost);$('travelSaleTotal').textContent=money(t.sale);
+  }
+  function bindRows(body,arr){
+    body.querySelectorAll('tr').forEach(tr=>{const item=arr.find(x=>x.id===tr.dataset.id);tr.querySelectorAll('[data-f]').forEach(el=>el.addEventListener('change',()=>{const f=el.dataset.f;item[f]=el.type==='number'?num(el.value):el.value;renderAll()}));tr.querySelector('[data-remove]')?.addEventListener('click',()=>{const i=arr.indexOf(item);if(i>=0)arr.splice(i,1);renderAll()})});
+  }
+
+  function setSegment(containerId,value){ $(containerId).querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.value===String(value))); }
+  function renderNota(){
+    const q=state.quote; const b=quoteBreakdown(); const manual=num(q.nrManualGross); const useManual=manual>0 && !q.nrUseBreakdown; const r=economicResult(useManual?manual:b.gross, q.nrUseBreakdown);
+    $('nrManualGross').value=useManual?manual:''; $('nrGross').textContent=money(r.gross);$('nrTaxes').textContent=money(r.taxes);$('nrRetentions').textContent=money(r.issRet+r.prevRet);$('nrCosts').textContent=money(r.costs);$('nrProfit').textContent=money(r.profit);$('nrProfitPct').textContent=pct(r.margin,1);$('nrProfit').className=r.profit>=0?'profit-positive':'profit-negative';
+    setSegment('annexSeg',q.annex);setSegment('issSeg',q.issRetained?'yes':'no');$('previdRetention').value=q.previdRetention;$('previdBase').value=q.previdBasePct;$('advanceToggle').checked=!!q.advance;
+    const t=r.taxMeta,p=getTaxProfile(),c=getClient();
+    $('taxRuleSummary').innerHTML=`<strong>Anexo ${q.annex}</strong><br>Simples efetivo: ${pct(t.total)} · ISS ${q.issRetained?'retido':'destaque'}: ${pct(q.issRetained?t.issYes:t.issNo)}${q.issRetained?` · DAS restante: ${pct(t.dasPayable)}`:''}<br>Prazo ${c.days} dias · Financeiro simples ${pct(p.dailyFinance*c.days)} · Taxa/repasse cliente ${pct(c.clientFee)}<br>Retenção previdenciária: ${q.previdRetention==='none'?'não se aplica':pct(q.previdRetention)} sobre ${pct(q.previdBasePct)} da base do serviço.`;
+    const rows=[
+      ['Receita serviço',money(r.serviceGross)],['Receita CFOP 5102',money(r.g5102)],['Receita CFOP 5405/ST',money(r.g5405)],
+      [`Simples serviço — total efetivo ${pct(t.total)}`,`- ${money(r.serviceTax)}`],
+      [`ISS retido ${q.issRetained?pct(t.issYes):'0%'}`,`- ${money(r.issRet)} (caixa)`],
+      [`DAS serviço a recolher`, `- ${money(r.dasService)}`],
+      [`Tributo 5102 ${pct(p.cfop5102)}`,`- ${money(r.tax5102)}`],[`Tributo 5405/ST ${pct(p.cfop5405)}`,`- ${money(r.tax5405)}`],
+      [`INSS retido ${q.previdRetention==='none'?'0%':pct(q.previdRetention)}`,`- ${money(r.prevRet)} (retenção/crédito)`],
+      [`Taxa/repasse ${pct(c.clientFee)}`,`- ${money(r.clientFee)}`],[`Antecipação simples`, `- ${money(r.finance)}`],
+      ['Custos reais',`- ${money(r.costs)}`],['Lucro econômico',money(r.profit),'total '+(r.profit>=0?'good':'bad')],['Margem econômica',pct(r.margin,2)],
+      ['Recebível antecipável',money(r.receivable)],['Caixa inicial após retenções/financeiro',money(r.cashInitial)],['Caixa após tributos a recolher',money(r.cashAfterObligations)]
+    ];
+    $('nrBreakdown').innerHTML=rows.map(x=>`<div class="break-row ${x[2]||''}"><span>${x[0]}</span><strong>${x[1]}</strong></div>`).join('');
+  }
+
+  function resultForDiscount(base,discountPct){
+    const orig=quoteBreakdown(); const factor=base>0?Math.max(0,1-num(discountPct)/100):0; const gross=base*factor;
+    return economicResult(gross,true);
+  }
+  function renderNegotiation(){
+    const b=quoteBreakdown(); if(!$('negBase').matches(':focus')) $('negBase').value=(num($('negBase').value)||b.gross).toFixed(2);
+    const base=num($('negBase').value)||b.gross, d=num(state.quote.negotiationPct), r=economicResult(base*(1-d/100),true);$('negPercent').value=d;$('minMargin').value=state.quote.minMarginPct;$('negAfter').textContent=money(r.gross);$('negProfit').textContent=money(r.profit);$('negMargin').textContent=pct(r.margin,2);$('negProfit').className=r.profit>=0?'profit-positive':'profit-negative';
+    const zero=economicResult(base,true); const contribution=zero.gross>0?(zero.gross-zero.taxes-zero.clientFee-zero.finance)/zero.gross:0; const be=contribution>0?zero.costs/contribution:Infinity; const maxBreak=base>0&&Number.isFinite(be)?Math.max(0,(1-be/base)*100):0; $('negMaxBreak').textContent=pct(maxBreak,2);
+    const m=num(state.quote.minMarginPct)/100; const target=contribution>m?zero.costs/(contribution-m):Infinity; const maxTarget=base>0&&Number.isFinite(target)?Math.max(0,(1-target/base)*100):0; $('negNotice').innerHTML=`Desconto máximo para manter margem mínima de <strong>${pct(state.quote.minMarginPct)}</strong>: <strong>${pct(maxTarget,2)}</strong>. O desconto comercial é calculado separado da taxa/repasse do cliente.`;
+  }
+
+  function renderSummary(){
+    const r=economicResult(); const p=getTaxProfile();$('sumRevenue').textContent=money(r.gross);$('sumCost').textContent=money(r.costs);$('sumTax').textContent=money(r.taxes);$('sumFinance').textContent=money(r.finance+r.clientFee);$('sumProfit').textContent=money(r.profit);$('sumMargin').textContent=pct(r.margin,2);
+    $('sumRevenueBreakdown').innerHTML=[['Serviços',r.serviceGross],['CFOP 5102',r.g5102],['CFOP 5405/ST',r.g5405],['Total',r.gross]].map(([n,v],i)=>`<div class="break-row ${i===3?'total':''}"><span>${n}</span><strong>${money(v)}</strong></div>`).join('');
+    const c=getClient(),t=serviceTaxMeta(); $('sumMemory').innerHTML=[['Competência',state.quote.competence],['Cliente',c.name],['Anexo',state.quote.annex],['Simples efetivo',pct(t.total)],['ISS',state.quote.issRetained?`Retido ${pct(t.issYes)}`:`Sem retenção · destaque ${pct(t.issNo)}`],['Retenção previdenciária',state.quote.previdRetention==='none'?'Não se aplica':`${pct(state.quote.previdRetention)} × base ${pct(state.quote.previdBasePct)}`],['CFOP 5102',pct(p.cfop5102)],['CFOP 5405/ST',pct(p.cfop5405)],['Prazo',`${c.days} dias`],['Financeiro',`${pct(p.dailyFinance)}/dia simples = ${pct(p.dailyFinance*c.days)}`],['Taxa/repasse cliente',pct(c.clientFee)],['Reserva negociação embutida',pct(state.quote.negotiationReservePct)],['Lucro econômico',money(r.profit)],['Margem',pct(r.margin,2)]].map(([n,v])=>`<div class="break-row"><span>${n}</span><strong>${v}</strong></div>`).join('');
+  }
+
+  function renderHistory(){
+    $('historyBody').innerHTML=history.map(h=>`<tr data-id="${h.id}"><td>${esc(h.number||'—')}</td><td>${esc(h.description||'—')}</td><td>${esc(h.clientName||'—')}</td><td>${esc(h.competence||'—')}</td><td>${money(h.total)}</td><td>${new Date(h.savedAt).toLocaleString('pt-BR')}</td><td><button class="btn btn-soft" data-load>Carregar</button> <button class="icon-btn" data-del>×</button></td></tr>`).join('');
+    $('historyBody').querySelectorAll('tr').forEach(tr=>{const h=history.find(x=>x.id===tr.dataset.id);tr.querySelector('[data-load]')?.addEventListener('click',()=>{state.quote=structuredClone(h.quote);if(h.taxSnapshot)state.taxProfiles[h.competence]=structuredClone(h.taxSnapshot);renderAll();openTab('mao');toast('Orçamento carregado')});tr.querySelector('[data-del]')?.addEventListener('click',()=>{history=history.filter(x=>x.id!==h.id);persistHistory();renderHistory()})});
+  }
+
+  function economicMarginForUnit(sale,cost){
+    const t=serviceTaxMeta(),c=getClient();const iss=t.issRetRate/100,prev=previdRate()/100*num(state.quote.previdBasePct)/100;const fin=advanceRate()*(1-iss-prev);const contribution=1-t.total/100-num(c.clientFee)/100-fin;const profit=sale*contribution-cost;return sale>0?profit/sale*100:0;
+  }
+  function renderPriceTable(){
+    const c=getClient();$('priceBody').innerHTML=state.roles.map(r=>{const cost=calcHH(r.id).costHH;const min=serviceMinimumFromCost(cost);const suggested=servicePriceFromCost(cost);const override=num(state.priceOverrides?.[c.id]?.[r.id]);const sale=override>0?override:suggested;const mar=economicMarginForUnit(sale,cost);return `<tr data-role="${r.id}"><td>${esc(r.name)}</td><td>${money(cost)}</td><td>${money(min)}</td><td>${esc(c.name)}</td><td><input data-price type="number" step="0.01" value="${sale.toFixed(2)}"></td><td class="${mar>=0?'profit-positive':'profit-negative'}">${pct(mar,2)}</td></tr>`}).join('');
+    $('priceBody').querySelectorAll('tr').forEach(tr=>tr.querySelector('[data-price]').addEventListener('change',e=>{state.priceOverrides[c.id]??={};state.priceOverrides[c.id][tr.dataset.role]=num(e.target.value);renderAll()}));
+  }
+  function renderHHCosts(){
+    $('hhCostBody').innerHTML=state.roles.map(r=>{const x=calcHH(r.id);return `<tr><td>${esc(r.name)}</td><td>${money(r.salary)}</td><td>${money(x.directAnnual)}</td><td>${money(x.fixedPerHH)}</td><td>${x.annualBillable.toFixed(0)} h</td><td><strong>${money(x.costHH)}</strong></td></tr>`}).join('');
+  }
+
+  function renderHHCalculator(){
+    $('hhRoleTabs').innerHTML=state.roles.map(r=>`<button data-id="${r.id}" class="${r.id===state.ui.hhRoleId?'active':''}">${esc(r.name)}</button>`).join('');$('hhRoleTabs').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{state.ui.hhRoleId=b.dataset.id;renderHHCalculator()}));
+    const role=getRole(state.ui.hhRoleId),h=state.hh,x=calcHH(role.id); setVal('hhSalary',role.salary);setVal('hhMinSalary',h.minSalary);setVal('hhInsal',h.insalPct);setVal('hhPrize',h.prize);$('hhPrizeInc').checked=h.prizeIntegrates;setVal('hhContractHours',h.contractHours);setVal('hhBillableHours',h.billableHours);setVal('hhEmployeeCount',h.employeeCount);setVal('hhEpi',h.epi);$('hhEpiPeriod').value=h.epiPeriod;setVal('hhExam',h.exam);$('hhExamPeriod').value=h.examPeriod;setVal('hhTools',h.tools);$('hhToolsPeriod').value=h.toolsPeriod;setVal('hhHealth',h.health);setVal('hhMeal',h.meal);setVal('hhTransport',h.transport);setVal('hhTraining',h.trainingAnnual);setVal('hhFgtsFine',h.fgtsFinePct);
+    const eff=num(h.contractHours)>0?num(h.billableHours)/num(h.contractHours)*100:0;
+    $('hhResult').innerHTML=[['Remuneração mensal paga',money(x.cashMonthly)],['Base mensal de encargos',money(x.chargeBase)],['13º anual',money(x.thirteenth)],['1/3 de férias anual',money(x.vacationThird)],['FGTS anual',money(x.fgts)],['CPP/RAT anual',`${money(x.cpp)} (${pct(x.cppRate)})`],['Provisão multa FGTS',money(x.severance)],['EPI/exames/ferramentas/benefícios anuais',money(x.extras)],['Custo direto anual',money(x.directAnnual)],['Horas faturáveis anuais',`${x.annualBillable.toFixed(0)} h`],['Eficiência faturável mensal',pct(eff,1)],['Custo direto por HH',money(x.directHH)],['Rateio fixo por HH',money(x.fixedPerHH)],['Preço mínimo comercial HH',money(servicePriceFromCost(x.costHH))]].map(([n,v])=>`<div class="break-row"><span>${n}</span><strong>${v}</strong></div>`).join('');$('hhHero').textContent=money(x.costHH);
+    $('fixedCostBody').innerHTML=state.fixedCosts.map(fc=>`<tr data-id="${fc.id}"><td><input data-name value="${esc(fc.name)}"></td><td><input data-value type="number" step="0.01" value="${fc.value}"></td><td><button class="icon-btn" data-del>×</button></td></tr>`).join('');$('fixedCostTotal').textContent=money(totalFixedMonthly());$('fixedCostBody').querySelectorAll('tr').forEach(tr=>{const fc=state.fixedCosts.find(x=>x.id===tr.dataset.id);tr.querySelector('[data-name]').addEventListener('change',e=>{fc.name=e.target.value;renderAll()});tr.querySelector('[data-value]').addEventListener('change',e=>{fc.value=num(e.target.value);renderAll()});tr.querySelector('[data-del]').addEventListener('click',()=>{state.fixedCosts=state.fixedCosts.filter(x=>x.id!==fc.id);renderAll()})});
+  }
+  function setVal(id,v){ if(!$(id).matches(':focus')) $(id).value=v; }
+
+  function renderTaxConfig(){
+    const p=getTaxProfile(); setVal('taxCompetence',state.quote.competence);setVal('taxDailyFinance',p.dailyFinance);setVal('taxA3',p.a3);setVal('taxA3IssNo',p.a3IssNo);setVal('taxA3IssYes',p.a3IssYes);setVal('taxA4',p.a4);setVal('taxA4IssNo',p.a4IssNo);setVal('taxA4IssYes',p.a4IssYes);setVal('tax5102',p.cfop5102);setVal('tax5102Credit',p.cfop5102Credit);setVal('tax5405',p.cfop5405);setVal('taxCpp',p.cpp);setVal('taxRat',p.rat);setVal('taxFap',p.fap);$('taxCprb').checked=!!p.cprb;setVal('taxCppCprb',p.cppCprbManual);
+    $('clientRulesBody').innerHTML=state.clients.map(c=>`<tr data-id="${c.id}"><td><input data-name value="${esc(c.name)}"></td><td><input class="small-input" data-days type="number" value="${c.days}"></td><td><input class="small-input" data-fee type="number" step="0.01" value="${c.clientFee}"></td><td><input data-adv type="checkbox" ${c.advanceDefault?'checked':''}></td><td><button class="icon-btn" data-del>×</button></td></tr>`).join('');
+    $('clientRulesBody').querySelectorAll('tr').forEach(tr=>{const c=state.clients.find(x=>x.id===tr.dataset.id);tr.querySelector('[data-name]').addEventListener('change',e=>{c.name=e.target.value;renderAll()});tr.querySelector('[data-days]').addEventListener('change',e=>{c.days=Math.max(0,num(e.target.value));renderAll()});tr.querySelector('[data-fee]').addEventListener('change',e=>{c.clientFee=Math.max(0,num(e.target.value));renderAll()});tr.querySelector('[data-adv]').addEventListener('change',e=>{c.advanceDefault=e.target.checked;if(c.id===state.quote.clientId)state.quote.advance=e.target.checked;renderAll()});tr.querySelector('[data-del]').addEventListener('click',()=>{if(state.clients.length<=1)return;state.clients=state.clients.filter(x=>x.id!==c.id);renderAll()})});
+  }
+
+  function saveTaxForm(){
+    const comp=$('taxCompetence').value||state.quote.competence;const p={competence:comp,dailyFinance:num($('taxDailyFinance').value),a3:num($('taxA3').value),a3IssNo:num($('taxA3IssNo').value),a3IssYes:num($('taxA3IssYes').value),a4:num($('taxA4').value),a4IssNo:num($('taxA4IssNo').value),a4IssYes:num($('taxA4IssYes').value),cfop5102:num($('tax5102').value),cfop5102Credit:num($('tax5102Credit').value),cfop5405:num($('tax5405').value),cpp:num($('taxCpp').value),rat:num($('taxRat').value),fap:num($('taxFap').value),cprb:$('taxCprb').checked,cppCprbManual:num($('taxCppCprb').value)};state.taxProfiles[comp]=p;state.quote.competence=comp;renderAll();toast(`Competência ${comp} salva`);
+  }
+  function saveHHForm(){
+    const h=state.hh,role=getRole(state.ui.hhRoleId);role.salary=num($('hhSalary').value);h.minSalary=num($('hhMinSalary').value);h.insalPct=num($('hhInsal').value);h.prize=num($('hhPrize').value);h.prizeIntegrates=$('hhPrizeInc').checked;h.contractHours=num($('hhContractHours').value);h.billableHours=Math.max(1,num($('hhBillableHours').value));h.employeeCount=Math.max(1,num($('hhEmployeeCount').value));h.epi=num($('hhEpi').value);h.epiPeriod=num($('hhEpiPeriod').value);h.exam=num($('hhExam').value);h.examPeriod=num($('hhExamPeriod').value);h.tools=num($('hhTools').value);h.toolsPeriod=num($('hhToolsPeriod').value);h.health=num($('hhHealth').value);h.meal=num($('hhMeal').value);h.transport=num($('hhTransport').value);h.trainingAnnual=num($('hhTraining').value);h.fgtsFinePct=num($('hhFgtsFine').value);renderAll();toast('Parâmetros HH salvos e aplicados ao orçamento');
+  }
+
+  function saveQuote(){
+    const r=economicResult();const c=getClient();const p=structuredClone(getTaxProfile());const item={id:state.quote.id||uid(),number:state.quote.number,description:state.quote.description,clientName:c.name,competence:state.quote.competence,total:r.gross,savedAt:new Date().toISOString(),quote:structuredClone(state.quote),taxSnapshot:p};const idx=history.findIndex(x=>x.id===item.id);if(idx>=0)history[idx]=item;else history.unshift(item);persistHistory();renderHistory();toast('Orçamento salvo no histórico');
+  }
+  function newQuote(){ const old=state.quote;const c=getClient(old.clientId);state.quote={...defaultState().quote,id:uid(),clientId:old.clientId,competence:old.competence,annex:old.annex,advance:c.advanceDefault};renderAll();openTab('mao');toast('Novo orçamento criado'); }
+  function exportData(){ const blob=new Blob([JSON.stringify({version:1,state,history},null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`multprest-orcamentos-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href); }
+  function importData(file){ const fr=new FileReader();fr.onload=()=>{try{const d=JSON.parse(fr.result);if(d.state)state=migrateState(d.state);if(Array.isArray(d.history))history=d.history;persist();persistHistory();renderAll();toast('Dados importados')}catch{toast('Arquivo inválido')}};fr.readAsText(file); }
+
+  function openTab(name){ document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===name));document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id===`tab-${name}`)); }
+  function addListeners(){
+    document.querySelectorAll('.tab-btn').forEach(b=>b.addEventListener('click',()=>openTab(b.dataset.tab)));
+    $('quoteNumber').addEventListener('change',e=>{state.quote.number=e.target.value;persist()});$('quoteDescription').addEventListener('change',e=>{state.quote.description=e.target.value;persist()});$('quoteClient').addEventListener('change',e=>{state.quote.clientId=e.target.value;state.quote.advance=getClient(e.target.value).advanceDefault;renderAll()});$('quoteCompetence').addEventListener('change',e=>{state.quote.competence=e.target.value;renderAll()});$('serviceProfitPct').addEventListener('change',e=>{state.quote.serviceProfitPct=clamp(e.target.value,0,300);renderAll()});$('serviceProfitMode').addEventListener('change',e=>{state.quote.serviceProfitMode=e.target.value;renderAll()});$('materialProfitMode').addEventListener('change',e=>{state.quote.materialProfitMode=e.target.value;renderAll()});$('negotiationReservePct').addEventListener('change',e=>{state.quote.negotiationReservePct=clamp(e.target.value,0,80);renderAll()});
+    $('addLabor').addEventListener('click',()=>{state.quote.labor.push({id:uid(),description:'',roleId:state.roles[0].id,hourType:'normal',hours:8.8,people:1,days:1});renderAll()});
+    $('addMaterial').addEventListener('click',()=>{state.quote.materials.push({id:uid(),description:'',cost:0,billing:'service',profitPct:10});renderAll()});
+    $('addExpense').addEventListener('click',()=>{state.quote.expenses.push({id:uid(),type:'almoco',description:'',unit:0,qty:1,days:1});renderAll()});
+    $('addTravel').addEventListener('click',()=>{state.quote.travel.push({id:uid(),description:'',roleId:state.roles[0].id,hours:0,people:1,days:1});renderAll()});
+    $('annexSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{state.quote.annex=b.dataset.value;renderAll()}));$('issSeg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{state.quote.issRetained=b.dataset.value==='yes';renderAll()}));$('previdRetention').addEventListener('change',e=>{state.quote.previdRetention=e.target.value;renderAll()});$('previdBase').addEventListener('change',e=>{state.quote.previdBasePct=clamp(e.target.value,0,100);renderAll()});$('advanceToggle').addEventListener('change',e=>{state.quote.advance=e.target.checked;renderAll()});
+    $('pullQuoteTotal').addEventListener('click',()=>{state.quote.nrManualGross=0;state.quote.nrUseBreakdown=true;renderAll();toast('Total e composição do orçamento aplicados')});$('nrManualGross').addEventListener('input',e=>{state.quote.nrManualGross=num(e.target.value);state.quote.nrUseBreakdown=false;renderNota()});
+    $('negPercent').addEventListener('input',e=>{state.quote.negotiationPct=clamp(e.target.value,0,99);renderNegotiation()});$('minMargin').addEventListener('input',e=>{state.quote.minMarginPct=clamp(e.target.value,0,80);renderNegotiation()});$('negBase').addEventListener('input',renderNegotiation);
+    $('saveHH').addEventListener('click',saveHHForm);$('addFixedCost').addEventListener('click',()=>{state.fixedCosts.push({id:uid(),name:'Novo custo',value:0});renderAll()});
+    $('saveTaxProfile').addEventListener('click',saveTaxForm);$('addClient').addEventListener('click',()=>{const id='cliente-'+uid();state.clients.push({id,name:'Novo cliente',days:30,clientFee:0,advanceDefault:true});renderAll()});$('taxCompetence').addEventListener('change',e=>{const comp=e.target.value;if(!comp)return;getTaxProfile(comp);state.quote.competence=comp;renderAll()});
+    $('btnSalvar').addEventListener('click',saveQuote);$('btnNovo').addEventListener('click',newQuote);$('btnExportar').addEventListener('click',exportData);$('importFile').addEventListener('change',e=>e.target.files?.[0]&&importData(e.target.files[0]));
+  }
+
+  addListeners(); renderAll();
+})();
+
 </script>
 </body>
 </html>
