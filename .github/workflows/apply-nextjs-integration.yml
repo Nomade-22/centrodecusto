@@ -1,0 +1,57 @@
+name: Aplicar pacote Next.js integrado
+
+on:
+  push:
+    branches: ["nextjs-neon-integration"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  aplicar:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout da branch de integração
+        uses: actions/checkout@v4
+        with:
+          ref: nextjs-neon-integration
+          fetch-depth: 0
+
+      - name: Aplicar pacote
+        shell: bash
+        run: |
+          set -euo pipefail
+          PKG="integration/orcamento_multprest_integrado.tgz"
+          if [ ! -f "$PKG" ]; then
+            echo "Pacote já aplicado; nada a fazer."
+            exit 0
+          fi
+          TMP="$(mktemp -d)"
+          tar -xzf "$PKG" -C "$TMP"
+          find . -mindepth 1 -maxdepth 1             ! -name .git             ! -name .github             ! -name integration             ! -name MIGRACAO_NEXTJS_NEON.md             -exec rm -rf {} +
+          cp -a "$TMP/orcamento_multprest_integrado/." .
+          rm -rf integration
+
+      - name: Validar estrutura
+        shell: bash
+        run: |
+          test -f package.json
+          test -f src/lib/hh.ts
+          test -f src/lib/fiscal.ts
+          test -f db/migrations/20261008_hh_integration.sql
+          echo "Estrutura Next.js + HH validada."
+
+      - name: Commit da versão integrada
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Sem alterações."
+            exit 0
+          fi
+          git commit -m "Aplica versão Next.js integrada com Calculadora HH"
+          git push origin HEAD:nextjs-neon-integration
