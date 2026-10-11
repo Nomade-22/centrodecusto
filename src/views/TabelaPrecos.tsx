@@ -167,9 +167,14 @@ export default function TabelaPrecos() {
   };
 
   const deleteWorker = async (id: number) => {
-    if (!confirm("Excluir esta função? As taxas relacionadas também serão excluídas.")) return;
+    if (!confirm("Excluir esta função? A exclusão só será permitida se ela nunca tiver sido usada em um orçamento.")) return;
     try {
-      await fetch(`/api/price-table/workers/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/price-table/workers/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        alert(payload.error || "Não foi possível excluir esta função.");
+        return;
+      }
       await fetchData(true);
     } catch (error) {
       console.error("Error deleting worker:", error);
@@ -210,9 +215,14 @@ export default function TabelaPrecos() {
   };
 
   const deleteHourType = async (id: number) => {
-    if (!confirm("Excluir este tipo de hora?")) return;
+    if (!confirm("Excluir este tipo de hora? A exclusão só será permitida se ele nunca tiver sido usado em um orçamento.")) return;
     try {
-      await fetch(`/api/price-table/hour-types/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/price-table/hour-types/${id}`, { method: "DELETE" });
+      if (!res.ok) {
+        const payload = await res.json().catch(() => ({}));
+        alert(payload.error || "Não foi possível excluir este tipo de hora.");
+        return;
+      }
       await fetchData(true);
     } catch (error) {
       console.error("Error deleting hour type:", error);
