@@ -1,0 +1,42 @@
+name: Expand Next.js source
+
+on:
+  push:
+    branches:
+      - nextjs-neon-integration
+    paths:
+      - ".source-parts/**"
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: nextjs-neon-integration
+
+      - name: Expand integrated source
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .source-parts/source.part.* > /tmp/centrodecusto-source.tar.gz
+          rm -f index.html script.js style.css
+          tar -xzf /tmp/centrodecusto-source.tar.gz
+          rm -rf .source-parts
+
+      - name: Commit expanded source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "feat: migrate Centro de Custo to integrated Next.js app"
+          git push origin HEAD:nextjs-neon-integration
