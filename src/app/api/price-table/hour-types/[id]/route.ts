@@ -37,6 +37,26 @@ export async function DELETE(req: Request, { params }: Params) {
   const { id } = await params;
 
   try {
+    const rows = await sql`SELECT hour_id FROM hour_types WHERE id = ${id}`;
+    if (rows.length === 0) {
+      return NextResponse.json({ error: "Tipo de hora não encontrado" }, { status: 404 });
+    }
+
+    const hourId = String(rows[0].hour_id);
+    const pattern = `%"hourTypeId":"${hourId}"%`;
+    const usage = await sql`
+      SELECT count(*)::int AS count
+      FROM orcamentos
+      WHERE dados LIKE ${pattern}
+    `;
+
+    if (Number(usage[0]?.count ?? 0) > 0) {
+      return NextResponse.json(
+        { error: "Este tipo de hora já foi usado em orçamentos e não pode ser excluído. Altere apenas o nome/multiplicador para preservar o histórico." },
+        { status: 409 }
+      );
+    }
+
     await sql`DELETE FROM hour_types WHERE id = ${id}`;
     return NextResponse.json({ success: true });
   } catch (error) {
