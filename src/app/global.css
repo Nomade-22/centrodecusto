@@ -1,0 +1,522 @@
+@import "tailwindcss";
+@source "../app/**/*.{ts,tsx,js,jsx}";
+@source "../components/**/*.{ts,tsx,js,jsx}";
+@source "../views/**/*.{ts,tsx,js,jsx}";
+@source "../hooks/**/*.{ts,tsx,js,jsx}";
+@source "../shared/**/*.{ts,tsx,js,jsx}";
+@source "../utils/**/*.{ts,tsx,js,jsx}";
+@source "../lib/**/*.{ts,tsx,js,jsx}";
+/* User's tailwind.config.js theme, ported to v4 @theme */
+@theme {
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-chart-1: hsl(var(--chart-1));
+  --color-chart-2: hsl(var(--chart-2));
+  --color-chart-3: hsl(var(--chart-3));
+  --color-chart-4: hsl(var(--chart-4));
+  --color-chart-5: hsl(var(--chart-5));
+  --color-sidebar: hsl(var(--sidebar));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-4xl: 2rem;
+}
+
+
+@custom-variant dark (&:is(.dark *));
+
+@layer base {
+  :root {
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(240 10% 3.9%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(240 10% 3.9%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(240 10% 3.9%);
+    --primary: hsl(240 5.9% 10%);
+    --primary-foreground: hsl(0 0% 98%);
+    --secondary: hsl(240 4.8% 95.9%);
+    --secondary-foreground: hsl(240 5.9% 10%);
+    --muted: hsl(240 4.8% 95.9%);
+    --muted-foreground: hsl(240 3.8% 46.1%);
+    --accent: hsl(240 4.8% 95.9%);
+    --accent-foreground: hsl(240 5.9% 10%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(240 5.9% 90%);
+    --input: hsl(240 5.9% 90%);
+    --ring: hsl(240 5.9% 10%);
+    --radius: 0.5rem;
+    --chart-1: hsl(12 76% 61%);
+    --chart-2: hsl(173 58% 39%);
+    --chart-3: hsl(197 37% 24%);
+    --chart-4: hsl(43 74% 66%);
+    --chart-5: hsl(27 87% 67%);
+    --sidebar: hsl(0 0% 98%);
+    --sidebar-foreground: hsl(240 5.3% 26.1%);
+    --sidebar-primary: hsl(240 5.9% 10%);
+    --sidebar-primary-foreground: hsl(0 0% 98%);
+    --sidebar-accent: hsl(240 4.8% 95.9%);
+    --sidebar-accent-foreground: hsl(240 5.9% 10%);
+    --sidebar-border: hsl(220 13% 91%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+}
+
+@layer base {
+  .dark {
+    --background: hsl(240 10% 3.9%);
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(240 10% 3.9%);
+    --card-foreground: hsl(0 0% 98%);
+    --popover: hsl(240 10% 3.9%);
+    --popover-foreground: hsl(0 0% 98%);
+    --primary: hsl(0 0% 98%);
+    --primary-foreground: hsl(240 5.9% 10%);
+    --secondary: hsl(240 3.7% 15.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(240 3.7% 15.9%);
+    --muted-foreground: hsl(240 5% 64.9%);
+    --accent: hsl(240 3.7% 15.9%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 62.8% 30.6%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(240 3.7% 15.9%);
+    --input: hsl(240 3.7% 15.9%);
+    --ring: hsl(240 4.9% 83.9%);
+    --chart-1: hsl(220 70% 50%);
+    --chart-2: hsl(160 60% 45%);
+    --chart-3: hsl(30 80% 55%);
+    --chart-4: hsl(280 65% 60%);
+    --chart-5: hsl(340 75% 55%);
+    --sidebar: hsl(240 5.9% 10%);
+    --sidebar-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-primary: hsl(224.3 76.3% 48%);
+    --sidebar-primary-foreground: hsl(0 0% 100%);
+    --sidebar-accent: hsl(240 3.7% 15.9%);
+    --sidebar-accent-foreground: hsl(240 4.8% 95.9%);
+    --sidebar-border: hsl(240 3.7% 15.9%);
+    --sidebar-ring: hsl(217.2 91.2% 59.8%);
+}
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-destructive-foreground: var(--destructive-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
+    --color-chart-1: var(--chart-1);
+    --color-chart-2: var(--chart-2);
+    --color-chart-3: var(--chart-3);
+    --color-chart-4: var(--chart-4);
+    --color-chart-5: var(--chart-5);
+    --color-sidebar: var(--sidebar);
+    --color-sidebar-foreground: var(--sidebar-foreground);
+    --color-sidebar-primary: var(--sidebar-primary);
+    --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+    --color-sidebar-accent: var(--sidebar-accent);
+    --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+    --color-sidebar-border: var(--sidebar-border);
+    --color-sidebar-ring: var(--sidebar-ring);
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
+}
+
+@layer base {
+  :root {
+    --background: hsl(0 0% 100%);
+    --foreground: hsl(20 14.3% 4.1%);
+    --card: hsl(0 0% 100%);
+    --card-foreground: hsl(20 14.3% 4.1%);
+    --popover: hsl(0 0% 100%);
+    --popover-foreground: hsl(20 14.3% 4.1%);
+    --primary: hsl(262 83% 58%);
+    --primary-foreground: hsl(270 50% 95%);
+    --secondary: hsl(60 4.8% 95.9%);
+    --secondary-foreground: hsl(24 9.8% 10%);
+    --muted: hsl(60 4.8% 95.9%);
+    --muted-foreground: hsl(25 5.3% 44.7%);
+    --accent: hsl(60 4.8% 95.9%);
+    --accent-foreground: hsl(24 9.8% 10%);
+    --destructive: hsl(0 84.2% 60.2%);
+    --destructive-foreground: hsl(60 9.1% 97.8%);
+    --border: hsl(20 5.9% 90%);
+    --input: hsl(20 5.9% 90%);
+    --ring: hsl(20 14.3% 4.1%);
+    --radius: 0.45rem;
+    --chart-1: hsl(262 70% 70%);
+    --chart-2: hsl(262 75% 60%);
+    --chart-3: hsl(262 80% 50%);
+    --chart-4: hsl(262 83% 45%);
+    --chart-5: hsl(262 85% 40%);
+    --sidebar: hsl(0 0% 98%);
+    --sidebar-foreground: hsl(20 14.3% 4.1%);
+    --sidebar-primary: hsl(262 83% 58%);
+    --sidebar-primary-foreground: hsl(270 50% 95%);
+    --sidebar-accent: hsl(60 4.8% 95.9%);
+    --sidebar-accent-foreground: hsl(24 9.8% 10%);
+    --sidebar-border: hsl(20 5.9% 90%);
+    --sidebar-ring: hsl(20 14.3% 4.1%);
+  }
+
+  .dark {
+    --background: hsl(20 14.3% 4.1%);
+    --foreground: hsl(0 0% 98%);
+    --card: hsl(24 9.8% 10%);
+    --card-foreground: hsl(0 0% 98%);
+    --popover: hsl(24 9.8% 10%);
+    --popover-foreground: hsl(0 0% 98%);
+    --primary: hsl(262 80% 55%);
+    --primary-foreground: hsl(270 50% 95%);
+    --secondary: hsl(240 3.7% 15.9%);
+    --secondary-foreground: hsl(0 0% 98%);
+    --muted: hsl(12 6.5% 15.1%);
+    --muted-foreground: hsl(24 5.4% 63.9%);
+    --accent: hsl(12 6.5% 15.1%);
+    --accent-foreground: hsl(0 0% 98%);
+    --destructive: hsl(0 72.2% 50.6%);
+    --destructive-foreground: hsl(0 0% 98%);
+    --border: hsl(0 0% 100% / 10%);
+    --input: hsl(0 0% 100% / 15%);
+    --ring: hsl(24 5.4% 63.9%);
+    --chart-1: hsl(262 70% 70%);
+    --chart-2: hsl(262 75% 60%);
+    --chart-3: hsl(262 80% 50%);
+    --chart-4: hsl(262 83% 45%);
+    --chart-5: hsl(262 85% 40%);
+    --sidebar: hsl(24 9.8% 10%);
+    --sidebar-foreground: hsl(0 0% 98%);
+    --sidebar-primary: hsl(262 75% 60%);
+    --sidebar-primary-foreground: hsl(270 50% 95%);
+    --sidebar-accent: hsl(12 6.5% 15.1%);
+    --sidebar-accent-foreground: hsl(0 0% 98%);
+    --sidebar-border: hsl(0 0% 100% / 10%);
+    --sidebar-ring: hsl(24 5.4% 63.9%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Inter Variable", "Inter", system-ui, sans-serif;
+  }
+
+  button:not([disabled]),
+  [role="button"]:not([disabled]) {
+    cursor: pointer;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * tailwind.config.js `theme.extend.keyframes` + `theme.extend.animation`
+ *
+ * Tailwind v4 has no `keyframes` / `animation` @theme namespaces (which is why
+ * pass 02 skipped them). Keyframes become plain @keyframes rules and each
+ * animation becomes an `--animate-*` token, which generates the matching
+ * `animate-<name>` utility — e.g. `animate-accordion-down`, used by
+ * components/ui/accordion.tsx.
+ * ------------------------------------------------------------------------- */
+@theme {
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+}
+
+@keyframes accordion-down {
+  from {
+    height: 0;
+  }
+  to {
+    height: var(--radix-accordion-content-height);
+  }
+}
+
+@keyframes accordion-up {
+  from {
+    height: var(--radix-accordion-content-height);
+  }
+  to {
+    height: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+ * v4 port of the `tailwindcss-animate` plugin the v3 config loaded.
+ *
+ * The shipped UI kit (dialog, select, popover, dropdown, tooltip, drawer, …)
+ * depends on `animate-in` / `animate-out` plus the `fade-*`, `zoom-*` and
+ * `slide-in-from-*` / `slide-out-to-*` modifiers. Reproduced here
+ * as native v4 utilities rather than `@plugin "tw-animate-css"` because that
+ * package is not a dependency of this workspace — a @plugin directive for it
+ * would fail to resolve at build time. The emitted CSS is equivalent.
+ *
+ * Note: the v3 plugin also taught `duration-*` to set `animation-duration`.
+ * v4's `duration-*` only drives transitions, so animate-in/out use a fixed
+ * `--tw-animate-duration` (default 150ms) instead.
+ * ------------------------------------------------------------------------- */
+@keyframes enter {
+  from {
+    opacity: var(--tw-enter-opacity, 1);
+    transform: translate3d(
+        var(--tw-enter-translate-x, 0),
+        var(--tw-enter-translate-y, 0),
+        0
+      )
+      scale3d(
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1),
+        var(--tw-enter-scale, 1)
+      )
+      rotate(var(--tw-enter-rotate, 0deg));
+  }
+}
+
+@keyframes exit {
+  to {
+    opacity: var(--tw-exit-opacity, 1);
+    transform: translate3d(
+        var(--tw-exit-translate-x, 0),
+        var(--tw-exit-translate-y, 0),
+        0
+      )
+      scale3d(
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1),
+        var(--tw-exit-scale, 1)
+      )
+      rotate(var(--tw-exit-rotate, 0deg));
+  }
+}
+
+@utility animate-in {
+  animation-name: enter;
+  animation-duration: var(--tw-animate-duration, 150ms);
+  --tw-enter-opacity: initial;
+  --tw-enter-scale: initial;
+  --tw-enter-rotate: initial;
+  --tw-enter-translate-x: initial;
+  --tw-enter-translate-y: initial;
+}
+
+@utility animate-out {
+  animation-name: exit;
+  animation-duration: var(--tw-animate-duration, 150ms);
+  --tw-exit-opacity: initial;
+  --tw-exit-scale: initial;
+  --tw-exit-rotate: initial;
+  --tw-exit-translate-x: initial;
+  --tw-exit-translate-y: initial;
+}
+
+/* The modifier scales the plugin exposed. Declared as discrete `@utility`
+ * names (rather than one functional `*` utility) so each one is a real Tailwind
+ * utility that composes with variants — `data-[state=open]:fade-in-0` only
+ * works if `fade-in-0` is registered here. These cover the values the shipped
+ * UI kit uses; an unlisted value is simply an unknown class, not a build
+ * error, so extend the lists below if a component needs another step. */
+@utility fade-in-0 {
+  --tw-enter-opacity: 0;
+}
+@utility fade-in-50 {
+  --tw-enter-opacity: 0.5;
+}
+@utility fade-in-80 {
+  --tw-enter-opacity: 0.8;
+}
+@utility fade-out-0 {
+  --tw-exit-opacity: 0;
+}
+@utility fade-out-50 {
+  --tw-exit-opacity: 0.5;
+}
+@utility fade-out-80 {
+  --tw-exit-opacity: 0.8;
+}
+
+@utility zoom-in-50 {
+  --tw-enter-scale: 0.5;
+}
+@utility zoom-in-75 {
+  --tw-enter-scale: 0.75;
+}
+@utility zoom-in-90 {
+  --tw-enter-scale: 0.9;
+}
+@utility zoom-in-95 {
+  --tw-enter-scale: 0.95;
+}
+@utility zoom-in-105 {
+  --tw-enter-scale: 1.05;
+}
+@utility zoom-in-110 {
+  --tw-enter-scale: 1.1;
+}
+@utility zoom-out-50 {
+  --tw-exit-scale: 0.5;
+}
+@utility zoom-out-75 {
+  --tw-exit-scale: 0.75;
+}
+@utility zoom-out-90 {
+  --tw-exit-scale: 0.9;
+}
+@utility zoom-out-95 {
+  --tw-exit-scale: 0.95;
+}
+@utility zoom-out-105 {
+  --tw-exit-scale: 1.05;
+}
+@utility zoom-out-110 {
+  --tw-exit-scale: 1.1;
+}
+
+@utility slide-in-from-top-1 {
+  --tw-enter-translate-y: calc(var(--spacing) * -1);
+}
+@utility slide-in-from-top-2 {
+  --tw-enter-translate-y: calc(var(--spacing) * -2);
+}
+@utility slide-in-from-top-4 {
+  --tw-enter-translate-y: calc(var(--spacing) * -4);
+}
+@utility slide-in-from-top-full {
+  --tw-enter-translate-y: -100%;
+}
+@utility slide-in-from-bottom-1 {
+  --tw-enter-translate-y: calc(var(--spacing) * 1);
+}
+@utility slide-in-from-bottom-2 {
+  --tw-enter-translate-y: calc(var(--spacing) * 2);
+}
+@utility slide-in-from-bottom-4 {
+  --tw-enter-translate-y: calc(var(--spacing) * 4);
+}
+@utility slide-in-from-bottom-full {
+  --tw-enter-translate-y: 100%;
+}
+@utility slide-in-from-left-1 {
+  --tw-enter-translate-x: calc(var(--spacing) * -1);
+}
+@utility slide-in-from-left-2 {
+  --tw-enter-translate-x: calc(var(--spacing) * -2);
+}
+@utility slide-in-from-left-4 {
+  --tw-enter-translate-x: calc(var(--spacing) * -4);
+}
+@utility slide-in-from-left-full {
+  --tw-enter-translate-x: -100%;
+}
+@utility slide-in-from-right-1 {
+  --tw-enter-translate-x: calc(var(--spacing) * 1);
+}
+@utility slide-in-from-right-2 {
+  --tw-enter-translate-x: calc(var(--spacing) * 2);
+}
+@utility slide-in-from-right-4 {
+  --tw-enter-translate-x: calc(var(--spacing) * 4);
+}
+@utility slide-in-from-right-full {
+  --tw-enter-translate-x: 100%;
+}
+
+@utility slide-out-to-top-1 {
+  --tw-exit-translate-y: calc(var(--spacing) * -1);
+}
+@utility slide-out-to-top-2 {
+  --tw-exit-translate-y: calc(var(--spacing) * -2);
+}
+@utility slide-out-to-top-4 {
+  --tw-exit-translate-y: calc(var(--spacing) * -4);
+}
+@utility slide-out-to-top-full {
+  --tw-exit-translate-y: -100%;
+}
+@utility slide-out-to-bottom-1 {
+  --tw-exit-translate-y: calc(var(--spacing) * 1);
+}
+@utility slide-out-to-bottom-2 {
+  --tw-exit-translate-y: calc(var(--spacing) * 2);
+}
+@utility slide-out-to-bottom-4 {
+  --tw-exit-translate-y: calc(var(--spacing) * 4);
+}
+@utility slide-out-to-bottom-full {
+  --tw-exit-translate-y: 100%;
+}
+@utility slide-out-to-left-1 {
+  --tw-exit-translate-x: calc(var(--spacing) * -1);
+}
+@utility slide-out-to-left-2 {
+  --tw-exit-translate-x: calc(var(--spacing) * -2);
+}
+@utility slide-out-to-left-4 {
+  --tw-exit-translate-x: calc(var(--spacing) * -4);
+}
+@utility slide-out-to-left-full {
+  --tw-exit-translate-x: -100%;
+}
+@utility slide-out-to-right-1 {
+  --tw-exit-translate-x: calc(var(--spacing) * 1);
+}
+@utility slide-out-to-right-2 {
+  --tw-exit-translate-x: calc(var(--spacing) * 2);
+}
+@utility slide-out-to-right-4 {
+  --tw-exit-translate-x: calc(var(--spacing) * 4);
+}
+@utility slide-out-to-right-full {
+  --tw-exit-translate-x: 100%;
+}
