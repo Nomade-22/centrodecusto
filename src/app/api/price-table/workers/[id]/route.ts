@@ -32,9 +32,26 @@ export async function DELETE(req: Request, { params }: Params) {
 
   try {
     const rows = await sql`SELECT worker_id FROM worker_types WHERE id = ${id}`;
-    if (rows.length > 0) {
-      await sql`DELETE FROM worker_rates WHERE worker_id = ${rows[0].worker_id}`;
+    if (rows.length === 0) {
+      return NextResponse.json({ error: 'Função não encontrada' }, { status: 404 });
     }
+
+    const workerId = String(rows[0].worker_id);
+    const pattern = `%"workerTypeId":"${workerId}"%`;
+    const usage = await sql`
+      SELECT count(*)::int AS count
+      FROM orcamentos
+      WHERE dados LIKE ${pattern}
+    `;
+
+    if (Number(usage[0]?.count ?? 0) > 0) {
+      return NextResponse.json(
+        { error: 'Esta função já foi usada em orçamentos e não pode ser excluída. Edite apenas o nome/ícone para preservar o histórico.' },
+        { status: 409 }
+      );
+    }
+
+    await sql`DELETE FROM worker_rates WHERE worker_id = ${workerId}`;
     await sql`DELETE FROM worker_types WHERE id = ${id}`;
     return NextResponse.json({ success: true });
   } catch (error) {
