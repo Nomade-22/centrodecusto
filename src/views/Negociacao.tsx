@@ -149,7 +149,7 @@ export default function NegociacaoPage({ state, setState, notaReversaState, labo
 
   // Calculate custos from laborItems (same as NotaReversa)
   const totalCustoMaoDeObra = laborItems.reduce((sum, item) => {
-    const custoHora = getCustoHora(item.workerTypeId, item.clientId) || 0;
+    const custoHora = getCustoHora(item.workerTypeId) || 0;
     const multiplier = getHourMultiplier(item.hourTypeId);
     return sum + (custoHora * multiplier * item.hours * item.people * item.days);
   }, 0);
