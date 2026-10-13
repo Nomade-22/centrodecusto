@@ -72,7 +72,7 @@ const generateId = () => Math.random().toString(36).substring(2, 9);
 
 function HomePageContent() {
   const { totals: contextTotals, updateTotal } = useTotals();
-  const { user, logout } = useAuth() as { user: { isAdmin?: boolean; email?: string } | null; logout: () => Promise<void> };
+  const { user, logout } = useAuth() as unknown as { user: { isAdmin?: boolean; email?: string } | null; logout: () => Promise<void> };
   const { activeClients, workers, hourTypes, getRate, getCustoHora, getHourMultiplier } = usePriceTable();
   const [activeTab, setActiveTab] = useState<"viagens" | "despesas" | "bdi" | "nota" | "negociacao" | "maoDeObra" | "dashboard" | "historico" | "tabelaPrecos" | "custosHH" | "usuarios">("maoDeObra");
   const [legs, setLegs] = useState<TripLeg[]>([
@@ -307,7 +307,7 @@ function HomePageContent() {
           acc.totalCost += hours * leg.people * leg.ratePerHour;
         }
         // Calculate cost using custoHora (without profit)
-        const custoHora = getCustoHora(leg.workerTypeId, leg.clientId) || 0;
+        const custoHora = getCustoHora(leg.workerTypeId) || 0;
         const hourMultiplier = getHourMultiplier(leg.hourTypeId);
         acc.totalCusto += hours * leg.people * custoHora * hourMultiplier;
       }
