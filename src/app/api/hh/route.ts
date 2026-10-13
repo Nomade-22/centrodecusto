@@ -3,7 +3,9 @@ import sql from '@/app/api/utils/sql';
 import { readJson, requireAdmin, serverError } from '@/app/api/_helpers/auth';
 import { loadHHData, syncHHMaterializedValues } from '@/lib/hh-server';
 
-export async function GET() {
+export async function GET(req: Request) {
+  const access = await requireAdmin(req);
+  if (access.response) return access.response;
   try {
     const data = await loadHHData();
     return NextResponse.json(data);
