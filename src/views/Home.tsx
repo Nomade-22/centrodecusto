@@ -339,7 +339,15 @@ function HomePageContent() {
             />
             <h1 className="text-2xl sm:text-3xl font-bold text-white">Orçamento</h1>
           </div>
-          <div className="flex-1 flex justify-end">
+          <div className="flex-1 flex items-center justify-end gap-2 sm:gap-4">
+            <a
+              href="/account/change-password"
+              className="flex items-center gap-1 text-slate-400 hover:text-white transition-colors text-xs sm:text-sm"
+              title="Alterar a senha de acesso"
+            >
+              <Settings className="h-4 w-4" />
+              <span>Alterar senha</span>
+            </a>
             <button
               onClick={logout}
               className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors text-sm"
