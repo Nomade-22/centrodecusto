@@ -18,7 +18,7 @@
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { argon2Verify } from 'argon2-wasm-edge';
 import { betterAuth } from 'better-auth';
-import { createAuthMiddleware } from 'better-auth/api';
+import { APIError, createAuthMiddleware } from 'better-auth/api';
 import { verifyPassword } from 'better-auth/crypto';
 import { bearer } from 'better-auth/plugins';
 import ws from 'ws';
@@ -124,6 +124,14 @@ export const auth = betterAuth({
       if (ctx.path !== '/sign-up/email') return;
       const body = ctx.body as { email?: unknown; name?: unknown } | undefined;
       if (!body || typeof body.email !== 'string') return;
+      // O cadastro é fechado: só e-mails previamente incluídos pelo administrador.
+      const allowed = await pool.query(
+        'SELECT 1 FROM allowed_users WHERE LOWER(email) = LOWER($1) LIMIT 1',
+        [body.email.trim()]
+      );
+      if (allowed.rowCount === 0) {
+        throw new APIError('FORBIDDEN', { message: 'Email não autorizado' });
+      }
       if (typeof body.name === 'string' && body.name.trim().length > 0) return;
       const derived = body.email.split('@')[0];
       body.name = derived && derived.length > 0 ? derived : 'User';
