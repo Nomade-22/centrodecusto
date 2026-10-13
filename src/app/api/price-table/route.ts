@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { serverError } from '@/app/api/_helpers/auth';
+import { requireAuth, serverError } from '@/app/api/_helpers/auth';
 import { loadHHData } from '@/lib/hh-server';
 
 /**
@@ -9,7 +9,9 @@ import { loadHHData } from '@/lib/hh-server';
  * remains only as a compatibility/materialized table for the migrated app and
  * historical diagnostics; it is no longer the source of truth.
  */
-export async function GET() {
+export async function GET(req: Request) {
+  const access = await requireAuth(req);
+  if (access.response) return access.response;
   try {
     const data = await loadHHData();
 
