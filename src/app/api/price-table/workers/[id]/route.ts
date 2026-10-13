@@ -1,11 +1,11 @@
 import { NextResponse } from 'next/server';
 import sql from '@/app/api/utils/sql';
-import { readJson, requireAuth, serverError } from '@/app/api/_helpers/auth';
+import { readJson, requireAdmin, serverError } from '@/app/api/_helpers/auth';
 
 type Params = { params: Promise<{ id: string }> };
 
 export async function PUT(req: Request, { params }: Params) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
   const { id } = await params;
   const body = await readJson<{ name?: string; icon?: string }>(req);
@@ -26,7 +26,7 @@ export async function PUT(req: Request, { params }: Params) {
 }
 
 export async function DELETE(req: Request, { params }: Params) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
   const { id } = await params;
 

@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import sql from "@/app/api/utils/sql";
-import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpers/auth";
+import { badRequest, readJson, requireAdmin, serverError } from "@/app/api/_helpers/auth";
 
 export async function POST(req: Request) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
 
   const body = await readJson<{ worker_id?: string; name?: string; icon?: string }>(req);
