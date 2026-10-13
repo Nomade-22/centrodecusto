@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import sql from "@/app/api/utils/sql";
-import { readJson, requireAuth, serverError } from "@/app/api/_helpers/auth";
+import { readJson, requireAdmin, serverError } from "@/app/api/_helpers/auth";
 
 type Params = { params: Promise<{ id: string }> };
 
 /** PUT /api/price-table/hour-types/:id */
 export async function PUT(req: Request, { params }: Params) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
 
   const { id } = await params;
@@ -31,7 +31,7 @@ export async function PUT(req: Request, { params }: Params) {
 
 /** DELETE /api/price-table/hour-types/:id */
 export async function DELETE(req: Request, { params }: Params) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
 
   const { id } = await params;

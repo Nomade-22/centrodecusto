@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import sql from "@/app/api/utils/sql";
-import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpers/auth";
+import { badRequest, readJson, requireAdmin, serverError } from "@/app/api/_helpers/auth";
 
 /**
  * PUT /api/price-table/rates — set the rate for one worker/client pair.
@@ -11,7 +11,7 @@ import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpe
  * statement — same outcome, no read-modify-write race.
  */
 export async function PUT(req: Request) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
 
   const body = await readJson<{

@@ -1,10 +1,10 @@
 import { NextResponse } from "next/server";
 import sql from "@/app/api/utils/sql";
-import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpers/auth";
+import { badRequest, readJson, requireAdmin, serverError } from "@/app/api/_helpers/auth";
 
 /** POST /api/price-table/hour-types — add an hour type (normal, 50%, 100%, …). */
 export async function POST(req: Request) {
-  const { response } = await requireAuth(req);
+  const { response } = await requireAdmin(req);
   if (response) return response;
 
   const body = await readJson<{
