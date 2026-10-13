@@ -1,6 +1,6 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { authClient, useSession } from "./auth-client";
 
 type BetterAuthSession = ReturnType<typeof useSession>;
@@ -8,6 +8,7 @@ type BetterAuthUser = NonNullable<
   NonNullable<BetterAuthSession["data"]>["user"]
 >;
 type MochaCompatUser = BetterAuthUser & {
+  isAdmin?: boolean;
   userName: string | null;
   google_sub: string | null;
   given_name: string | null;
@@ -72,6 +73,30 @@ function toMochaCompatUser(user: BetterAuthUser | null | undefined) {
 // better-auth handles the OAuth callback itself via /api/auth/[...all].
 export function useAuth() {
   const session = useSession();
+  const userEmail = session.data?.user?.email ?? null;
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [permissionsPending, setPermissionsPending] = useState(false);
+
+  useEffect(() => {
+    if (!userEmail) {
+      setIsAdmin(false);
+      setPermissionsPending(false);
+      return;
+    }
+
+    let active = true;
+    setPermissionsPending(true);
+    fetch("/api/users/me", { credentials: "same-origin", cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("User not authorized");
+        return response.json() as Promise<{ isAdmin?: boolean }>;
+      })
+      .then((user) => { if (active) setIsAdmin(user.isAdmin === true); })
+      .catch(() => { if (active) setIsAdmin(false); })
+      .finally(() => { if (active) setPermissionsPending(false); });
+    return () => { active = false; };
+  }, [userEmail]);
+
   const signOut = () => authClient.signOut();
   // Mocha's redirectToLogin accepts no args; user code commonly attaches it
   // directly to onClick, so don't tighten the signature.
@@ -79,9 +104,11 @@ export function useAuth() {
     if (typeof window !== "undefined") window.location.href = "/account/signin";
   };
   return {
-    user: toMochaCompatUser(session.data?.user),
-    isPending: session.isPending,
-    loading: session.isPending,
+    user: session.data?.user
+      ? { ...toMochaCompatUser(session.data.user)!, isAdmin }
+      : null,
+    isPending: session.isPending || permissionsPending,
+    loading: session.isPending || permissionsPending,
     error: session.error ?? null,
     signOut,
     logout: signOut,
