@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import sql from '@/app/api/utils/sql';
-import { notFound, serverError } from '@/app/api/_helpers/auth';
+import { notFound, requireAuth, requireAdmin, serverError } from '@/app/api/_helpers/auth';
 
 type Params = { params: Promise<{ id: string }> };
 
 /** GET /api/orcamentos/:id — full record, including the `dados` JSON blob. */
-export async function GET(_req: Request, { params }: Params) {
+export async function GET(req: Request, { params }: Params) {
+  const access = await requireAuth(req);
+  if (access.response) return access.response;
   const { id } = await params;
 
   try {
@@ -34,7 +36,9 @@ export async function GET(_req: Request, { params }: Params) {
 }
 
 /** DELETE /api/orcamentos/:id */
-export async function DELETE(_req: Request, { params }: Params) {
+export async function DELETE(req: Request, { params }: Params) {
+  const access = await requireAdmin(req);
+  if (access.response) return access.response;
   const { id } = await params;
 
   try {

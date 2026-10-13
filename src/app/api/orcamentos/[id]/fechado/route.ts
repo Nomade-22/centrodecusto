@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import sql from '@/app/api/utils/sql';
-import { readJson, serverError } from '@/app/api/_helpers/auth';
+import { readJson, requireAuth, serverError } from '@/app/api/_helpers/auth';
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -11,6 +11,8 @@ type Params = { params: Promise<{ id: string }> };
  * rather than a Postgres boolean.
  */
 export async function PATCH(req: Request, { params }: Params) {
+  const access = await requireAuth(req);
+  if (access.response) return access.response;
   const { id } = await params;
   const body = await readJson<{ is_fechado?: unknown }>(req);
 

@@ -82,6 +82,9 @@ export type AuthResult =
 export async function requireAuth(req: Request): Promise<AuthResult> {
   const user = await getSessionUser(req);
   if (!user) return { user: null, response: unauthorized() };
+  if (!(await isEmailAllowed(user.email))) {
+    return { user: null, response: forbidden('Usuário não autorizado para o Centro de Custo') };
+  }
   return { user, response: null };
 }
 

@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import sql from '@/app/api/utils/sql';
-import { badRequest, readJson, serverError } from '@/app/api/_helpers/auth';
-import { auth } from '@/lib/auth';
+import { badRequest, readJson, requireAuth, serverError } from '@/app/api/_helpers/auth';
 
 /**
  * GET /api/orcamentos — list saved budgets, newest first.
@@ -10,7 +9,9 @@ import { auth } from '@/lib/auth';
  * returns int8 as a string. The frontend types them as numbers and relies on
  * `is_fechado` being falsy for 0, so cast both to int here.
  */
-export async function GET(_req: Request) {
+export async function GET(req: Request) {
+  const access = await requireAuth(req);
+  if (access.response) return access.response;
   try {
     const rows = await sql`
       SELECT id::int AS id,
@@ -31,14 +32,9 @@ export async function GET(_req: Request) {
 
 /** POST /api/orcamentos — save the current budget. */
 export async function POST(req: Request) {
-  // Try to get user from session, but don't block if there's no session
-  let userEmail: string | null = null;
-  try {
-    const session = await auth.api.getSession({ headers: req.headers });
-    userEmail = session?.user?.email ?? null;
-  } catch {
-    // no session — save without user email
-  }
+  const access = await requireAuth(req);
+  if (access.response) return access.response;
+  const userEmail = access.user.email;
 
   const body = await readJson<{
     numero?: string;
