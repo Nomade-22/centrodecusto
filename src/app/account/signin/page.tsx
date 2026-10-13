@@ -24,6 +24,37 @@ function SignInForm() {
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState<string | null>(null);
 	const [loading, setLoading] = useState(false);
+  const [requestingActivation, setRequestingActivation] = useState(false);
+  const [activationMessage, setActivationMessage] = useState<string | null>(null);
+
+  const requestActivation = async () => {
+    setActivationMessage(null);
+    setError(null);
+    if (!email.trim()) {
+      setError("Informe seu e-mail para solicitar a ativação.");
+      return;
+    }
+    setRequestingActivation(true);
+    try {
+      const response = await fetch("/api/auth/request-activation", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim() }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        setError(result.error ?? "Não foi possível solicitar o link.");
+      } else {
+        setActivationMessage(result.message ??
+          "Se sua conta estiver autorizada, você receberá um link de ativação.");
+      }
+    } catch {
+      setError("Não foi possível solicitar o link. Tente novamente.");
+    } finally {
+      setRequestingActivation(false);
+    }
+  };
+
 
 	const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -68,7 +99,7 @@ function SignInForm() {
 
 
 				<label className="flex flex-col gap-[4px] text-[14px]">
-					Email
+					E-mail
 					<input
 						type="email"
 						required
@@ -79,7 +110,7 @@ function SignInForm() {
 				</label>
 
 				<label className="flex flex-col gap-[4px] text-[14px]">
-					Password
+					Senha
 					<input
 						type="password"
 						required
@@ -104,9 +135,21 @@ function SignInForm() {
 				</button>
 
 
-            <p className="text-center text-[13px] text-gray-500">
-              Primeiro acesso? Utilize o link de ativação fornecido pelo administrador.
-            </p>
+            {activationMessage && (
+              <p role="status" className="rounded-lg bg-emerald-50 p-3 text-center text-[13px] text-emerald-800">
+                {activationMessage}
+              </p>
+            )}
+            <div className="text-center">
+              <button
+                type="button"
+                onClick={() => { void requestActivation(); }}
+                disabled={requestingActivation}
+                className="text-[13px] text-blue-700 underline disabled:opacity-60"
+              >
+                {requestingActivation ? "Solicitando…" : "Primeiro acesso? Receber link para criar a senha"}
+              </button>
+            </div>
 			</form>
 		</main>
 	);
