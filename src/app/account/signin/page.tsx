@@ -15,7 +15,6 @@
 
 import { useSearchParams } from "next/navigation";
 import { type FormEvent, Suspense, useState } from "react";
-import { SocialSignInButtons } from "@/components/SocialSignInButtons";
 import { authClient } from "@/lib/auth-client";
 
 function SignInForm() {
@@ -60,22 +59,13 @@ function SignInForm() {
 				className="flex w-full max-w-[400px] flex-col gap-[16px] rounded-[12px] bg-white p-[24px] shadow"
 			>
 				<h1 className="text-[24px] font-semibold">Centro de Custo Multprest</h1>
+            {searchParams.get("activated") === "1" && (
+              <div className="rounded-lg bg-green-50 p-3 text-sm text-green-700">
+                Senha criada. Entre com seu e-mail e a senha escolhida.
+              </div>
+            )}
             <p className="text-[14px] text-gray-600">Entre com uma conta autorizada.</p>
 
-        {/* O botão Google só aparece se o provedor OAuth estiver configurado. */}
-        {(process.env.NEXT_PUBLIC_CREATE_AUTH_PROVIDERS ?? "")
-          .split(",").map((item) => item.trim()).includes("google") ? null : (
-          <div className="rounded-lg border border-amber-600/30 bg-amber-50 p-3 text-sm text-amber-900">
-            O acesso com Google está em configuração. Administradores devem
-            habilitar o provedor OAuth antes de utilizar o login antigo.
-          </div>
-        )}
-
-        <div className="flex items-center gap-[12px]">
-          <div className="h-[1px] flex-1 bg-gray-200" />
-          <span className="text-[12px] text-gray-400">or</span>
-          <div className="h-[1px] flex-1 bg-gray-200" />
-        </div>
 
 				<label className="flex flex-col gap-[4px] text-[14px]">
 					Email
@@ -110,17 +100,13 @@ function SignInForm() {
 					disabled={loading}
 					className="rounded-[8px] bg-blue-600 p-[12px] text-[16px] font-medium text-white disabled:opacity-50"
 				>
-					{loading ? "Entrando…" : "Sign In"}
+					{loading ? "Entrando…" : "Entrar"}
 				</button>
 
-				<SocialSignInButtons callbackUrl={callbackUrl} />
 
-				<a
-					href={`/account/signup?callbackUrl=${encodeURIComponent(callbackUrl)}`}
-					className="text-center text-[14px] text-blue-600 hover:underline"
-				>
-					Conta nova? Solicite autorização e cadastre-se
-				</a>
+            <p className="text-center text-[13px] text-gray-500">
+              Primeiro acesso? Utilize o link de ativação fornecido pelo administrador.
+            </p>
 			</form>
 		</main>
 	);
