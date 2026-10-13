@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { badRequest, readJson, serverError } from "@/app/api/_helpers/auth";
+import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpers/auth";
 
 type GeocodeResult = { lat: number; lng: number; name: string };
 
@@ -38,15 +38,18 @@ async function geocodeAddress(
  * POST /api/calculate-route
  *
  * Geocode origin + destination and ask OpenRouteService for driving directions.
- * Unauthenticated in the original worker; kept that way.
+ * Requires an authorized account to prevent public abuse of the paid routing API key.
  */
 export async function POST(req: Request) {
+  const access = await requireAuth(req);
+  if (access.response) return access.response;
+
   const { origin, destination } = await readJson<{
     origin?: string;
     destination?: string;
   }>(req);
 
-  if (!origin || !destination) {
+  if (!origin?.trim() || !destination?.trim() || origin.length > 250 || destination.length > 250) {
     return badRequest("Origem e destino são obrigatórios");
   }
 
