@@ -145,7 +145,7 @@ export function usePriceTable() {
     if (cachedData) {
       setData(cachedData);
       setLoading(false);
-      return () => listeners.delete(handleInvalidation);
+      return () => { listeners.delete(handleInvalidation); };
     }
 
     if (!fetchPromise) fetchPromise = fetchPriceTable();
@@ -154,7 +154,7 @@ export function usePriceTable() {
       setLoading(false);
     });
 
-    return () => listeners.delete(handleInvalidation);
+    return () => { listeners.delete(handleInvalidation); };
   }, [refetch]);
 
   const activeClients = useMemo(
