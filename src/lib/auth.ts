@@ -111,6 +111,8 @@ export const auth = betterAuth({
   socialProviders,
   emailAndPassword: {
     enabled: true,
+    // Só administradores podem conceder acesso; não permitir cadastro público.
+    disableSignUp: true,
     requireEmailVerification: false,
     password: {
       verify: verifyCompatiblePassword,
