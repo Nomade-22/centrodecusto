@@ -4,16 +4,17 @@ import "./global.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-	title: "Anything App",
-	description: "Created with Anything",
+	title: "Centro de Custo",
+	description: "Sistema de orçamentos e custos da Multprest",
 	icons: {
-		icon: "/favicon.png",
+		icon: [{ url: "/centro-de-custo-favicon.png", type: "image/png", sizes: "64x64" }],
+		shortcut: "/centro-de-custo-favicon.png",
 	},
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="pt-BR">
 			<head>
 				<link
 					rel="stylesheet"
