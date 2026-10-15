@@ -54,6 +54,20 @@ export async function isEmailAdmin(email: string): Promise<boolean> {
   return rows.length > 0;
 }
 
+/** Returns true while an account still has a temporary credential. */
+export async function requiresPasswordChange(userId: string): Promise<boolean> {
+  const rows = await sql`
+    SELECT 1
+    FROM public.temporary_passwords temp
+    JOIN public.account credential ON credential."userId" = temp.user_id
+    WHERE temp.user_id = ${userId}
+      AND credential."providerId" = 'credential'
+      AND credential.password = temp.password_hash
+    LIMIT 1
+  `;
+  return rows.length > 0;
+}
+
 export function badRequest(message: string) {
   return NextResponse.json({ error: message }, { status: 400 });
 }
@@ -85,6 +99,9 @@ export async function requireAuth(req: Request): Promise<AuthResult> {
   if (!(await isEmailAllowed(user.email))) {
     return { user: null, response: forbidden('Usuário não autorizado para o Centro de Custo') };
   }
+  if (await requiresPasswordChange(user.id)) {
+    return { user: null, response: forbidden("Altere a senha provisória antes de acessar os dados.") };
+  }
   return { user, response: null };
 }
 
@@ -97,6 +114,9 @@ export async function requireAdmin(req: Request): Promise<AuthResult> {
       user: null,
       response: forbidden("Acesso restrito a administradores"),
     };
+  }
+  if (await requiresPasswordChange(user.id)) {
+    return { user: null, response: forbidden("Altere a senha provisória antes de acessar os dados.") };
   }
   return { user, response: null };
 }
