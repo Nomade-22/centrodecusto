@@ -99,19 +99,6 @@ async function verifyCompatiblePassword({
     });
   }
 
-  // Temporary credential: bcrypt verifier only during its limited lifetime.
-  const bcryptPrefix = String.fromCharCode(36) + "2";
-  if (hash.startsWith(bcryptPrefix)) {
-    const result = await pool.query<{ allowed: boolean }>(
-      `SELECT (crypt($1, $2) = $2) AS allowed
-       FROM public.temporary_passwords
-       WHERE password_hash = $2 AND expires_at > now()
-       LIMIT 1`,
-      [password, hash],
-    );
-    return result.rows[0]?.allowed === true;
-  }
-
   return verifyPassword({
     hash,
     password,
