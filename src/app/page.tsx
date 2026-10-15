@@ -2,7 +2,7 @@ import ClientPage from "./client-page";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
-import { isEmailAllowed, requiresPasswordChange } from "@/app/api/_helpers/auth";
+import { isEmailAllowed } from "@/app/api/_helpers/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -19,10 +19,6 @@ export default async function Page() {
 
   if (!(await isEmailAllowed(session.user.email))) {
     redirect("/account/access-denied");
-  }
-
-  if (await requiresPasswordChange(session.user.id)) {
-    redirect("/account/change-password");
   }
 
   return <ClientPage />;
