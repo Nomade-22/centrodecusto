@@ -37,7 +37,7 @@ describe("Entradas decimais no Centro de Custo", () => {
   it("permite digitar 20,50 sem perder foco, sem apagar vírgula ou zeros", () => {
     render(<ControlledDecimal />);
     const input = screen.getByRole("textbox", { name: "Custo do material" }) as HTMLInputElement;
-    fireEvent.focus(input);
+    input.focus();
     for (const draft of ["2", "20", "20,", "20,5", "20,50"]) {
       fireEvent.change(input, { target: { value: draft } });
       expect(input).toHaveValue(draft);
@@ -52,7 +52,7 @@ describe("Entradas decimais no Centro de Custo", () => {
   it("não quebra edição de valores com ponto e casas adicionais", () => {
     render(<ControlledDecimal initial={10.81} />);
     const input = screen.getByRole("textbox", { name: "Custo do material" });
-    fireEvent.focus(input);
+    input.focus();
     fireEvent.change(input, { target: { value: "0.0001" } });
     expect(input).toHaveValue("0.0001");
     expect(screen.getByTestId("calculated")).toHaveTextContent("0.0001");
@@ -63,7 +63,7 @@ describe("Entradas decimais no Centro de Custo", () => {
   it("preserva digitação parcial e restaura valor normalizado ao sair", () => {
     render(<ControlledDecimal initial={50} />);
     const input = screen.getByRole("textbox", { name: "Custo do material" });
-    fireEvent.focus(input);
+    input.focus();
     fireEvent.change(input, { target: { value: "20," } });
     expect(input).toHaveValue("20,");
     expect(screen.getByTestId("calculated")).toHaveTextContent("20");
