@@ -3,6 +3,7 @@
 import { useMemo, useEffect } from "react";
 import { useTotals } from "@/context/TotalsContext";
 import { usePriceTable } from "@/hooks/usePriceTable";
+import { clampMaterialNegotiationPct, effectiveMaterialNegotiationPct, materialOfferMarkupPct, materialOfferPrice } from "@/lib/material-negotiation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,6 +23,8 @@ export interface MaterialItem {
   clientId: string;
   description: string;
   valorMaterial: number;
+  /** null: padrão do cliente; número: negociação ajustada neste orçamento; undefined: legado */
+  negotiationOverridePct?: number | null;
 }
 
 /**
@@ -29,7 +32,7 @@ export interface MaterialItem {
  * Na regra 2026:
  * - inss = retenção de INSS (fluxo de caixa/compensável), não custo econômico extra;
  * - simplesIssqn = alíquota efetiva TOTAL do Simples/DAS;
- * - descontoCompras = colchão de negociação da proposta. Se zero, usa o % do cliente;
+ * - descontoCompras = valor legado usado apenas em históricos sem negociação por material;
  * - ISS retido vem do cadastro do cliente/HH e já está dentro do DAS total.
  */
 export interface BDIState {
@@ -50,6 +53,7 @@ export const createDefaultMaterial = (): MaterialItem => ({
   clientId: "",
   description: "",
   valorMaterial: 0,
+  negotiationOverridePct: null,
 });
 
 export const createDefaultBDIState = (): BDIState => ({
@@ -116,7 +120,34 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
   };
 
   const resetMaterials = () => {
-    setState(prev => ({ ...prev, materials: [createDefaultMaterial()] }));
+    setState(prev => ({ ...prev, descontoCompras: 0, materials: [createDefaultMaterial()] }));
+  };
+
+  // O campo superior atua sobre um único cliente. Quando há clientes diferentes
+  // no orçamento, cada item mantém sua negociação individual, sem sobrescrita.
+  const sharedClientId = materials[0]?.clientId &&
+    materials.every(m => m.clientId === materials[0].clientId)
+    ? materials[0].clientId
+    : null;
+  const sharedClient = sharedClientId ? getClient(sharedClientId) : undefined;
+  const setSharedNegotiationPct = (newPercent: number) => {
+    if (!sharedClientId) return;
+    const pct = clampMaterialNegotiationPct(newPercent);
+    setState(prev => ({
+      ...prev,
+      descontoCompras: 0,
+      materials: prev.materials.map(m =>
+        m.clientId === sharedClientId ? { ...m, negotiationOverridePct: pct } : m
+      ),
+    }));
+  };
+  const setItemNegotiationPct = (id: string, value: number | null) => {
+    setState(prev => ({
+      ...prev,
+      materials: prev.materials.map(m =>
+        m.id === id ? { ...m, negotiationOverridePct: value } : m
+      ),
+    }));
   };
 
   const totalValorMaterial = useMemo(
@@ -124,9 +155,9 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
     [materials]
   );
 
-  const calculateMaterial = (valorMaterial: number, clientId: string): MaterialCalculation => {
-    const cost = Math.max(0, Number(valorMaterial) || 0);
-    const client = getClient(clientId);
+  const calculateMaterial = (material: MaterialItem): MaterialCalculation => {
+    const cost = Math.max(0, Number(material.valorMaterial) || 0);
+    const client = getClient(material.clientId);
     const days = Math.max(0, Number(client?.dias ?? diasPagamento) || 0);
 
     const dasPct = Math.max(0, Number(simplesIssqn ?? hhSettings?.das_effective_pct ?? 10.81));
@@ -135,16 +166,15 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
     const profitPct = Math.max(0, Number(lucroPercent) || 0);
     const notePct = Math.max(0, Number(trocaNota) || 0);
     const dailyPct = Math.max(0, Number(jurosDia ?? hhSettings?.anticipation_daily_pct ?? 0.1));
-    const negotiationPct = Math.min(
-      95,
-      Math.max(0, Number(descontoCompras > 0 ? descontoCompras : (client?.negotiation_pct ?? 0)))
+    const negotiationPct = effectiveMaterialNegotiationPct(
+      client?.negotiation_pct ?? 0, material.negotiationOverridePct, descontoCompras
     );
 
     const receivableFraction = Math.max(0, 1 - (issPct + inssPct) / 100);
     const financePct = client?.anticipate === false ? 0 : days * dailyPct;
     const divisor = 1 - (dasPct + profitPct + notePct) / 100 - (financePct / 100) * receivableFraction;
     const basePrice = cost > 0 && divisor > 0 ? cost / divisor : 0;
-    const offerPrice = negotiationPct < 100 ? basePrice / (1 - negotiationPct / 100) : 0;
+    const offerPrice = materialOfferPrice(basePrice, negotiationPct);
 
     const das = basePrice * dasPct / 100;
     const issRetained = basePrice * issPct / 100;
@@ -175,11 +205,17 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
   };
 
   const materialCalculations = useMemo(
-    () => materials.map(m => calculateMaterial(m.valorMaterial, m.clientId)),
+    () => materials.map(m => calculateMaterial(m)),
     // calculateMaterial intentionally depends on the values listed here.
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [materials, inss, simplesIssqn, lucroPercent, jurosDia, diasPagamento, trocaNota, descontoCompras, getClient, hhSettings]
   );
+
+  const sharedNegotiationPct = sharedClientId &&
+    materialCalculations.length > 0 &&
+    materialCalculations.every(m => m.negotiationPct === materialCalculations[0].negotiationPct)
+    ? materialCalculations[0].negotiationPct
+    : null;
 
   const calculations = useMemo(() => {
     const sum = (field: keyof MaterialCalculation) =>
@@ -304,11 +340,32 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
                 className="bg-slate-700/50 border-slate-600 text-white h-8 text-sm" />
             </div>
             <div className="space-y-1">
-              <Label className="text-slate-400 text-xs">Negociação manual %</Label>
-              <Input type="number" step="0.1" value={descontoCompras}
-                onChange={(e) => updateField("descontoCompras", parseFloat(e.target.value) || 0)}
-                className="bg-slate-700/50 border-slate-600 text-white h-8 text-sm" />
-              <div className="text-[10px] text-slate-500">0 = usa o percentual cadastrado do cliente</div>
+              <Label className="text-slate-400 text-xs">Negociação aplicada %</Label>
+              <Input type="number" step="0.1" min="0" max="95"
+                value={sharedNegotiationPct ?? ""}
+                placeholder={sharedClientId ? "Varia por item" : "Por cliente"}
+                disabled={!sharedClientId}
+                onChange={(e) => setSharedNegotiationPct(parseFloat(e.target.value) || 0)}
+                className="bg-slate-700/50 border-slate-600 text-white h-8 text-sm disabled:opacity-70" />
+              <div className="text-[10px] text-slate-400">
+                {sharedClientId
+                  ? `Padrão de ${sharedClient?.name ?? "cliente"}: ${formatPercent(Number(sharedClient?.negotiation_pct ?? 0))} • editável só neste orçamento`
+                  : "Selecione um cliente; com clientes diferentes, ajuste em cada item."}
+              </div>
+              {sharedNegotiationPct !== null && (
+                <div className="text-[10px] text-emerald-400">
+                  Acréscimo na oferta: +{formatPercent(materialOfferMarkupPct(sharedNegotiationPct))} para permitir desconto de {formatPercent(sharedNegotiationPct)}
+                </div>
+              )}
+              {sharedClientId && materials.some(m => m.negotiationOverridePct !== null || (m.negotiationOverridePct === undefined && descontoCompras > 0)) && (
+                <button type="button" className="text-[10px] text-sky-400 hover:underline"
+                  onClick={() => setState(prev => ({
+                    ...prev, descontoCompras: 0,
+                    materials: prev.materials.map(m => m.clientId === sharedClientId ? { ...m, negotiationOverridePct: null } : m)
+                  }))}>
+                  Restaurar percentual cadastrado
+                </button>
+              )}
             </div>
             <div className="space-y-1">
               <Label className="text-slate-400 text-xs">Antecipação média</Label>
@@ -334,7 +391,7 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
 
       <div className="space-y-3">
         {materials.map((material, index) => {
-          const calc = materialCalculations[index] ?? calculateMaterial(material.valorMaterial, material.clientId);
+          const calc = materialCalculations[index] ?? calculateMaterial(material);
           const materialClient = getClient(material.clientId);
           return (
             <Card key={material.id} className="bg-slate-800/50 border-slate-700 backdrop-blur-sm">
@@ -353,7 +410,7 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                   <div className="space-y-1">
                     <Label className="text-slate-400 text-xs flex items-center gap-1"><Building2 className="w-3 h-3" />Cliente</Label>
-                    <Select value={material.clientId} onValueChange={(value) => updateMaterial(material.id, { clientId: value })} disabled={loadingClients}>
+                    <Select value={material.clientId} onValueChange={(value) => updateMaterial(material.id, { clientId: value, negotiationOverridePct: null })} disabled={loadingClients}>
                       <SelectTrigger className="bg-slate-700/50 border-slate-600 text-white h-9 text-sm"><SelectValue placeholder="Selecione" /></SelectTrigger>
                       <SelectContent className="bg-slate-800 border-slate-700">
                         {activeClients.map((client) => (
@@ -386,8 +443,25 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
                   </div>
                 </div>
                 {materialClient && (
-                  <div className="mt-2 text-[10px] text-slate-500">
-                    Base sem colchão de negociação: {formatCurrency(calc.basePrice)} · negociação: {formatPercent(calc.negotiationPct)}
+                  <div className="mt-3 flex flex-wrap items-end gap-3 border-t border-slate-700/60 pt-3">
+                    <div className="space-y-1 w-40">
+                      <Label className="text-slate-400 text-xs">Negociação deste material %</Label>
+                      <Input type="number" step="0.1" min="0" max="95"
+                        value={calc.negotiationPct}
+                        onChange={(e) => setItemNegotiationPct(material.id, clampMaterialNegotiationPct(parseFloat(e.target.value) || 0))}
+                        className="bg-slate-700/50 border-slate-600 text-white h-8 text-sm" />
+                    </div>
+                    <div className="flex-1 text-xs text-slate-400">
+                      <div>Padrão {materialClient.name}: {formatPercent(Number(materialClient.negotiation_pct ?? 0))}</div>
+                      <div>Preço-base: {formatCurrency(calc.basePrice)} · acréscimo para negociação: <span className="text-emerald-400">+{formatPercent(materialOfferMarkupPct(calc.negotiationPct))} ({formatCurrency(calc.negotiationCushion)})</span></div>
+                      <div>Desconto possível sobre a oferta: <span className="text-emerald-400">{formatPercent(calc.negotiationPct)}</span> · após desconto: {formatCurrency(calc.offerPrice * (1 - calc.negotiationPct / 100))}</div>
+                    </div>
+                    {(material.negotiationOverridePct !== null || (material.negotiationOverridePct === undefined && descontoCompras > 0)) && (
+                      <button type="button" className="text-xs text-sky-400 hover:underline"
+                        onClick={() => setItemNegotiationPct(material.id, null)}>
+                        Usar padrão
+                      </button>
+                    )}
                   </div>
                 )}
               </CardContent>
