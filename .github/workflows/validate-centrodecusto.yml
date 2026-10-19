@@ -35,8 +35,8 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
-      - name: HH audit tests
-        run: npx vitest run src/lib/hh-calculator.test.ts src/lib/material-negotiation.test.ts
+      - name: Regressão HH, material e digitação
+        run: npx vitest run src/lib/hh-calculator.test.ts src/lib/material-negotiation.test.ts src/components/ui/input.test.tsx
 
       - name: TypeScript
         run: npm run typecheck
