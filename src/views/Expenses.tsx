@@ -1183,33 +1183,24 @@ export default function ExpensesPage({ state, setState, laborItems = [], laborTe
       </Card>
 
       {/* Meals */}
-      <MealSection
-        title="Almoço"
-        icon={UtensilsCrossed}
-        iconColor="text-amber-400"
-        items={lunches}
-        type="lunch"
-        total={lunchTotal}
-        onSync={() => syncLaborToMeals("lunch")}
-      />
-      <MealSection
-        title="Janta"
-        icon={Moon}
-        iconColor="text-purple-400"
-        items={dinners}
-        type="dinner"
-        total={dinnerTotal}
-        onSync={() => syncLaborToMeals("dinner")}
-      />
-      <MealSection
-        title="Café"
-        icon={Coffee}
-        iconColor="text-orange-400"
-        items={breakfasts}
-        type="breakfast"
-        total={breakfastTotal}
-        onSync={() => syncLaborToMeals("breakfast")}
-      />
+      {/* Call this inline render helper directly. Using <MealSection /> here
+          remounts all inputs on EVERY parent update because MealSection is
+          declared inside ExpensesPage, destroying focus after one keystroke. */}
+      {MealSection({
+        title: "Almoço", icon: UtensilsCrossed, iconColor: "text-amber-400",
+        items: lunches, type: "lunch", total: lunchTotal,
+        onSync: () => syncLaborToMeals("lunch"),
+      })}
+      {MealSection({
+        title: "Janta", icon: Moon, iconColor: "text-purple-400",
+        items: dinners, type: "dinner", total: dinnerTotal,
+        onSync: () => syncLaborToMeals("dinner"),
+      })}
+      {MealSection({
+        title: "Café", icon: Coffee, iconColor: "text-orange-400",
+        items: breakfasts, type: "breakfast", total: breakfastTotal,
+        onSync: () => syncLaborToMeals("breakfast"),
+      })}
     </div>
   );
 }
