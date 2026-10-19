@@ -45,6 +45,9 @@ function NumericInput({
     // normalized numeric value, including when the user enters a comma.
     // Do not mutate the actual DOM input: that would jump the caret.
     const normalized = normalizeDecimalText(raw);
+    // "-" or "." is an incomplete draft, not a valid number. Preserve
+    // the text locally without passing NaN to fiscal/HH calculations.
+    if (normalized === "-" || normalized === "." || normalized === "-.") return;
     const forwarded = {
       ...event,
       target: { ...event.target, value: normalized } as HTMLInputElement,
