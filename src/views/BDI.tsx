@@ -357,7 +357,7 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
                   Acréscimo na oferta: +{formatPercent(materialOfferMarkupPct(sharedNegotiationPct))} para permitir desconto de {formatPercent(sharedNegotiationPct)}
                 </div>
               )}
-              {sharedClientId && materials.some(m => m.negotiationOverridePct !== null || (m.negotiationOverridePct === undefined && descontoCompras > 0)) && (
+              {sharedClientId && materials.some(m => typeof m.negotiationOverridePct === "number" || (m.negotiationOverridePct === undefined && descontoCompras > 0)) && (
                 <button type="button" className="text-[10px] text-sky-400 hover:underline"
                   onClick={() => setState(prev => ({
                     ...prev, descontoCompras: 0,
@@ -456,7 +456,7 @@ export default function BDIPage({ state, setState }: BDIPageProps) {
                       <div>Preço-base: {formatCurrency(calc.basePrice)} · acréscimo para negociação: <span className="text-emerald-400">+{formatPercent(materialOfferMarkupPct(calc.negotiationPct))} ({formatCurrency(calc.negotiationCushion)})</span></div>
                       <div>Desconto possível sobre a oferta: <span className="text-emerald-400">{formatPercent(calc.negotiationPct)}</span> · após desconto: {formatCurrency(calc.offerPrice * (1 - calc.negotiationPct / 100))}</div>
                     </div>
-                    {(material.negotiationOverridePct !== null || (material.negotiationOverridePct === undefined && descontoCompras > 0)) && (
+                    {(typeof material.negotiationOverridePct === "number" || (material.negotiationOverridePct === undefined && descontoCompras > 0)) && (
                       <button type="button" className="text-xs text-sky-400 hover:underline"
                         onClick={() => setItemNegotiationPct(material.id, null)}>
                         Usar padrão
