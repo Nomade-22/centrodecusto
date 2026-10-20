@@ -36,7 +36,7 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Regressão HH, material e digitação
-        run: npx vitest run src/lib/hh-calculator.test.ts src/lib/material-negotiation.test.ts src/components/ui/input.test.tsx
+        run: npx vitest run src/lib/hh-calculator.test.ts src/lib/material-negotiation.test.ts src/lib/budget-export.test.ts src/components/ui/input.test.tsx
 
       - name: TypeScript
         run: npm run typecheck
