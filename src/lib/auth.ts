@@ -65,6 +65,10 @@ const socialProviders = {
         google: {
           clientId: process.env.GOOGLE_CLIENT_ID,
           clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+          // A conta precisa existir e ter sido autorizada previamente.
+          disableSignUp: true,
+          // Impede entrar acidentalmente com um Gmail diferente.
+          prompt: "select_account",
         },
       }
     : {}),
