@@ -2,12 +2,51 @@
 
 import { useAuth } from "@/lib/auth-shim";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { authClient } from "@/lib/auth-client";
 import { useNavigate } from "@/lib/router-shim";
 
 export default function LoginPage() {
   const { user, isPending, redirectToLogin } = useAuth();
   const navigate = useNavigate();
+  const [googleConfigured, setGoogleConfigured] = useState<boolean | null>(null);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    fetch("/api/auth/google-status", { signal: controller.signal, cache: "no-store" })
+      .then(async response => {
+        if (!response.ok) throw new Error("Falha na verificação da configuração Google");
+        return response.json() as Promise<{ enabled: boolean }>;
+      })
+      .then(result => {
+        if (!controller.signal.aborted) setGoogleConfigured(result.enabled === true);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setGoogleConfigured(false);
+      });
+    return () => controller.abort();
+  }, []);
+
+  const signInGoogle = async () => {
+    if (!googleConfigured || googleLoading) return;
+    setGoogleError(null);
+    setGoogleLoading(true);
+    try {
+      const { error } = await authClient.signIn.social({
+        provider: "google",
+        callbackURL: "/",
+      });
+      if (error) {
+        setGoogleError(error.message || "Falha ao entrar com o Google.");
+        setGoogleLoading(false);
+      }
+    } catch {
+      setGoogleError("Falha ao iniciar o login Google.");
+      setGoogleLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (user) {
@@ -40,10 +79,12 @@ export default function LoginPage() {
             <p className="text-slate-400">Sistema de Orçamentos</p>
           </div>
 
-          {/* Login Button */}
+          {/* Login Google somente quando OAuth estiver habilitado na Vercel */}
           <button
-            onClick={redirectToLogin}
-            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl"
+            type="button"
+            onClick={() => { void signInGoogle(); }}
+            disabled={googleConfigured !== true || googleLoading}
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-gray-100 text-gray-800 font-medium py-3 px-4 rounded-xl transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-60 disabled:cursor-not-allowed"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -63,7 +104,20 @@ export default function LoginPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            Entrar com Google
+            {googleLoading ? "Abrindo Google…" : "Entrar com Google"}
+          </button>
+
+          {googleConfigured === false && (
+            <p role="status" className="mt-3 text-center text-sm text-amber-300">
+              Acesso Google aguardando credenciais OAuth na Vercel.
+            </p>
+          )}
+          {googleError && (
+            <p role="alert" className="mt-3 text-center text-sm text-red-400">{googleError}</p>
+          )}
+          <button type="button" onClick={redirectToLogin}
+            className="mt-3 w-full rounded-xl border border-slate-600 p-3 text-sm font-medium text-white hover:bg-slate-700">
+            Entrar com e-mail e senha
           </button>
 
           <p className="text-center text-slate-500 text-sm mt-6">
