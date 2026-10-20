@@ -203,6 +203,32 @@ export function buildBudgetHtml(data:BudgetExportData,meta:BudgetExportMetadata,
     meta.observacoes.trim()?`<p><strong>Observações:</strong> ${fmt(meta.observacoes).replace(/\n/g,"<br>")}</p>`:"",
   ].filter(Boolean).join("");
   const n=data.nota,g=data.negociacao;
+  const brutoNota=positive(n.valorBrutoNumerico);
+  const issPct=positive(data.settings?.default_iss_retained_pct??4.36);
+  const inssPct=positive(data.settings?.default_inss_retained_pct??0);
+  const dasPct=positive(data.settings?.das_effective_pct??10.81);
+  const issNota=n.incluirIssqn?brutoNota*issPct/100:0;
+  const inssNota=n.incluirInss?brutoNota*inssPct/100:0;
+  const dasNota=n.incluirSimples?brutoNota*dasPct/100:0;
+  const antecipNota=n.incluirAntecipacao?
+    Math.max(0,brutoNota-issNota-inssNota)*positive(n.antecipacaoPercent)/100:0;
+  const costsBySection=(name:string)=>report.groups.find(g=>g.label===name)?.costTotal||0;
+  const mealCost=(name:string)=>report.groups.find(g=>g.label==="Estadia e alimentação")
+    ?.rows.filter(r=>r.cells[0]===name).reduce((sum,r)=>sum+(r.cost||0),0)||0;
+  const despesasNota=
+    (n.incluirMaoDeObra?costsBySection("Mão de obra"):0)+
+    (n.incluirMaterial?costsBySection("Materiais"):0)+
+    (n.incluirViagens?costsBySection("Horas viajadas"):0)+
+    (n.incluirTransporte?costsBySection("Transporte"):0)+
+    (n.incluirEstadia?mealCost("Estadia"):0)+
+    (n.incluirAlmoco?mealCost("Almoço"):0)+
+    (n.incluirJanta?mealCost("Janta"):0)+
+    (n.incluirCafe?mealCost("Café da manhã"):0);
+  const resultadoNota=brutoNota-dasNota-antecipNota-despesasNota;
+  const originalNegociacao=positive(g.valorOriginalNumerico);
+  const descontoNegociacao=g.tipoDesconto==="percent"?
+    originalNegociacao*positive(g.descontoPercent)/100:positive(g.descontoValor);
+  const negociado=Math.max(0,originalNegociacao-descontoNegociacao);
   const internalSections=internal?`<section class="internal"><h2>Nota reversa - análise interna</h2><table>
       ${itemName("Valor bruto informado",positive(n.valorBrutoNumerico))}
       ${itemText("Antecipação considerada",dec(positive(n.antecipacaoPercent),2)+"%")}
@@ -210,10 +236,18 @@ export function buildBudgetHtml(data:BudgetExportData,meta:BudgetExportMetadata,
       ${itemText("Incluir INSS retido",n.incluirInss?"Sim":"Não")}
       ${itemText("Incluir DAS",n.incluirSimples?"Sim":"Não")}
       ${itemText("Incluir antecipação",n.incluirAntecipacao?"Sim":"Não")}
-    </table><p class="muted">Os valores da nota reversa representam uma simulação de caixa, não um novo imposto sobre a proposta.</p></section>
+      ${itemName("ISS retido (fluxo de caixa)",issNota)}
+      ${itemName("INSS retido (fluxo de caixa)",inssNota)}
+      ${itemName("Simples/DAS econômico (ISS incluído)",dasNota)}
+      ${itemName("Custo de antecipação",antecipNota)}
+      ${itemName("Custos operacionais selecionados",despesasNota)}
+      ${itemName("Resultado simulado",resultadoNota)}
+    </table><p class="muted">Simulação baseada no valor bruto informado na aba Nota Reversa (se houver). ISS já integra a carga do DAS; INSS retido não é somado novamente como custo econômico.</p></section>
     <section class="internal"><h2>Negociação - análise interna</h2><table>
       ${itemName("Valor original da negociação",positive(g.valorOriginalNumerico))}
       ${itemText("Desconto informado",g.tipoDesconto==="percent"?dec(positive(g.descontoPercent),2)+"%":money(positive(g.descontoValor)))}
+      ${itemName("Desconto calculado sobre valor original",descontoNegociacao)}
+      ${itemName("Valor após negociação simulada",negociado)}
       ${itemName("Custo interno estimado do orçamento",report.totalCost)}
       ${itemName("Diferença bruta venda - custo",report.total-report.totalCost)}
     </table><p class="muted">Desconto: ${g.tipoDesconto==="percent"?"percentual (%)":"valor (R$)"}. Os valores de negociação salvos podem pertencer a uma simulação anterior; a venda consolidada é calculada pelos itens atuais.</p></section>
