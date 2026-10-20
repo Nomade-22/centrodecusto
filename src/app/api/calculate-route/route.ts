@@ -3,24 +3,67 @@ import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpe
 
 type GeocodeResult = { lat: number; lng: number; name: string };
 
+/** Exibe erros úteis sem expor segredos ou respostas brutas do provedor. */
+class RouteProviderError extends Error {
+  constructor(message: string, public readonly httpStatus: number) {
+    super(message);
+    this.name = "RouteProviderError";
+  }
+}
+
+async function readProviderResponse<T>(response: Response, step: string): Promise<T> {
+  const raw = await response.text();
+  let data: unknown = null;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    // Gateways podem devolver HTML ou texto em erros de autenticação/limite.
+  }
+
+  if (!response.ok) {
+    const status = response.status;
+    const message =
+      status === 401 || status === 403
+        ? "A API de rotas recusou a chave de acesso. Verifique a credencial OPENROUTE_API_KEY na Vercel."
+        : status === 429
+          ? "Limite de consultas de rotas atingido. Aguarde e tente novamente."
+          : status >= 500
+            ? "Serviço externo de rotas temporariamente indisponível. Tente novamente."
+            : `A API não conseguiu concluir ${step} (HTTP ${status}). Verifique os endereços.`;
+    console.error(`HeiGIT ${step}: HTTP ${status}`);
+    throw new RouteProviderError(message, status);
+  }
+
+  if (data === null || typeof data !== "object") {
+    throw new RouteProviderError(
+      `Resposta inválida do serviço de ${step}. Tente novamente.`,
+      502
+    );
+  }
+  return data as T;
+}
+
 async function geocodeAddress(
   address: string,
   apiKey: string
 ): Promise<GeocodeResult | null> {
-  const url = new URL("https://api.openrouteservice.org/geocode/search");
+  const url = new URL("https://api.heigit.org/pelias/v1/search");
   url.searchParams.set("api_key", apiKey);
   url.searchParams.set("text", address);
   url.searchParams.set("size", "1");
   // Focus search on Brazil to avoid finding addresses in other countries
   url.searchParams.set("boundary.country", "BR");
 
-  const response = await fetch(url.toString(), { cache: "no-store" });
-  const data = (await response.json()) as {
+  const response = await fetch(url.toString(), {
+    cache: "no-store",
+    signal: AbortSignal.timeout(12000),
+  });
+  const data = await readProviderResponse<{
     features?: Array<{
       geometry: { coordinates: [number, number] };
       properties: { label: string; country?: string };
     }>;
-  };
+  }>(response, "geocodificação");
 
   if (!data.features || data.features.length === 0) {
     return null;
@@ -72,7 +115,7 @@ export async function POST(req: Request) {
     }
 
     const directionsResponse = await fetch(
-      "https://api.openrouteservice.org/v2/directions/driving-car",
+      "https://api.heigit.org/openrouteservice/v2/directions/driving-car",
       {
         method: "POST",
         headers: {
@@ -86,13 +129,14 @@ export async function POST(req: Request) {
           ],
         }),
         cache: "no-store",
+        signal: AbortSignal.timeout(15000),
       }
     );
 
-    const directionsData = (await directionsResponse.json()) as {
+    const directionsData = await readProviderResponse<{
       routes?: Array<{ summary: { distance: number; duration: number } }>;
       error?: { message?: string };
-    };
+    }>(directionsResponse, "cálculo de rota");
 
     if (directionsData.error) {
       // Distance-limit rejections get a more actionable message.
@@ -127,7 +171,13 @@ export async function POST(req: Request) {
       duration_text: durationText,
     });
   } catch (error) {
-    console.error("OpenRouteService API error:", error);
-    return serverError("Erro ao conectar com OpenRouteService API");
+    if (error instanceof RouteProviderError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.httpStatus === 429 ? 429 : 502 }
+      );
+    }
+    console.error("HeiGIT API connection error:", error instanceof Error ? error.name : "unknown");
+    return serverError("Falha de conexão com o serviço de rotas. Tente novamente.");
   }
 }
