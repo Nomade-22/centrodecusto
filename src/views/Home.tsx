@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Trash2, MapPin, Clock, Users, DollarSign, Navigation, Loader2, UtensilsCrossed, Calculator, Receipt, HardHat, LogOut, LayoutDashboard, Archive, RotateCcw, Settings, Handshake } from "lucide-react";
+import { Plus, Trash2, MapPin, Clock, Users, DollarSign, Navigation, Loader2, UtensilsCrossed, Calculator, Receipt, HardHat, LogOut, LayoutDashboard, Archive, RotateCcw, Settings, Handshake, FileDown } from "lucide-react";
 import { useAuth } from "@/lib/auth-shim";
 import ExpensesPage, { 
   ExpensesState, 
@@ -25,6 +25,7 @@ import HistoricoPage from "./Historico";
 import TabelaPrecosPage from "./TabelaPrecos";
 import CustosHHPage from "./CustosHH";
 import UsuariosPage from "./Usuarios";
+import ExportarPDF from "./ExportarPDF";
 import { DEFAULT_CLIENTS } from "@/lib/bdi";
 import { usePriceTable } from "@/hooks/usePriceTable";
 
@@ -73,8 +74,8 @@ const generateId = () => Math.random().toString(36).substring(2, 9);
 function HomePageContent() {
   const { totals: contextTotals, updateTotal } = useTotals();
   const { user, logout } = useAuth() as unknown as { user: { isAdmin?: boolean; email?: string } | null; logout: () => Promise<void> };
-  const { activeClients, workers, hourTypes, getRate, getCustoHora, getHourMultiplier } = usePriceTable();
-  const [activeTab, setActiveTab] = useState<"viagens" | "despesas" | "bdi" | "nota" | "negociacao" | "maoDeObra" | "dashboard" | "historico" | "tabelaPrecos" | "custosHH" | "usuarios">("maoDeObra");
+  const { activeClients, workers, hourTypes, getRate, getCustoHora, getHourMultiplier, hhSettings } = usePriceTable();
+  const [activeTab, setActiveTab] = useState<"viagens" | "despesas" | "bdi" | "nota" | "negociacao" | "maoDeObra" | "dashboard" | "historico" | "tabelaPrecos" | "custosHH" | "usuarios" | "pdf">("maoDeObra");
   const [legs, setLegs] = useState<TripLeg[]>([
     {
       id: generateId(),
@@ -471,6 +472,16 @@ function HomePageContent() {
             <DollarSign className="w-4 h-4 mr-2" />
             Custos HH
           </Button>
+          <Button
+            variant={activeTab === "pdf" ? "default" : "outline"}
+            onClick={() => setActiveTab("pdf")}
+            className={activeTab === "pdf"
+              ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+              : "border-slate-600 text-slate-300 hover:bg-slate-700"}
+          >
+            <FileDown className="w-4 h-4 mr-2"/>
+            Exportar PDF
+          </Button>
           {user?.isAdmin && (
             <Button
               variant={activeTab === "usuarios" ? "default" : "outline"}
@@ -486,7 +497,26 @@ function HomePageContent() {
           )}
         </div>
 
-        {activeTab === "despesas" ? (
+        {activeTab === "pdf" ? (
+          <ExportarPDF
+            laborItems={laborItems}
+            laborTeamSize={laborTeamSize}
+            materials={bdiState}
+            expenses={expensesState}
+            trips={legs}
+            paymentRule={paymentRule}
+            maxHours={maxHours}
+            nota={notaReversaState}
+            negociacao={negociacaoState}
+            clients={activeClients}
+            workers={workers}
+            hourTypes={hourTypes}
+            settings={hhSettings}
+            getRate={getRate}
+            getCustoHora={getCustoHora}
+            getHourMultiplier={getHourMultiplier}
+          />
+        ) : activeTab === "despesas" ? (
           <ExpensesPage state={expensesState} setState={setExpensesState} laborItems={laborItems} laborTeamSize={laborTeamSize} />
         ) : activeTab === "bdi" ? (
           <BDIPage state={bdiState} setState={setBdiState} />
