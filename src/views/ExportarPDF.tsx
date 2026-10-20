@@ -18,6 +18,8 @@ import { buildBudgetHtml, calculateBudgetExport, type ExportTrip, type ReportMod
 export interface ExportarPDFProps {
   laborItems: LaborItem[];
   laborTeamSize: number;
+  initialNumero?: string;
+  initialDescricao?: string;
   materials: BDIState;
   expenses: ExpensesState;
   trips: ExportTrip[];
@@ -37,9 +39,9 @@ export interface ExportarPDFProps {
 const fmt = (value: number) => value.toLocaleString("pt-BR", {style:"currency",currency:"BRL"});
 export default function ExportarPDF(props: ExportarPDFProps) {
   const [modo, setModo] = useState<ReportMode>("cliente");
-  const [numero, setNumero] = useState("");
+  const [numero, setNumero] = useState(props.initialNumero ?? "");
   const [cliente, setCliente] = useState("");
-  const [descricao, setDescricao] = useState("");
+  const [descricao, setDescricao] = useState(props.initialDescricao ?? "");
   const [validade, setValidade] = useState("");
   const [prazo, setPrazo] = useState("");
   const [observacoes, setObservacoes] = useState("");
