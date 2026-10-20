@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { badRequest, readJson, requireAuth, serverError } from "@/app/api/_helpers/auth";
 
+export const maxDuration = 60;
+
 type GeocodeResult = { lat: number; lng: number; name: string };
 
 /** Exibe erros úteis sem expor segredos ou respostas brutas do provedor. */
@@ -43,6 +45,58 @@ async function readProviderResponse<T>(response: Response, step: string): Promis
   return data as T;
 }
 
+/** Fallback temporário para a URL antiga (desligamento anunciado para novembro/2026).
+ * Não altera a chave nem as fórmulas de orçamento. Tentativas independentes têm
+ * seus próprios timeouts para não reutilizar um sinal já abortado.
+ */
+function networkFailureCode(error: unknown): string {
+  if (!(error instanceof Error)) return "ERRO_DESCONHECIDO";
+  if (error.name === "TimeoutError" || error.name === "AbortError") return "TIMEOUT";
+  const cause = (error as Error & { cause?: { code?: string } }).cause;
+  const code = cause?.code;
+  if (code === "ENOTFOUND" || code === "EAI_AGAIN") return "DNS";
+  if (code === "ECONNRESET" || code === "ETIMEDOUT") return "CONEXAO";
+  if (error.name === "TypeError") return "REDE";
+  return "INDEFINIDO";
+}
+
+async function fetchWithTemporaryFallback(
+  modernUrl: string,
+  legacyUrl: string,
+  options: RequestInit,
+  step: string,
+  timeoutMs: number
+): Promise<Response> {
+  const attempt = (url: string) =>
+    fetch(url, { ...options, signal: AbortSignal.timeout(timeoutMs) });
+
+  let primaryFailure = "";
+  try {
+    const response = await attempt(modernUrl);
+    // Não contornar limites (429) nem restrições de credencial (401/403).
+    if (response.status !== 502 && response.status !== 503 && response.status !== 504) {
+      return response;
+    }
+    primaryFailure = `HTTP_${response.status}`;
+  } catch (error) {
+    primaryFailure = networkFailureCode(error);
+  }
+
+  console.warn(`HeiGIT indisponível na etapa ${step}: ${primaryFailure}; tentando URL temporária`);
+  try {
+    const response = await attempt(legacyUrl);
+    console.info(`Retorno da conexão temporária em ${step}: HTTP_${response.status}`);
+    return response;
+  } catch (error) {
+    const backupFailure = networkFailureCode(error);
+    console.error(`Ambos endpoints indisponíveis em ${step}: ${primaryFailure}/${backupFailure}`);
+    throw new RouteProviderError(
+      `Não foi possível conectar aos serviços de rota (${step}). Código: ${primaryFailure}/${backupFailure}. A chave não foi exposta.`,
+      503
+    );
+  }
+}
+
 async function geocodeAddress(
   address: string,
   apiKey: string
@@ -54,10 +108,15 @@ async function geocodeAddress(
   // Focus search on Brazil to avoid finding addresses in other countries
   url.searchParams.set("boundary.country", "BR");
 
-  const response = await fetch(url.toString(), {
-    cache: "no-store",
-    signal: AbortSignal.timeout(12000),
-  });
+  const legacyUrl = new URL("https://api.openrouteservice.org/geocode/search");
+  legacyUrl.search = url.search;
+  const response = await fetchWithTemporaryFallback(
+    url.toString(),
+    legacyUrl.toString(),
+    { cache: "no-store" },
+    "geocodificação",
+    9000
+  );
   const data = await readProviderResponse<{
     features?: Array<{
       geometry: { coordinates: [number, number] };
@@ -114,8 +173,9 @@ export async function POST(req: Request) {
       return badRequest("Não foi possível encontrar o endereço de destino");
     }
 
-    const directionsResponse = await fetch(
+    const directionsResponse = await fetchWithTemporaryFallback(
       "https://api.heigit.org/openrouteservice/v2/directions/driving-car",
+      "https://api.openrouteservice.org/v2/directions/driving-car",
       {
         method: "POST",
         headers: {
@@ -129,8 +189,9 @@ export async function POST(req: Request) {
           ],
         }),
         cache: "no-store",
-        signal: AbortSignal.timeout(15000),
-      }
+      },
+      "cálculo de rota",
+      12000
     );
 
     const directionsData = await readProviderResponse<{
@@ -177,7 +238,8 @@ export async function POST(req: Request) {
         { status: error.httpStatus === 429 ? 429 : 502 }
       );
     }
-    console.error("HeiGIT API connection error:", error instanceof Error ? error.name : "unknown");
-    return serverError("Falha de conexão com o serviço de rotas. Tente novamente.");
+    const code = networkFailureCode(error);
+    console.error("Falha inesperada no cálculo de rota:", code);
+    return serverError(`Falha inesperada no serviço de rotas (código ${code}). Tente novamente.`);
   }
 }
