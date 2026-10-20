@@ -68,7 +68,7 @@ const socialProviders = {
           // A conta precisa existir e ter sido autorizada previamente.
           disableSignUp: true,
           // Impede entrar acidentalmente com um Gmail diferente.
-          prompt: "select_account",
+          prompt: "select_account" as const,
         },
       }
     : {}),
