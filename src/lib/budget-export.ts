@@ -139,12 +139,12 @@ export function calculateBudgetExport(data: BudgetExportData): BudgetExportRepor
     });
   };
   const expenseRows:ExportRow[]=[];
-  const meals:(readonly [string, typeof data.expenses.lunches])[]=[
+  const meals: Array<[string, Array<{baseCost:number;clientId:string;people:number;days:number;location?:string}>]>=[
     ["Estadia",data.expenses.accommodation],
     ["Almoço",data.expenses.lunches],
     ["Janta",data.expenses.dinners],
     ["Café da manhã",data.expenses.breakfasts],
-  ] as (readonly [string, typeof data.expenses.lunches])[];
+  ];
   for(const [label,items] of meals){
     items.forEach((item)=>{
       const costUnit=positive(item.baseCost);
@@ -196,6 +196,7 @@ export function buildBudgetHtml(data:BudgetExportData,meta:BudgetExportMetadata,
       </table></div></section>`;
   }).join("");
   const itemName=(label:string,amount:number)=>`<tr><td>${fmt(label)}</td><td class="numeric">${money(amount)}</td></tr>`;
+  const itemText=(label:string,value:string)=>`<tr><td>${fmt(label)}</td><td class="numeric">${fmt(value)}</td></tr>`;
   const notes=[
     meta.validade.trim()?`<p><strong>Validade:</strong> ${fmt(meta.validade)}</p>`:"",
     meta.prazo.trim()?`<p><strong>Prazo de execução:</strong> ${fmt(meta.prazo)}</p>`:"",
@@ -204,15 +205,15 @@ export function buildBudgetHtml(data:BudgetExportData,meta:BudgetExportMetadata,
   const n=data.nota,g=data.negociacao;
   const internalSections=internal?`<section class="internal"><h2>Nota reversa - análise interna</h2><table>
       ${itemName("Valor bruto informado",positive(n.valorBrutoNumerico))}
-      ${itemName("Antecipação considerada (%)",positive(n.antecipacaoPercent))}
-      ${itemName("Incluir ISS retido",n.incluirIssqn?1:0)}
-      ${itemName("Incluir INSS retido",n.incluirInss?1:0)}
-      ${itemName("Incluir DAS",n.incluirSimples?1:0)}
-      ${itemName("Incluir antecipação",n.incluirAntecipacao?1:0)}
-    </table><p class="muted">Os indicadores de incidência são apresentados como 1=Sim e 0=Não. Os valores da nota reversa representam uma simulação de caixa, não um novo imposto sobre a proposta.</p></section>
+      ${itemText("Antecipação considerada",dec(positive(n.antecipacaoPercent),2)+"%")}
+      ${itemText("Incluir ISS retido",n.incluirIssqn?"Sim":"Não")}
+      ${itemText("Incluir INSS retido",n.incluirInss?"Sim":"Não")}
+      ${itemText("Incluir DAS",n.incluirSimples?"Sim":"Não")}
+      ${itemText("Incluir antecipação",n.incluirAntecipacao?"Sim":"Não")}
+    </table><p class="muted">Os valores da nota reversa representam uma simulação de caixa, não um novo imposto sobre a proposta.</p></section>
     <section class="internal"><h2>Negociação - análise interna</h2><table>
       ${itemName("Valor original da negociação",positive(g.valorOriginalNumerico))}
-      ${itemName("Desconto informado",g.tipoDesconto==="percent"?positive(g.descontoPercent):positive(g.descontoValor))}
+      ${itemText("Desconto informado",g.tipoDesconto==="percent"?dec(positive(g.descontoPercent),2)+"%":money(positive(g.descontoValor)))}
       ${itemName("Custo interno estimado do orçamento",report.totalCost)}
       ${itemName("Diferença bruta venda - custo",report.total-report.totalCost)}
     </table><p class="muted">Desconto: ${g.tipoDesconto==="percent"?"percentual (%)":"valor (R$)"}. Os valores de negociação salvos podem pertencer a uma simulação anterior; a venda consolidada é calculada pelos itens atuais.</p></section>
