@@ -42,7 +42,7 @@ interface OrcamentoFull {
 
 interface HistoricoProps {
   onSave: (numero: string, descricao: string) => Promise<boolean>;
-  onLoad: (dados: unknown) => void;
+  onLoad: (dados: unknown, meta?: {numero: string; descricao: string}) => void;
 }
 
 export default function Historico({ onSave, onLoad }: HistoricoProps) {
@@ -144,7 +144,7 @@ export default function Historico({ onSave, onLoad }: HistoricoProps) {
   const handleLoadOrcamento = () => {
     if (viewingOrcamento) {
       const dados = JSON.parse(viewingOrcamento.dados);
-      onLoad(dados);
+      onLoad(dados, {numero: viewingOrcamento.numero, descricao: viewingOrcamento.descricao || ""});
       setViewingOrcamento(null);
       alert('Orçamento carregado! Vá para as outras abas para ver os dados.');
     }
