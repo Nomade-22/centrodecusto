@@ -127,6 +127,7 @@ function HomePageContent() {
 
   // Negociacao state (lifted from Negociacao)
   const [negociacaoState, setNegociacaoState] = useState<NegociacaoState>(createDefaultNegociacaoState);
+  const [pdfMeta, setPdfMeta] = useState<{numero: string; descricao: string}>({numero:"",descricao:""});
 
   // The HH calculator is the single source of truth for travel-hour rates.
   // Recalculate whenever the shared table changes; legacy loaded trips keep all
@@ -501,6 +502,8 @@ function HomePageContent() {
           <ExportarPDF
             laborItems={laborItems}
             laborTeamSize={laborTeamSize}
+            initialNumero={pdfMeta.numero}
+            initialDescricao={pdfMeta.descricao}
             materials={bdiState}
             expenses={expensesState}
             trips={legs}
@@ -568,13 +571,15 @@ function HomePageContent() {
                   }),
                 });
                 if (!res.ok) throw new Error("Failed to save");
+                setPdfMeta({numero,descricao});
                 return true;
               } catch {
                 alert("Erro ao salvar orçamento");
                 return false;
               }
             }}
-            onLoad={(dados: unknown) => {
+            onLoad={(dados: unknown, meta?: {numero: string; descricao: string}) => {
+              if (meta) setPdfMeta(meta);
               const d = dados as { 
                 legs?: TripLeg[]; 
                 paymentRule?: "all" | "max-hours"; 
